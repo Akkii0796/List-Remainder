@@ -42,1034 +42,1312 @@
             }
         }
 
-        header {
-            background-color: #6a1bb1; /* Darker header for contrast */
-            color: #fff;
-            padding: 15px 20px;
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            /* Slightly darker header */
+            color: white;
+            padding: 20px;
             text-align: center;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin: 0 20px; /* Aligned with tab buttons */
+            border-radius: 15px;
+            /* Rounded corners for header */
+            margin-bottom: 20px;
+            /* Space between header and tabs */
+            position: relative;
+        }
+        /* Removed .header .user-info style block */
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        header h1 {
-            font-size: 1.8em;
-            margin: 0;
+        /* Tabs Styling */
+        .tabs-container {
+            margin-top: 0px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: space-around;
+            background: #e0e7ff; 
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            margin: 0 20px; 
+            margin-top: 20px;
+            /* Space between header and tabs */
+        }
+
+        .tab-button {
             flex-grow: 1;
-        }
-
-        .month-year {
-            font-size: 1em;
-            margin-left: 20px;
-        }
-
-        nav {
-            background-color: #8c42d3; /* Slightly lighter than header */
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        nav button {
-            background: none;
+            padding: 15px 20px;
             border: none;
-            color: #fff;
-            padding: 10px 20px;
-            margin: 0 5px;
-            font-size: 1em;
+            background: transparent;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4f46e5; 
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
         }
 
-        nav button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+        .tab-button:hover {
+            background: #c7d2fe;
         }
 
-        nav button.active {
-            background-color: #6a1bb1; /* Matches header for active tab */
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            border-bottom: 3px solid #f59e0b; 
         }
 
         .tab-content {
-            padding: 20px;
-        }
-
-        .tab-pane {
             display: none;
-            animation: fadeIn 0.5s ease-out;
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            min-height: 400px;
         }
 
-        .tab-pane.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .dashboard-grid {
+        .tab-content.active {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
-            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .tab-content.active { 
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (min-width: 1024px) {
+            .tab-content.active { 
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        
+        .tab-content .full-width {
+            grid-column: 1 / -1;
+        }
+        .tab-content .stats-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .tab-content .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .card {
-            background: #fff;
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
             padding: 20px;
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
-        .budget-summary h2, .recent-expenses h2, .add-expense h2 {
-            color: #6a1bb1;
+        .card h2 {
+            color: #4f46e5;
             margin-bottom: 15px;
-            font-size: 1.5em;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .budget-details p {
-            font-size: 1.1em;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        .budget-amount {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .progress-container {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 15px;
-            height: 20px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #4CAF50; /* Green */
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-            line-height: 20px;
-            transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
-        }
-
-        .progress-bar.orange {
-            background-color: #ff9800; /* Orange */
-        }
-
-        .progress-bar.red {
-            background-color: #f44336; /* Red */
-        }
-
-        .recent-expenses table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .recent-expenses th, .recent-expenses td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            font-size: 0.95em;
-        }
-
-        .recent-expenses th {
-            background-color: #f2f2f2;
-            color: #6a1bb1;
-        }
-
-        .recent-expenses tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .recent-expenses tbody tr:hover {
-            background-color: #e9e9e9;
-        }
-
-        .delete-btn {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        .add-expense form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-group {
+            font-size: 1.3rem;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .form-group label {
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
             margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-            font-size: 0.95em;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group input[type="date"],
-        .form-group textarea,
-        .form-group select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
             width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
         }
 
-        .form-group input[type="text"]:focus,
-        .form-group input[type="number"]:focus,
-        .form-group input[type="date"]:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #8c42d3;
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
             outline: none;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .add-expense button[type="submit"], .reset-budget-btn, .set-budget-btn {
-            background-color: #6a1bb1;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 10px;
-        }
-
-        .add-expense button[type="submit"]:hover, .reset-budget-btn:hover, .set-budget-btn:hover {
-            background-color: #5a129d;
-            transform: translateY(-2px);
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         .radio-group {
             display: flex;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 20px;
+            margin-top: 10px;
         }
 
         .radio-group label {
-            cursor: pointer;
-            font-size: 0.95em;
-            color: #555;
-        }
-
-        .summary-charts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .summary-charts canvas {
-            max-width: 100%;
-            height: 300px; /* Fixed height for charts */
-        }
-
-        .summary-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .summary-section h2 {
-            color: #6a1bb1;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .summary-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .summary-section li {
-            background-color: #f9f9f9;
-            border: 1px solid #eee;
-            margin-bottom: 8px;
-            padding: 10px 15px;
-            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 1em;
-            color: #333;
+            cursor: pointer;
+            font-weight: normal;
         }
 
-        .summary-section li strong {
-            color: #6a1bb1;
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+            transform: scale(1.2);
+            accent-color: #4f46e5;
         }
 
-        .search-filter-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .search-filter-section input[type="text"],
-        .search-filter-section input[type="date"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .search-filter-section button {
-            background-color: #6a1bb1;
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            /* Slightly darker buttons */
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        .search-filter-section button:hover {
-            background-color: #5a129d;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #a0aec0; 
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #38b2ac, #319795);
+            /* Teal */
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            width: auto;
+            margin: 0;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            margin-top: 10px;
+        }
+        .btn-outline:hover {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+
+        .budget-summary {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .budget-summary {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .budget-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+
+        .budget-item.budget {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        }
+
+        .budget-item.spent {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+        }
+
+        .budget-item.remaining {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        }
+
+        .budget-item h3 {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .budget-item .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            /* Allows horizontal scrolling for larger tables if absolutely necessary */
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            max-width: 100%; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            /* min-width: 700px; Removed min-width to allow shrinking */
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            /* Consistent header color */
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap; 
+        }
+
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: normal; /* Allow wrapping by default for mobile friendliness */
+            overflow: visible;
+            /* Ensure content is visible */
+            text-overflow: clip;
+            /* Prevent ellipsis, allow full content */
+            max-width: none;
+            /* Remove max-width constraints */
+        }
+        
+        /* Specific adjustments for smaller screens for better vertical display */
+        @media (max-width: 600px) {
+            table {
+                display: block;
+                /* Make table behave like a block for stacking */
+                width: 100%;
+            }
+
+            thead {
+                display: none;
+                /* Hide table header */
+            }
+
+            tr {
+                display: block;
+                /* Make rows behave like blocks */
+                margin-bottom: 10px;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                background-color: white;
+            }
+
+            td {
+                display: block;
+                /* Make cells behave like blocks */
+                text-align: right;
+                padding-left: 50%; /* Make space for pseudo-element label */
+                position: relative;
+                border-bottom: 1px dashed #e5e7eb; /* Add dashed border for separation */
+            }
+
+            td:last-child {
+                border-bottom: none;
+            }
+
+            td::before {
+                content: attr(data-label);
+                /* Use data-label for content */
+                position: absolute;
+                left: 10px;
+                width: calc(50% - 20px);
+                text-align: left;
+                font-weight: bold;
+                color: #4f46e5;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            grid-column: 1 / -1;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .icon {
+            font-size: 1.2rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
         }
 
         .download-buttons {
-            margin-top: 20px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 15px; /* Added margin for search/filter buttons */
+            justify-content: space-between;
+            /* Distribute items evenly */
         }
 
-        .download-buttons button {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
+        .download-buttons .btn {
+            flex: 1;
+            min-width: unset; /* Allow buttons to shrink */
+            margin-top: 0;
+            /* Remove default margin-top if flex item */
         }
 
-        .download-buttons button:hover {
-            background-color: #1976D2;
-        }
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .tab-buttons {
+                margin: 0 10px;
+            }
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
+            .tab-button {
+                font-size: 0.9rem;
+                padding: 12px 10px;
+            }
+
+            .tab-content {
                 padding: 15px;
             }
-
-            header {
-                flex-direction: column;
-                padding: 10px;
+            
+            .card {
+                padding: 15px;
             }
-
-            header h1 {
-                font-size: 1.5em;
-                margin-bottom: 10px;
+            
+            table {
+                font-size: 0.75rem;
+                /* Smaller font for tables on very small screens */
             }
-
-            .month-year {
-                margin-left: 0;
+            
+            th, td {
+                padding: 8px 4px;
             }
+            td:nth-child(6) { white-space: normal;
+            } /* Ensure note wraps on small screens */
 
-            nav {
-                flex-wrap: wrap;
+            .download-buttons {
+                flex-direction: row;
+                /* Keep buttons in a row by default */
+                justify-content: space-around;
+                /* Space them out */
             }
-
-            nav button {
-                flex: 1 1 auto;
-                margin: 5px;
-            }
-
-            .dashboard-grid, .add-expense form, .summary-charts, .search-filter-section {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: span 1;
+            .download-buttons .btn {
+                flex-basis: auto;
+                /* Let content dictate width */
+                min-width: 100px;
+                /* Ensure a minimum width */
+                padding: 10px 15px;
             }
         }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-details {
+            flex-grow: 1;
+        }
+
+        .expense-category {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .expense-vendor {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .expense-amount {
+            font-weight: bold;
+            color: #1f2937;
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg);
+            }
+            100% { transform: rotate(360deg);
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px; 
+            width: 100%;
+        }
+        
+        /* Budget Progress Bar */
+        .budget-progress-bar {
+            width: 100%;
+            background-color: #e0e7ff; 
+            border-radius: 15px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px; 
+            margin-bottom: 15px;
+        }
+
+        .budget-progress-fill {
+            height: 100%;
+            width: 0%; 
+            background: linear-gradient(90deg, #9fe6b0, #7ee793); /* Lighter green */
+            transition: width 0.5s ease-in-out;
+            border-radius: 15px;
+        }
+
+        .budget-progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1f2937; 
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5); 
+            white-space: nowrap;
+        }
+
+        .summary-tables {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            grid-column: 1 / -1; 
+        }
+
+        @media (min-width: 768px) {
+            .summary-tables {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .top-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px; /* Added margin for header */
+        }
+        .top-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            font-size: 0.95rem;
+        }
+        .top-list li:last-child {
+            border-bottom: none;
+        }
+        .top-list .label {
+            font-weight: 500;
+            color: #374151;
+            flex: 2; /* Adjust flex for spacing */
+        }
+        .top-list .value {
+            font-weight: bold;
+            color: #4f46e5;
+            text-align: right;
+            flex: 1; /* Adjust flex for spacing */
+        }
+        .top-list-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e7ff;
+            /* Thicker border for heading */
+            margin-bottom: 5px;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        .top-list-header span {
+            flex: 1;
+            /* Default flex */
+        }
+        .top-list-header span:first-child {
+            flex: 2;
+            /* Adjust flex for spacing */
+        }
+        .top-list-header span:last-child {
+            text-align: right;
+            flex: 1; /* Adjust flex for spacing */
+        }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Expense Tracker</h1>
-            <p id="currentMonthYear" class="month-year"></p>
-        </header>
+    <div class="container" id="appContent">
+        <div class="header">
+            <h1 id="headerTitle">💰 Expense Tracker</h1>
+            <p id="currentMonthYear"></p>
+            <p>Track your expenses and manage your budget efficiently</p>
+            </div>
 
-        <nav>
-            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-            <button class="tab-btn" data-tab="summary">Summary</button>
-            <button class="tab-btn" data-tab="search-filter">Search & Filter</button>
-        </nav>
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('dashboardTab')">Dashboard</button>
+            <button class="tab-button" onclick="showTab('summaryTab')">Summary</button>
+            <button class="tab-button" onclick="showTab('searchTab')">Search</button>
+        </div>
 
-        <div class="tab-content">
-            <div id="dashboard" class="tab-pane active">
-                <div class="dashboard-grid">
-                    <div class="card budget-summary">
-                        <h2>Budget Summary</h2>
-                        <div class="budget-details">
-                            <p>Set Budget: <span id="budgetAmount" class="budget-amount">₹0.00</span></p>
-                            <p>Total Spent: <span id="totalSpent" class="budget-amount">₹0.00</span></p>
-                            <p>Remaining: <span id="remainingBudget" class="budget-amount">₹0.00</span></p>
-                            <div class="progress-container">
-                                <div id="budgetProgressBar" class="progress-bar">0%</div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <input type="number" id="newBudget" placeholder="Set new monthly budget" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: calc(100% - 100px);">
-                            <button id="setBudgetBtn" class="set-budget-btn">Set Budget</button>
-                            <button id="resetBudgetBtn" class="reset-budget-btn" style="background-color: #f44336; margin-left: 10px;">Reset Budget</button>
-                        </div>
+        <div id="dashboardTab" class="tab-content active">
+            <div class="card">
+                <h2><span class="icon">🎯</span> Set Monthly Budget</h2>
+                <div class="input-group">
+                    <label for="budgetAmount">Budget Amount (₹)</label>
+                    <input type="number" id="budgetAmount" placeholder="Enter your monthly budget">
+                </div>
+                <div class="download-buttons"> 
+                    <button class="btn" id="setBudgetBtn" onclick="setBudget(event)">Set Budget</button>
+                    <button class="btn btn-outline" id="resetBudgetBtn" onclick="resetBudget()">Reset Budget</button>
+                </div>
+                
+                <div class="budget-summary">
+                    <div class="budget-item budget">
+                        <h3>Budget</h3>
+                        <div class="amount" id="budgetDisplay">₹0</div>
                     </div>
-
-                    <div class="card add-expense">
-                        <h2>Add New Expense</h2>
-                        <form id="expenseForm">
-                            <div class="form-group full-width">
-                                <label>Recorded By:</label>
-                                <div class="radio-group">
-                                    <input type="radio" id="recordedByAkshay" name="recordedBy" value="Akshay" checked>
-                                    <label for="recordedByAkshay">Akshay</label>
-                                    <input type="radio" id="recordedByAchal" name="recordedBy" value="Achal">
-                                    <label for="recordedByAchal">Achal</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="expenseCategory">Category:</label>
-                                <select id="expenseCategory" required>
-                                    <option value="">Select Category</option>
-                                    <option value="Grocery">Grocery</option>
-                                    <option value="Bills">Bills</option>
-                                    <option value="Online shopping">Online shopping</option>
-                                    <option value="Transportation">Transportation</option>
-                                    <option value="Food & Dining">Food & Dining</option>
-                                    <option value="Entertainment">Entertainment</option>
-                                    <option value="Health">Health</option>
-                                    <option value="Education">Education</option>
-                                    <option value="Personal Care">Personal Care</option>
-                                    <option value="Investments">Investments</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="expenseVendor">Vendor:</label>
-                                <input type="text" id="expenseVendor" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="expenseAmount">Amount:</label>
-                                <input type="number" id="expenseAmount" required min="0.01" step="0.01">
-                            </div>
-                            <div class="form-group">
-                                <label for="expenseNote">Note (Optional):</label>
-                                <textarea id="expenseNote"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="expenseReceipt">Receipt (Optional, Max 1MB):</label>
-                                <input type="file" id="expenseReceipt" accept="image/*">
-                            </div>
-                            <button type="submit" class="full-width">Add Expense</button>
-                        </form>
+                    <div class="budget-item spent">
+                        <h3>Total Spent</h3>
+                        <div class="amount" id="totalSpent">₹0</div>
                     </div>
-
-                    <div class="card recent-expenses full-width">
-                        <h2>Recent Expenses</h2>
-                        <table id="expensesTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Recorded By</th>
-                                    <th>Category</th>
-                                    <th>Vendor</th>
-                                    <th>Amount</th>
-                                    <th>Note</th>
-                                    <th>Receipt</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
+                    <div class="budget-item remaining">
+                        <h3>Remaining</h3>
+                        <div class="amount" id="remaining">₹0</div>
                     </div>
+                </div>
+
+                <div class="budget-progress-bar">
+                    <div class="budget-progress-fill" id="budgetProgressBarFill"></div>
+                    <div class="budget-progress-text" id="budgetProgressBarText">0% Used</div>
                 </div>
             </div>
 
-            <div id="summary" class="tab-pane">
-                <div class="summary-charts">
-                    <div class="card">
-                        <h2>Spending by Category</h2>
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                    <div class="card">
-                        <h2>Monthly Spending</h2>
-                        <canvas id="monthlyChart"></canvas>
-                    </div>
-                    <div class="card">
-                        <h2>Daily Spending Trend (Current Month)</h2>
-                        <canvas id="dailyTrendChart"></canvas>
-                    </div>
-                    <div class="card">
-                        <h2>Weekly Spending Trend</h2>
-                        <canvas id="weeklyChart"></canvas>
-                    </div>
-                    <div class="card">
-                        <h2>Number of Spends by Category</h2>
-                        <canvas id="spendsByCategoryChart"></canvas>
-                    </div>
-                    <div class="card">
-                        <h2>Spending by User</h2>
-                        <canvas id="spendingByUserChart"></canvas>
+            <div class="card">
+                <h2><span class="icon">➕</span> Add Expense</h2>
+                <div class="input-group">
+                    <label>Recorded By</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="recordedBy" value="Akshay" checked>
+                            Akshay
+                        </label>
+                        <label>
+                            <input type="radio" name="recordedBy" value="Achal">
+                            Achal
+                        </label>
                     </div>
                 </div>
+                <div class="input-group">
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="Grocery">Grocery</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Online shopping">Online shopping</option>
+                        <option value="Travelling">Travelling</option>
+                        <option value="Food">Food</option>
+                        <option value="Medical expenses">Medical expenses</option>
+                        <option value="Debt">Debt</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Home expenses other than grocery">Home expenses other than grocery</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="EMI">EMI</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="vendor">Vendor</label>
+                    <input type="text" id="vendor" placeholder="Enter vendor name">
+                </div>
+                <div class="input-group">
+                    <label for="amount">Amount (₹)</label>
+                    <input type="number" id="amount" placeholder="Enter amount">
+                </div>
+                <div class="input-group">
+                    <label for="note">Note</label>
+                    <textarea id="note" rows="3" placeholder="Add a note (optional)"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="receiptUpload">Upload Receipt (Optional)</label>
+                    <input type="file" id="receiptUpload" accept="image/*">
+                    <small style="color: #6b7280; font-size: 0.8em; margin-top: 5px; display: block;">Max 1MB for optimal performance. Larger files may not save.</small>
+                </div>
+                <button class="btn btn-secondary" id="addExpenseBtn" onclick="addExpense(event)">Add Expense</button>
+            </div>
 
-                <div class="summary-section">
-                    <h2>Top 3 Categories (by amount)</h2>
-                    <ul id="topCategoriesList">
-                        </ul>
-                </div>
-                <div class="summary-section">
-                    <h2>Top 3 Vendors (by amount)</h2>
-                    <ul id="topVendorsList">
-                        </ul>
+            <div class="card full-width">
+                <h2><span class="icon">📋</span> Recent Expenses</h2>
+                <div id="recentExpenses">
+                    </div>
+            </div>
+        </div>
+
+        <div id="summaryTab" class="tab-content">
+            <div class="card full-width">
+                <h2><span class="icon">📊</span> Spending by Category</h2> 
+                <div class="chart-container">
+                    <canvas id="categoryPieChart"></canvas>
                 </div>
             </div>
 
-            <div id="search-filter" class="tab-pane">
+            <div class="stats-grid">
                 <div class="card">
-                    <h2>Search Expenses</h2>
-                    <div class="search-filter-section">
-                        <input type="text" id="searchText" placeholder="Search by vendor, category, note, user">
-                        <button id="searchBtn">Search</button>
+                    <h2><span class="icon">📈</span> Monthly Spending</h2>
+                    <div class="chart-container">
+                        <canvas id="monthlyBarChart"></canvas>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 20px;">
-                    <h2>Filter Expenses by Date</h2>
-                    <div class="search-filter-section">
-                        <input type="date" id="filterStartDate">
-                        <input type="date" id="filterEndDate">
-                        <button id="filterBtn">Filter</button>
+                <div class="card">
+                    <h2><span class="icon">📉</span> Daily Spending Trend (Current Month)</h2>
+                    <div class="chart-container">
+                        <canvas id="dailyLineChart"></canvas>
                     </div>
                 </div>
+            </div>
 
-                <div class="card recent-expenses" style="margin-top: 20px;">
-                    <h2>Filtered Expenses</h2>
-                    <table id="filteredExpensesTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Recorded By</th>
-                                <th>Category</th>
-                                <th>Vendor</th>
-                                <th>Amount</th>
-                                <th>Note</th>
-                                <th>Receipt</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                    <div class="download-buttons">
-                        <button id="downloadFilteredCsvBtn">Download Filtered CSV</button>
-                        <button id="downloadFilteredPdfBtn">Download Filtered PDF</button>
-                    </div>
+            <div class="card full-width">
+                <h2><span class="icon">📅</span> Weekly Spending Trend</h2>
+                <div class="chart-container">
+                    <canvas id="weeklyBarChart"></canvas>
                 </div>
+            </div>
 
-                <div class="card download-section" style="margin-top: 20px;">
-                    <h2>Download All Data</h2>
-                    <div class="download-buttons">
-                        <button id="downloadAllCsvBtn">Download All CSV</button>
-                        <button id="downloadAllPdfBtn">Download All PDF</button>
+            <div class="card full-width">
+                <h2><span class="icon">🔢</span> Number of Spends by Category</h2>
+                <div class="chart-container">
+                    <canvas id="categoryCountBarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <h2><span class="icon">👥</span> Spending by User</h2>
+                <div class="chart-container">
+                    <canvas id="userSpendingBarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="summary-tables">
+                <div class="card">
+                    <h2><span class="icon">🏆</span> Top 3 Categories (by amount)</h2>
+                    <div class="top-list-header">
+                        <span style="flex: 2;">Category</span>
+                        <span style="flex: 1; text-align: right;">Amount</span>
+                        <span style="flex: 1; text-align: right;">% of Total</span>
                     </div>
+                    <ul id="topCategoriesList" class="top-list">
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h2><span class="icon">🛍️</span> Top 3 Vendors (by amount)</h2>
+                    <div class="top-list-header">
+                        <span style="flex: 2;">Vendor</span>
+                        <span style="flex: 1; text-align: right;">Amount</span>
+                    </div>
+                    <ul id="topVendorsList" class="top-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="searchTab" class="tab-content">
+            <div class="card full-width">
+                <h2><span class="icon">🔍</span> Search Expenses</h2>
+                <div class="input-group">
+                    <label for="searchQuery">Search by Vendor, Category, Note or User</label>
+                    <input type="text" id="searchQuery" placeholder="e.g., 'Grocery', 'Amazon', 'fuel', 'Akshay'">
+                </div>
+                <div class="download-buttons"> <button class="btn" id="searchBtn" onclick="performSearch()">Search</button>
+                    <button class="btn btn-outline" id="clearSearchBtn" onclick="clearSearch()">Clear Search</button>
+                </div>
+                
+                <div id="searchResultsDisplay" class="table-container" style="margin-top: 20px;">
+                    </div>
+            </div>
+
+            <div class="card full-width">
+                <h2><span class="icon">📅</span> Filter Expenses by Date</h2>
+                <div class="input-group">
+                    <label for="filterStartDate">Start Date</label>
+                    <input type="date" id="filterStartDate">
+                </div>
+                <div class="input-group">
+                    <label for="filterEndDate">End Date</label>
+                    <input type="date" id="filterEndDate">
+                </div>
+                <button class="btn" id="applyFilterBtn" onclick="filterAndDisplayExpenses()">Apply Filter</button>
+                <div id="filteredExpensesDisplay" class="table-container" style="margin-top: 20px;">
+                    </div>
+
+                <div class="download-buttons" style="margin-top: 15px;">
+                    <button class="btn" id="downloadFilteredCsvBtn" onclick="downloadFilteredCSV()" disabled>📄 Download Filtered CSV</button>
+                    <button class="btn" id="downloadFilteredPdfBtn" onclick="downloadFilteredPDF()" disabled>📊 Download Filtered PDF</button>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <h2><span class="icon">💾</span> Export All Data</h2>
+                <div class="download-buttons"> <button class="btn" id="downloadAllCsvBtn" onclick="downloadCSV()">📄 Download All CSV</button>
+                    <button class="btn" id="downloadAllPdfBtn" onclick="downloadPDF()">📊 Download All PDF</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, setDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
-
-        // Firebase Configuration (Replace with your actual config)
+    <script>
+        // Firebase Configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Replace with your API Key
-            authDomain: "YOUR_AUTH_DOMAIN", // Replace with your Auth Domain
-            projectId: "YOUR_PROJECT_ID", // Replace with your Project ID
-            storageBucket: "YOUR_STORAGE_BUCKET", // Replace with your Storage Bucket
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your Messaging Sender ID
-            appId: "YOUR_APP_ID" // Replace with your App ID
-        };
-
+      apiKey: "AIzaSyCVcdGryuTGeMS2Aq9C2cqbeNmfnddDIu8",
+      authDomain: "monthly-expense-tracker-179de.firebaseapp.com",
+      databaseURL:
+        "https://monthly-expense-tracker-179de-default-rtdb.firebaseio.com",
+      projectId: "monthly-expense-tracker-179de",
+      storageBucket: "monthly-expense-tracker-179de.firebasestorage.app",
+      messagingSenderId: "927646586236",
+      appId: "1:927646586236:web:fc56a0334a31464cf000f9",
+      measurementId: "G-CVR339GKH9"
+    };
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        // Removed firebase.auth() initialization
+        // Removed let currentUser = null;
+        const fixedUserId = "public_expense_tracker_user"; // Fixed user ID for direct access
 
-        // Fixed user ID for this public tracker
-        const USER_ID = "public_expense_tracker_user";
-        const expensesCol = collection(db, `users/${USER_ID}/expenses`);
-        const budgetDocRef = doc(db, `users/${USER_ID}/budget/monthly`);
-
-        const budgetAmountEl = document.getElementById('budgetAmount');
-        const totalSpentEl = document.getElementById('totalSpent');
-        const remainingBudgetEl = document.getElementById('remainingBudget');
-        const budgetProgressBar = document.getElementById('budgetProgressBar');
-        const expensesTableBody = document.querySelector('#expensesTable tbody');
-        const expenseForm = document.getElementById('expenseForm');
-        const setBudgetBtn = document.getElementById('setBudgetBtn');
-        const resetBudgetBtn = document.getElementById('resetBudgetBtn');
-        const newBudgetInput = document.getElementById('newBudget');
-        const filteredExpensesTableBody = document.querySelector('#filteredExpensesTable tbody');
-        const searchBtn = document.getElementById('searchBtn');
-        const searchText = document.getElementById('searchText');
-        const filterBtn = document.getElementById('filterBtn');
-        const filterStartDate = document.getElementById('filterStartDate');
-        const filterEndDate = document.getElementById('filterEndDate');
-        const downloadAllCsvBtn = document.getElementById('downloadAllCsvBtn');
-        const downloadAllPdfBtn = document.getElementById('downloadAllPdfBtn');
-        const downloadFilteredCsvBtn = document.getElementById('downloadFilteredCsvBtn');
-        const downloadFilteredPdfBtn = document.getElementById('downloadFilteredPdfBtn');
-
-        let currentBudget = 0;
-        let allExpenses = []; // To store all expenses for filtering/charts
+        // Data storage using Firebase (replacing Local Storage)
+        let budget = 0;
+        let expenses = [];
+        let filteredExpenses = []; 
+        let currentSearchResults = []; 
 
         // Chart instances
-        let categoryChartInstance;
-        let monthlyChartInstance;
-        let dailyTrendChartInstance;
-        let weeklyChartInstance;
-        let spendsByCategoryChartInstance;
-        let spendingByUserChartInstance;
+        let categoryPieChartInstance;
+        let monthlyBarChartInstance;
+        let dailyLineChartInstance;
+        let weeklyBarChartInstance; 
+        let userSpendingBarChartInstance;
+        let categoryCountBarChartInstance;
 
         document.addEventListener('DOMContentLoaded', () => {
-            setupTabs();
-            // Removed redundant updateHeaderMonth() as it's called within renderExpenses()
-            loadBudget();
-            renderExpenses(); // This will also call updateHeaderMonth() and updateSummaryCharts()
+            updateHeaderMonth();
+            
+            // Set default dates for convenience (e.g., last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            document.getElementById('filterEndDate').value = today.toISOString().split('T')[0];
+            document.getElementById('filterStartDate').value = thirtyDaysAgo.toISOString().split('T')[0];
+            
+            // Show the default tab
+            showTab('dashboardTab');
+
+            // Register the datalabels plugin globally
+            Chart.register(ChartDataLabels);
+
+            // Directly load user data since authentication is removed
+            loadUserData();
         });
 
-        async function loadBudget() {
-            try {
-                const docSnap = await getDoc(budgetDocRef);
-                if (docSnap.exists()) {
-                    currentBudget = docSnap.data().amount || 0;
-                } else {
-                    currentBudget = 0;
-                }
-                updateBudgetUI();
-            } catch (error) {
-                console.error("Error loading budget:", error);
-                alert("Failed to load budget. Please check your internet connection and try again.");
+        // --- Removed Authentication Functions (toggleAuth, signInWithGoogle, signOutUser) ---
+
+        // Simplified enableUI and disableUI (no longer tied to auth state)
+        function enableUI() {
+            document.getElementById('budgetAmount').disabled = false;
+            document.getElementById('setBudgetBtn').disabled = false;
+            document.getElementById('resetBudgetBtn').disabled = false;
+            document.getElementById('category').disabled = false;
+            document.getElementById('vendor').disabled = false;
+            document.getElementById('amount').disabled = false;
+            document.getElementById('note').disabled = false;
+            document.getElementById('receiptUpload').disabled = false;
+            document.getElementById('addExpenseBtn').disabled = false;
+            document.getElementById('searchQuery').disabled = false;
+            document.getElementById('searchBtn').disabled = false;
+            document.getElementById('clearSearchBtn').disabled = false;
+            document.getElementById('filterStartDate').disabled = false;
+            document.getElementById('filterEndDate').disabled = false;
+            document.getElementById('applyFilterBtn').disabled = false;
+            document.getElementById('downloadAllCsvBtn').disabled = false;
+            document.getElementById('downloadAllPdfBtn').disabled = false;
+            document.querySelectorAll('input[name="recordedBy"]').forEach(radio => radio.disabled = false);
+        }
+
+        function disableUI() {
+            // All UI elements are now enabled by default if no authentication
+            // This function might not be strictly needed if there's no auth logic
+            // but keeping it as a placeholder if future logic requires disabling elements.
+            document.getElementById('budgetAmount').disabled = true;
+            document.getElementById('setBudgetBtn').disabled = true;
+            document.getElementById('resetBudgetBtn').disabled = true;
+            document.getElementById('category').disabled = true;
+            document.getElementById('vendor').disabled = true;
+            document.getElementById('amount').disabled = true;
+            document.getElementById('note').disabled = true;
+            document.getElementById('receiptUpload').disabled = true;
+            document.getElementById('addExpenseBtn').disabled = true;
+            document.getElementById('searchQuery').disabled = true;
+            document.getElementById('searchBtn').disabled = true;
+            document.getElementById('clearSearchBtn').disabled = true;
+            document.getElementById('filterStartDate').disabled = true;
+            document.getElementById('filterEndDate').disabled = true;
+            document.getElementById('applyFilterBtn').disabled = true;
+            document.getElementById('downloadAllCsvBtn').disabled = true;
+            document.getElementById('downloadAllPdfBtn').disabled = true;
+            updateFilteredDownloadButtons();
+            document.querySelectorAll('input[name="recordedBy"]').forEach(radio => radio.disabled = true);
+        }
+
+        function clearData() {
+            budget = 0;
+            expenses = [];
+            filteredExpenses = [];
+            currentSearchResults = [];
+            document.getElementById('budgetAmount').value = '';
+            updateDisplay();
+            document.getElementById('recentExpenses').innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No recent expenses.</p>';
+            document.getElementById('searchResultsDisplay').innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No search results.</p>';
+            document.getElementById('filteredExpensesDisplay').innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Select dates and click \'Apply Filter\'.</p>';
+            document.getElementById('topCategoriesList').innerHTML = '<li><span class="label">No data available.</span></li>';
+            document.getElementById('topVendorsList').innerHTML = '<li><span class="label">No data available.</span></li>';
+
+            if (categoryPieChartInstance) categoryPieChartInstance.destroy();
+            if (monthlyBarChartInstance) monthlyBarChartInstance.destroy();
+            if (dailyLineChartInstance) dailyLineChartInstance.destroy();
+            if (weeklyBarChartInstance) weeklyBarChartInstance.destroy();
+            if (userSpendingBarChartInstance) userSpendingBarChartInstance.destroy();
+            if (categoryCountBarChartInstance) categoryCountBarChartInstance.destroy();
+        }
+
+        // --- Tab Management ---
+        function showTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+            
+            // Re-render charts and update tables when their tab becomes active.
+            // This is crucial because Chart.js can behave unexpectedly if rendered on hidden canvases.
+            if (tabId === 'dashboardTab') {
+                updateBudgetSummary();
+                updateBudgetProgressBar();
+                updateRecentExpenses();
+            } else if (tabId === 'summaryTab') {
+                renderCategoryPieChart();
+                renderMonthlyBarChart();
+                renderDailyLineChart();
+                renderWeeklyBarChart();
+                renderCategoryCountBarChart();
+                renderUserSpendingBarChart();
+                updateTopCategories();
+                updateTopVendors();
+            } else if (tabId === 'searchTab') {
+                clearSearch(); // Reset search display
+                // Reset filter display to initial message
+                document.getElementById('filteredExpensesDisplay').innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Select dates and click \'Apply Filter\'.</p>';
+                updateFilteredDownloadButtons(); // Disable buttons
             }
         }
 
-        async function setBudget() {
-            const amount = parseFloat(newBudgetInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid positive budget amount.");
+        // --- Data Handling (Firebase) ---
+        function loadUserData() {
+            const uid = fixedUserId; // Using a fixed user ID
+
+            // Budget listener
+            db.collection('users').doc(uid).collection('budgets').doc('monthly')
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        budget = doc.data().amount || 0;
+                        document.getElementById('budgetAmount').value = budget;
+                    } else {
+                        budget = 0;
+                        document.getElementById('budgetAmount').value = '';
+                    }
+                    updateDisplay();
+                }, (error) => {
+                    console.error("Error fetching budget:", error);
+                });
+
+            // Expenses listener
+            db.collection('users').doc(uid).collection('expenses').orderBy('date', 'desc').orderBy('time', 'desc')
+                .onSnapshot((snapshot) => {
+                    expenses = [];
+                    snapshot.forEach((doc) => {
+                        expenses.push({ id: doc.id, ...doc.data() });
+                    });
+                    // Sort expenses (most recent first) after loading
+                    expenses.sort((a, b) => {
+                        const dateA = new Date(a.date + ' ' + a.time);
+                        const dateB = new Date(b.date + ' ' + b.time);
+                        return dateB - dateA;
+                    });
+                    updateDisplay();
+                }, (error) => {
+                    console.error("Error fetching expenses:", error);
+                });
+        }
+
+        async function setBudget(event) {
+            const uid = fixedUserId; // Using a fixed user ID
+            const budgetInput = document.getElementById('budgetAmount');
+            const newBudget = parseFloat(budgetInput.value);
+            const btn = event.target;
+            const originalText = btn.textContent;
+            const originalBackground = btn.style.background; // Capture original background
+
+            if (isNaN(newBudget) || newBudget < 0) {
+                alert('Please enter a valid budget amount (0 or greater)');
                 return;
             }
 
             try {
-                await setDoc(budgetDocRef, { amount: amount });
-                currentBudget = amount;
-                updateBudgetUI();
-                newBudgetInput.value = '';
-                alert("Budget set successfully!");
-            } catch (error) {
-                console.error("Error setting budget:", error);
-                alert("Failed to set budget. Please try again.");
+                await db.collection('users').doc(uid).collection('budgets').doc('monthly').set({ amount: newBudget });
+                btn.textContent = '✅ Budget Set!';
+                btn.style.background = 'linear-gradient(135deg, #9fe6b0, #7ee793)'; // Lighter green
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = originalBackground; // Restore original background
+                }, 2000);
+            } catch (e) {
+                console.error("Error setting budget: ", e);
+                alert("Error setting budget: " + e.message);
+                btn.textContent = '❌ Failed!';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = originalBackground; // Restore original background
+                }, 2000);
             }
         }
 
         async function resetBudget() {
-            if (!confirm("Are you sure you want to reset your monthly budget to 0?")) {
-                return;
-            }
-            try {
-                await setDoc(budgetDocRef, { amount: 0 });
-                currentBudget = 0;
-                updateBudgetUI();
-                alert("Budget reset successfully!");
-            } catch (error) {
-                console.error("Error resetting budget:", error);
-                alert("Failed to reset budget. Please try again.");
-            }
-        }
-
-        async function renderExpenses(expensesToRender = null, targetTableBody = expensesTableBody) {
-            targetTableBody.innerHTML = '';
-            let totalSpent = 0;
-
-            let expenses = [];
-            if (expensesToRender) {
-                expenses = expensesToRender;
-            } else {
+            const uid = fixedUserId; // Using a fixed user ID
+            if (confirm('Are you sure you want to reset your budget to ₹0? This will not affect your expenses.')) {
                 try {
-                    const q = query(expensesCol, orderBy('timestamp', 'desc'));
-                    const querySnapshot = await getDocs(q);
-                    expenses = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    allExpenses = expenses; // Store all expenses for filtering and summary
-                } catch (error) {
-                    console.error("Error rendering expenses:", error);
-                    alert("Failed to load expenses. Please check your internet connection and try again.");
-                    return;
+                    await db.collection('users').doc(uid).collection('budgets').doc('monthly').set({ amount: 0 });
+                } catch (e) {
+                    console.error("Error resetting budget: ", e);
+                    alert("Error resetting budget: " + e.message);
                 }
-            }
-
-            expenses.forEach(expense => {
-                totalSpent += expense.amount;
-                const row = targetTableBody.insertRow();
-                row.innerHTML = `
-                    <td>${new Date(expense.date).toLocaleDateString()}</td>
-                    <td>${expense.time}</td>
-                    <td>${expense.recordedBy}</td>
-                    <td>${expense.category}</td>
-                    <td>${expense.vendor}</td>
-                    <td>₹${expense.amount.toFixed(2)}</td>
-                    <td>${expense.note || ''}</td>
-                    <td>
-                        ${expense.receiptURL ? `<a href="${expense.receiptURL}" target="_blank">View Receipt</a>` : 'N/A'}
-                    </td>
-                    <td><button class="delete-btn" data-id="${expense.id}" data-receipt-url="${expense.receiptURL || ''}">Delete</button></td>
-                `;
-            });
-
-            if (targetTableBody === expensesTableBody) { // Only update budget for the main dashboard
-                totalSpentEl.textContent = `₹${totalSpent.toFixed(2)}`;
-                const remaining = currentBudget - totalSpent;
-                remainingBudgetEl.textContent = `₹${remaining.toFixed(2)}`;
-
-                let percentage = (totalSpent / currentBudget) * 100;
-                if (currentBudget === 0) percentage = 0; // Avoid division by zero
-
-                budgetProgressBar.style.width = `${Math.min(percentage, 100)}%`;
-                budgetProgressBar.textContent = `${Math.round(percentage)}%`;
-
-                // Update progress bar color
-                budgetProgressBar.classList.remove('orange', 'red');
-                if (percentage > 90) {
-                    budgetProgressBar.classList.add('red');
-                } else if (percentage > 60) {
-                    budgetProgressBar.classList.add('orange');
-                }
-
-                updateHeaderMonth();
-                updateSummaryCharts(allExpenses); // Update charts with all expenses
             }
         }
 
-        function updateBudgetUI() {
-            budgetAmountEl.textContent = `₹${currentBudget.toFixed(2)}`;
-            renderExpenses(); // Recalculate total spent and remaining based on new budget
-        }
-
-        setBudgetBtn.addEventListener('click', setBudget);
-        resetBudgetBtn.addEventListener('click', resetBudget);
-
-        expenseForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
+        async function addExpense(event) {
+            const uid = fixedUserId; // Using a fixed user ID
             const recordedBy = document.querySelector('input[name="recordedBy"]:checked').value;
-            const category = document.getElementById('expenseCategory').value;
-            const vendor = document.getElementById('expenseVendor').value;
-            const amount = parseFloat(document.getElementById('expenseAmount').value);
-            const note = document.getElementById('expenseNote').value;
-            const receiptFile = document.getElementById('expenseReceipt').files[0];
+            const category = document.getElementById('category').value;
+            const vendor = document.getElementById('vendor').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const note = document.getElementById('note').value.trim();
+            const receiptFile = document.getElementById('receiptUpload').files[0];
 
-            if (isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid positive amount for the expense.");
+            if (!category || !vendor || isNaN(amount) || amount <= 0) {
+                alert('Please fill in all required fields: Category, Vendor, and Amount (must be greater than 0).');
                 return;
-            }
-
-            let receiptURL = '';
-            if (receiptFile) {
-                if (receiptFile.size > 1024 * 1024) { // 1MB limit
-                    alert("Receipt file size exceeds 1MB. Please choose a smaller file.");
-                    return;
-                }
-                const storageRef = ref(storage, `receipts/${USER_ID}/${Date.now()}_${receiptFile.name}`);
-                try {
-                    await uploadBytes(storageRef, receiptFile);
-                    receiptURL = await getDownloadURL(storageRef);
-                } catch (error) {
-                    console.error("Error uploading receipt:", error);
-                    alert("Failed to upload receipt. Please try again.");
-                    // Continue without receipt if upload fails, but inform user
-                }
             }
 
             const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0];
+
             const expenseData = {
                 recordedBy,
                 category,
                 vendor,
                 amount,
                 note,
-                receiptURL,
-                date: now.toISOString().split('T')[0], // YYYY-MM-DD
-                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                timestamp: serverTimestamp() // For consistent ordering
+                date,
+                time,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Use server timestamp for consistent ordering
             };
 
+            const btn = event.target;
+            const originalText = btn.textContent;
+            const originalBackground = btn.style.background; // Capture original background
+
+            btn.textContent = 'Adding...';
+            btn.disabled = true;
+            btn.style.background = '#a0aec0'; // Set to a neutral disabled color immediately
+
             try {
-                await addDoc(expensesCol, expenseData);
-                expenseForm.reset();
-                alert("Expense added successfully!");
-                renderExpenses(); // Re-render expenses to show the new one
-            } catch (error) {
-                console.error("Error adding expense:", error);
-                alert("Failed to add expense. Please try again.");
-            }
-        });
+                if (receiptFile) {
+                    const storageRef = firebase.storage().ref();
+                    const receiptName = `receipts/${uid}/${Date.now()}_${receiptFile.name}`;
+                    const fileRef = storageRef.child(receiptName);
 
-        expensesTableBody.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('delete-btn')) {
-                const expenseId = e.target.dataset.id;
-                const receiptURL = e.target.dataset.receiptUrl;
-
-                if (!confirm("Are you sure you want to delete this expense?")) {
-                    return;
-                }
-
-                try {
-                    await deleteDoc(doc(db, `users/${USER_ID}/expenses`, expenseId));
-                    if (receiptURL) {
-                        const receiptRef = ref(storage, receiptURL);
-                        try {
-                            await deleteObject(receiptRef);
-                        } catch (storageError) {
-                            console.warn("Could not delete receipt from storage (it might not exist or permissions issue):", storageError);
-                            // Continue even if receipt deletion fails, main expense should be deleted
-                        }
+                    // Check file size (max 1MB)
+                    if (receiptFile.size > 1 * 1024 * 1024) {
+                        alert('Receipt file is too large. Max size is 1MB.');
+                        btn.textContent = originalText;
+                        btn.style.background = originalBackground; // Restore original background
+                        btn.disabled = false;
+                        return;
                     }
-                    alert("Expense deleted successfully!");
-                    renderExpenses(); // Re-render expenses
-                } catch (error) {
-                    console.error("Error deleting expense:", error);
-                    alert("Failed to delete expense. Please try again.");
+
+                    const snapshot = await fileRef.put(receiptFile);
+                    expenseData.receiptURL = await snapshot.ref.getDownloadURL();
+                }
+
+                await db.collection('users').doc(uid).collection('expenses').add(expenseData);
+                
+                btn.textContent = '✅ Added!';
+                btn.style.background = 'linear-gradient(135deg, #9fe6b0, #7ee793)'; // Lighter green for success
+
+                // Clear form fields
+                document.getElementById('vendor').value = '';
+                document.getElementById('amount').value = '';
+                document.getElementById('note').value = '';
+                document.getElementById('receiptUpload').value = ''; // Clear file input
+
+                // Update UI display
+                updateDisplay();
+
+                // Restore button state immediately
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = originalBackground;
+                    btn.disabled = false;
+                }, 1000); // Short delay for visual feedback of success/fail
+            } catch (e) {
+                console.error("Error adding expense: ", e);
+                alert("Error adding expense: " + e.message);
+                btn.textContent = '❌ Failed!';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)'; // Red for failure
+                // Restore button state immediately
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = originalBackground;
+                    btn.disabled = false;
+                }, 1000); // Short delay for visual feedback of success/fail
+            }
+        }
+
+        async function deleteExpense(id) {
+            const uid = fixedUserId; // Using a fixed user ID
+            if (confirm('Are you sure you want to delete this expense?')) {
+                try {
+                    await db.collection('users').doc(uid).collection('expenses').doc(id).delete();
+                    updateDisplay();
+                } catch (e) {
+                    console.error("Error deleting expense: ", e);
+                    alert("Error deleting expense: " + e.message);
                 }
             }
-        });
+        }
 
-        // Search and Filter functionality
-        searchBtn.addEventListener('click', () => {
-            const query = searchText.value.toLowerCase().trim();
-            const filtered = allExpenses.filter(expense =>
-                expense.vendor.toLowerCase().includes(query) ||
-                expense.category.toLowerCase().includes(query) ||
-                expense.note.toLowerCase().includes(query) ||
-                expense.recordedBy.toLowerCase().includes(query)
-            );
-            renderExpenses(filtered, filteredExpensesTableBody);
-        });
+        // --- UI Updates ---
+        function updateDisplay() {
+            updateBudgetSummary();
+            updateRecentExpenses();
+            updateBudgetProgressBar();
+            // Re-render charts and tables only if their tab is active
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                if (activeTab.id === 'summaryTab') {
+                    renderCategoryPieChart();
+                    renderMonthlyBarChart();
+                    renderDailyLineChart();
+                    renderWeeklyBarChart();
+                    renderCategoryCountBarChart();
+                    renderUserSpendingBarChart();
+                    updateTopCategories();
+                    updateTopVendors();
+                } else if (activeTab.id === 'searchTab') {
+                    // Do nothing here, search/filter results are updated by explicit button clicks
+                }
+            }
+            updateFilteredDownloadButtons(); // Update download buttons regardless of tab
+        }
 
-        filterBtn.addEventListener('click', () => {
-            const startDate = filterStartDate.value;
-            const endDate = filterEndDate.value;
+        function updateBudgetSummary() {
+            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const remainingAmount = budget - totalSpent;
 
-            if (!startDate || !endDate) {
-                alert("Please select both start and end dates for filtering.");
+            document.getElementById('budgetDisplay').textContent = `₹${budget.toFixed(2)}`;
+            document.getElementById('totalSpent').textContent = `₹${totalSpent.toFixed(2)}`;
+            document.getElementById('remaining').textContent = `₹${remainingAmount.toFixed(2)}`;
+
+            const remainingElement = document.getElementById('remaining');
+            if (remainingAmount < 0) {
+                remainingElement.style.color = '#dc2626'; // Red for over budget
+            } else {
+                remainingElement.style.color = '#1f2937'; // Default color
+            }
+        }
+
+        function updateBudgetProgressBar() {
+            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            let percentage = (budget > 0) ? (totalSpent / budget) * 100 : 0;
+            percentage = Math.min(percentage, 100); // Cap at 100% for display
+
+            const progressBarFill = document.getElementById('budgetProgressBarFill');
+            const progressBarText = document.getElementById('budgetProgressBarText');
+
+            progressBarFill.style.width = `${percentage}%`;
+            progressBarText.textContent = `${percentage.toFixed(1)}% Used`;
+
+            // Change color based on percentage
+            if (percentage >= 100) {
+                progressBarFill.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)'; // Red
+                progressBarText.style.color = '#ffffff'; // White text for contrast
+            } else if (percentage >= 75) {
+                progressBarFill.style.background = 'linear-gradient(90deg, #fcd34d, #fbbf24)'; // Orange/Yellow
+                progressBarText.style.color = '#1f2937';
+            } else {
+                progressBarFill.style.background = 'linear-gradient(90deg, #9fe6b0, #7ee793)'; // Green
+                progressBarText.style.color = '#1f2937';
+            }
+        }
+
+
+        function updateRecentExpenses() {
+            const recentExpensesDiv = document.getElementById('recentExpenses');
+            recentExpensesDiv.innerHTML = ''; // Clear previous entries
+
+            if (expenses.length === 0) {
+                recentExpensesDiv.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No recent expenses to display.</p>';
                 return;
             }
 
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            end.setDate(end.getDate() + 1); // Include the end date fully
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Recorded By</th>
+                        <th>Category</th>
+                        <th>Vendor</th>
+                        <th>Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            `;
+            const tbody = table.querySelector('tbody');
 
-            const filtered = allExpenses.filter(expense => {
-                const expenseDate = new Date(expense.date);
-                return expenseDate >= start && expenseDate < end;
+            // Display a limited number of recent expenses for the dashboard
+            const expensesToDisplay = expenses.slice(0, 10); 
+
+            expensesToDisplay.forEach(expense => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td data-label="Date">${expense.date}</td>
+                    <td data-label="Recorded By">${expense.recordedBy}</td>
+                    <td data-label="Category">${expense.category}</td>
+                    <td data-label="Vendor">${expense.vendor}</td>
+                    <td data-label="Amount (₹)">${expense.amount.toFixed(2)}</td>
+                `;
             });
-            renderExpenses(filtered, filteredExpensesTableBody);
-        });
-
-        // Download functionality
-        downloadAllCsvBtn.addEventListener('click', () => downloadExpensesCsv(allExpenses, 'all_expenses'));
-        downloadAllPdfBtn.addEventListener('click', () => downloadExpensesPdf(allExpenses, 'all_expenses'));
-
-        downloadFilteredCsvBtn.addEventListener('click', () => {
-            const filteredExpenses = Array.from(filteredExpensesTableBody.rows).map(row => {
-                return {
-                    date: row.cells[0].textContent,
-                    time: row.cells[1].textContent,
-                    recordedBy: row.cells[2].textContent,
-                    category: row.cells[3].textContent,
-                    vendor: row.cells[4].textContent,
-                    amount: parseFloat(row.cells[5].textContent.replace('₹', '')),
-                    note: row.cells[6].textContent,
-                    receiptURL: row.cells[7].querySelector('a') ? row.cells[7].querySelector('a').href : 'N/A'
-                };
-            });
-            downloadExpensesCsv(filteredExpenses, 'filtered_expenses');
-        });
-
-        downloadFilteredPdfBtn.addEventListener('click', () => {
-            const filteredExpenses = Array.from(filteredExpensesTableBody.rows).map(row => {
-                return {
-                    date: row.cells[0].textContent,
-                    time: row.cells[1].textContent,
-                    recordedBy: row.cells[2].textContent,
-                    category: row.cells[3].textContent,
-                    vendor: row.cells[4].textContent,
-                    amount: parseFloat(row.cells[5].textContent.replace('₹', '')),
-                    note: row.cells[6].textContent,
-                    receiptURL: row.cells[7].querySelector('a') ? row.cells[7].querySelector('a').href : 'N/A'
-                };
-            });
-            downloadExpensesPdf(filteredExpenses, 'filtered_expenses');
-        });
-
-
-        // Charting functions
-        function updateSummaryCharts(expenses) {
-            // Destroy existing charts to prevent stacking
-            if (categoryChartInstance) categoryChartInstance.destroy();
-            if (monthlyChartInstance) monthlyChartInstance.destroy();
-            if (dailyTrendChartInstance) dailyTrendChartInstance.destroy();
-            if (weeklyChartInstance) weeklyChartInstance.destroy();
-            if (spendsByCategoryChartInstance) spendsByCategoryChartInstance.destroy();
-            if (spendingByUserChartInstance) spendingByUserChartInstance.destroy();
-
-            // Spending by Category
-            const categorySpending = expenses.reduce((acc, expense) => {
-                acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
-                return acc;
-            }, {});
-            createPieChart('categoryChart', categorySpending, 'Spending by Category');
-
-            // Monthly Spending
-            const monthlySpending = expenses.reduce((acc, expense) => {
-                const monthYear = new Date(expense.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-                acc[monthYear] = (acc[monthYear] || 0) + expense.amount;
-                return acc;
-            }, {});
-            createBarChart('monthlyChart', monthlySpending, 'Monthly Spending');
-
-            // Daily Spending Trend (Current Month)
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const dailySpending = expenses.reduce((acc, expense) => {
-                const expenseDate = new Date(expense.date);
-                if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
-                    const day = expenseDate.getDate();
-                    acc[day] = (acc[day] || 0) + expense.amount;
-                }
-                return acc;
-            }, {});
-            const sortedDailyDates = Array.from({ length: new Date(currentYear, currentMonth + 1, 0).getDate() }, (_, i) => i + 1); // Days in current month
-            const dailyData = sortedDailyDates.map(day => dailySpending[day] || 0);
-            createLineChart('dailyTrendChart', sortedDailyDates, dailyData, 'Daily Spending Trend');
-
-            // Weekly Spending Trend
-            const weeklySpending = expenses.reduce((acc, expense) => {
-                const date = new Date(expense.date);
-                // Get the start of the week (Sunday)
-                const startOfWeek = new Date(date);
-                startOfWeek.setDate(date.getDate() - date.getDay()); // date.getDay() returns 0 for Sunday, 1 for Monday etc.
-                const weekKey = startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); // e.g., "Jan 1"
-                acc[weekKey] = (acc[weekKey] || 0) + expense.amount;
-                return acc;
-            }, {});
-            createBarChart('weeklyChart', weeklySpending, 'Weekly Spending Trend');
-
-            // Number of Spends by Category
-            const spendsByCategory = expenses.reduce((acc, expense) => {
-                acc[expense.category] = (acc[expense.category] || 0) + 1;
-                return acc;
-            }, {});
-            createBarChart('spendsByCategoryChart', spendsByCategory, 'Number of Spends by Category', 'horizontal');
-
-            // Spending by User
-            const spendingByUser = expenses.reduce((acc, expense) => {
-                acc[expense.recordedBy] = (acc[expense.recordedBy] || 0) + expense.amount;
-                return acc;
-            }, {});
-            createBarChart('spendingByUserChart', spendingByUser, 'Spending by User');
-
-
-            // Top 3 Categories and Vendors
-            const sortedCategories = Object.entries(categorySpending).sort(([, a], [, b]) => b - a);
-            displayTopList('topCategoriesList', sortedCategories, totalSpentEl.textContent.replace('₹', ''));
-
-            const vendorSpending = expenses.reduce((acc, expense) => {
-                acc[expense.vendor] = (acc[expense.vendor] || 0) + expense.amount;
-                return acc;
-            }, {});
-            const sortedVendors = Object.entries(vendorSpending).sort(([, a], [, b]) => b - a);
-            displayTopList('topVendorsList', sortedVendors, totalSpentEl.textContent.replace('₹', ''));
+            recentExpensesDiv.appendChild(table);
         }
 
-        function createPieChart(canvasId, data, title) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            categoryChartInstance = new Chart(ctx, {
-                type: 'doughnut',
+        // --- Chart Rendering Functions (No changes needed, they operate on 'expenses' array) ---
+        function renderCategoryPieChart() {
+            if (categoryPieChartInstance) categoryPieChartInstance.destroy();
+
+            const categoryData = {};
+            expenses.forEach(expense => {
+                categoryData[expense.category] = (categoryData[expense.category] || 0) + expense.amount;
+            });
+
+            const labels = Object.keys(categoryData);
+            const data = Object.values(categoryData);
+
+            const ctx = document.getElementById('categoryPieChart').getContext('2d');
+            categoryPieChartInstance = new Chart(ctx, {
+                type: 'pie',
                 data: {
-                    labels: Object.keys(data),
+                    labels: labels,
                     datasets: [{
-                        data: Object.values(data),
+                        data: data,
                         backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-                            '#FF9F40', '#E7E9ED', '#C9CBCE', '#A3A6A8', '#8C8C8C'
+                            '#667eea', '#764ba2', '#38b2ac', '#ed8936', '#ecc94b',
+                            '#4299e1', '#805ad5', '#d53f8c', '#48bb78', '#f56565',
+                            '#a0aec0', '#c05621', '#1a202c'
                         ],
                         hoverOffset: 4
                     }]
@@ -1078,236 +1356,737 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: title,
-                            font: { size: 16, family: 'Segoe UI' }
-                        },
                         legend: {
                             position: 'right',
+                            labels: {
+                                color: '#374151',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Spending by Category',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
                         },
                         datalabels: {
-                            formatter: (value, ctx) => {
-                                let sum = 0;
-                                let dataArr = ctx.chart.data.datasets[0].data;
-                                dataArr.map(data => {
-                                    sum += data;
-                                });
-                                let percentage = (value * 100 / sum).toFixed(2) + "%";
-                                return percentage;
-                            },
                             color: '#fff',
+                            formatter: (value, context) => {
+                                const total = context.dataset.data.reduce((acc, current) => acc + current, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return `${percentage}%`;
+                            },
                             font: {
-                                weight: 'bold'
+                                weight: 'bold',
+                                size: 10
                             }
                         }
                     }
-                },
-                plugins: [ChartDataLabels]
+                }
             });
         }
 
-        function createBarChart(canvasId, data, title, orientation = 'vertical') {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            const chartData = {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: 'Amount (₹)',
-                    data: Object.values(data),
-                    backgroundColor: '#6a1bb1',
-                    borderColor: '#5a129d',
-                    borderWidth: 1
-                }]
-            };
+        function renderMonthlyBarChart() {
+            if (monthlyBarChartInstance) monthlyBarChartInstance.destroy();
 
-            let options = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: title,
-                        font: { size: 16, family: 'Segoe UI' }
-                    },
-                    legend: {
-                        display: false
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'top',
-                        formatter: (value) => `₹${value.toFixed(2)}`,
-                        color: '#333',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                indexAxis: orientation === 'horizontal' ? 'y' : 'x', // Set indexAxis for horizontal bars
-            };
+            const monthlyData = {};
+            expenses.forEach(expense => {
+                const monthYear = new Date(expense.date).toLocaleString('en-US', { month: 'short', year: 'numeric' });
+                monthlyData[monthYear] = (monthlyData[monthYear] || 0) + expense.amount;
+            });
 
-            if (canvasId === 'monthlyChart') monthlyChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: options, plugins: [ChartDataLabels] });
-            else if (canvasId === 'weeklyChart') weeklyChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: options, plugins: [ChartDataLabels] });
-            else if (canvasId === 'spendsByCategoryChart') spendsByCategoryChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: options, plugins: [ChartDataLabels] });
-            else if (canvasId === 'spendingByUserChart') spendingByUserChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: options, plugins: [ChartDataLabels] });
-        }
+            // Sort months chronologically
+            const sortedMonths = Object.keys(monthlyData).sort((a, b) => new Date(a) - new Date(b));
+            const data = sortedMonths.map(month => monthlyData[month]);
 
-        function createLineChart(canvasId, labels, data, title) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            dailyTrendChartInstance = new Chart(ctx, {
-                type: 'line',
+            const ctx = document.getElementById('monthlyBarChart').getContext('2d');
+            monthlyBarChartInstance = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: sortedMonths,
                     datasets: [{
-                        label: 'Amount (₹)',
+                        label: 'Amount Spent (₹)',
                         data: data,
-                        borderColor: '#4BC0C0',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                        tension: 0.1
+                        backgroundColor: '#667eea',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: title,
-                            font: { size: 16, family: 'Segoe UI' }
-                        },
                         legend: {
                             display: false
                         },
+                        title: {
+                            display: true,
+                            text: 'Monthly Spending',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
+                        },
                         datalabels: {
-                            display: false // Hide data labels for line chart for cleaner look
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#374151',
+                            font: {
+                                weight: 'bold',
+                                size: 10
+                            },
+                            formatter: (value) => `₹${value.toFixed(0)}`
                         }
                     },
                     scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Day of Month'
-                            }
-                        },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Amount (₹)'
+                                text: 'Amount (₹)',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
                             }
                         }
                     }
-                },
-                plugins: [ChartDataLabels]
+                }
             });
         }
 
-        function displayTopList(elementId, data, totalSpent) {
-            const listEl = document.getElementById(elementId);
-            listEl.innerHTML = '';
-            const total = parseFloat(totalSpent);
+        function renderDailyLineChart() {
+            if (dailyLineChartInstance) dailyLineChartInstance.destroy();
 
-            data.slice(0, 3).forEach(([name, amount]) => {
-                const percentage = total > 0 ? ((amount / total) * 100).toFixed(2) : 0;
+            const dailyData = {};
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            // Initialize dailyData for all days in the current month to 0
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                dailyData[dateKey] = 0;
+            }
+
+            expenses.forEach(expense => {
+                const expenseDate = new Date(expense.date);
+                if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
+                    const dateKey = expense.date; //YYYY-MM-DD
+                    dailyData[dateKey] = (dailyData[dateKey] || 0) + expense.amount;
+                }
+            });
+
+            const labels = Object.keys(dailyData).sort(); // Ensure dates are sorted
+            const data = labels.map(dateKey => dailyData[dateKey]);
+
+            const ctx = document.getElementById('dailyLineChart').getContext('2d');
+            dailyLineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Spent (₹)',
+                        data: data,
+                        borderColor: '#38b2ac',
+                        backgroundColor: 'rgba(56, 178, 172, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Daily Spending Trend (Current Month)',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        datalabels: {
+                            display: false // Hide datalabels for line chart points
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount (₹)',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151',
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderWeeklyBarChart() {
+            if (weeklyBarChartInstance) weeklyBarChartInstance.destroy();
+
+            const weeklyData = {};
+            expenses.forEach(expense => {
+                const expenseDate = new Date(expense.date);
+                const day = expenseDate.getDay(); // 0 for Sunday, 6 for Saturday
+                const diff = expenseDate.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+                const weekStart = new Date(expenseDate.setDate(diff));
+                const weekKey = `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`;
+                weeklyData[weekKey] = (weeklyData[weekKey] || 0) + expense.amount;
+            });
+
+            const labels = Object.keys(weeklyData).sort();
+            const data = labels.map(key => weeklyData[key]);
+
+            const ctx = document.getElementById('weeklyBarChart').getContext('2d');
+            weeklyBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Spent (₹)',
+                        data: data,
+                        backgroundColor: '#ed8936',
+                        borderColor: '#dd6b20',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Weekly Spending Trend',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#374151',
+                            font: {
+                                weight: 'bold',
+                                size: 10
+                            },
+                            formatter: (value) => `₹${value.toFixed(0)}`
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount (₹)',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Week Start Date',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151',
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCategoryCountBarChart() {
+            if (categoryCountBarChartInstance) categoryCountBarChartInstance.destroy();
+
+            const categoryCount = {};
+            expenses.forEach(expense => {
+                categoryCount[expense.category] = (categoryCount[expense.category] || 0) + 1;
+            });
+
+            const labels = Object.keys(categoryCount);
+            const data = Object.values(categoryCount);
+
+            const ctx = document.getElementById('categoryCountBarChart').getContext('2d');
+            categoryCountBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Spends',
+                        data: data,
+                        backgroundColor: '#4299e1',
+                        borderColor: '#3182ce',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Spends by Category',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#374151',
+                            font: {
+                                weight: 'bold',
+                                size: 10
+                            },
+                            formatter: (value) => value // Display count directly
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0,
+                            title: {
+                                display: true,
+                                text: 'Count',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151',
+                                callback: function(value) { if (value % 1 === 0) return value; } // Only show whole numbers
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Category',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderUserSpendingBarChart() {
+            if (userSpendingBarChartInstance) userSpendingBarChartInstance.destroy();
+
+            const userData = {};
+            expenses.forEach(expense => {
+                userData[expense.recordedBy] = (userData[expense.recordedBy] || 0) + expense.amount;
+            });
+
+            const labels = Object.keys(userData);
+            const data = Object.values(userData);
+
+            const ctx = document.getElementById('userSpendingBarChart').getContext('2d');
+            userSpendingBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Spent (₹)',
+                        data: data,
+                        backgroundColor: '#805ad5',
+                        borderColor: '#6b46c1',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Spending by User',
+                            color: '#1f2937',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#374151',
+                            font: {
+                                weight: 'bold',
+                                size: 10
+                            },
+                            formatter: (value) => `₹${value.toFixed(0)}`
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount (₹)',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'User',
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function updateTopCategories() {
+            const topCategoriesList = document.getElementById('topCategoriesList');
+            topCategoriesList.innerHTML = ''; // Clear previous entries
+
+            if (expenses.length === 0) {
+                topCategoriesList.innerHTML = '<li><span class="label">No data available.</span></li>';
+                return;
+            }
+
+            const categorySpending = {};
+            let totalAmount = 0;
+            expenses.forEach(expense => {
+                categorySpending[expense.category] = (categorySpending[expense.category] || 0) + expense.amount;
+                totalAmount += expense.amount;
+            });
+
+            const sortedCategories = Object.entries(categorySpending).sort(([, a], [, b]) => b - a);
+
+            const top3Categories = sortedCategories.slice(0, 3);
+
+            if (top3Categories.length === 0) {
+                topCategoriesList.innerHTML = '<li><span class="label">No data available.</span></li>';
+                return;
+            }
+
+            top3Categories.forEach(([category, amount]) => {
+                const percentage = totalAmount > 0 ? ((amount / totalAmount) * 100).toFixed(1) : 0;
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
-                    <span><strong>${name}:</strong> ₹${amount.toFixed(2)}</span>
-                    <span>${percentage}%</span>
+                    <span class="label">${category}</span>
+                    <span class="value">₹${amount.toFixed(2)}</span>
+                    <span class="value">${percentage}%</span>
                 `;
-                listEl.appendChild(listItem);
+                topCategoriesList.appendChild(listItem);
             });
         }
 
-        // Tab switching logic
-        function setupTabs() {
-            document.querySelectorAll('.tab-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        function updateTopVendors() {
+            const topVendorsList = document.getElementById('topVendorsList');
+            topVendorsList.innerHTML = ''; // Clear previous entries
 
-                    button.classList.add('active');
-                    document.getElementById(button.dataset.tab).classList.add('active');
+            if (expenses.length === 0) {
+                topVendorsList.innerHTML = '<li><span class="label">No data available.</span></li>';
+                return;
+            }
 
-                    // Re-render charts when summary tab is active to ensure they draw correctly
-                    if (button.dataset.tab === 'summary') {
-                        updateSummaryCharts(allExpenses);
-                    }
-                });
+            const vendorSpending = {};
+            expenses.forEach(expense => {
+                vendorSpending[expense.vendor] = (vendorSpending[expense.vendor] || 0) + expense.amount;
+            });
+
+            const sortedVendors = Object.entries(vendorSpending).sort(([, a], [, b]) => b - a);
+
+            const top3Vendors = sortedVendors.slice(0, 3);
+
+            if (top3Vendors.length === 0) {
+                topVendorsList.innerHTML = '<li><span class="label">No data available.</span></li>';
+                return;
+            }
+
+            top3Vendors.forEach(([vendor, amount]) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span class="label">${vendor}</span>
+                    <span class="value">₹${amount.toFixed(2)}</span>
+                `;
+                topVendorsList.appendChild(listItem);
             });
         }
 
-        // CSV Download
-        function convertToCsv(data) {
-            const header = ['Date', 'Time', 'Recorded By', 'Category', 'Vendor', 'Amount', 'Note', 'Receipt URL'];
+        // --- Search and Filter ---
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value.toLowerCase();
+            const searchResultsDisplay = document.getElementById('searchResultsDisplay');
+            searchResultsDisplay.innerHTML = ''; // Clear previous results
+
+            if (!query) {
+                searchResultsDisplay.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Enter a keyword to search expenses.</p>';
+                currentSearchResults = [];
+                return;
+            }
+
+            currentSearchResults = expenses.filter(expense =>
+                expense.vendor.toLowerCase().includes(query) ||
+                expense.category.toLowerCase().includes(query) ||
+                (expense.note && expense.note.toLowerCase().includes(query)) ||
+                expense.recordedBy.toLowerCase().includes(query)
+            );
+
+            if (currentSearchResults.length === 0) {
+                searchResultsDisplay.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No matching expenses found.</p>';
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Recorded By</th>
+                        <th>Category</th>
+                        <th>Vendor</th>
+                        <th>Amount (₹)</th>
+                        <th>Note</th>
+                        <th>Receipt</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            `;
+            const tbody = table.querySelector('tbody');
+
+            currentSearchResults.forEach(expense => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td data-label="Date">${expense.date}</td>
+                    <td data-label="Time">${expense.time}</td>
+                    <td data-label="Recorded By">${expense.recordedBy}</td>
+                    <td data-label="Category">${expense.category}</td>
+                    <td data-label="Vendor">${expense.vendor}</td>
+                    <td data-label="Amount (₹)">${expense.amount.toFixed(2)}</td>
+                    <td data-label="Note">${expense.note || '-'}</td>
+                    <td data-label="Receipt">
+                        ${expense.receiptURL ? `<a href="${expense.receiptURL}" target="_blank" class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem; text-decoration: none; border-radius: 5px;">View</a>` : '-'}
+                    </td>
+                    <td data-label="Actions">
+                        <button class="btn-danger" onclick="deleteExpense('${expense.id}')">Delete</button>
+                    </td>
+                `;
+            });
+            searchResultsDisplay.appendChild(table);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchQuery').value = '';
+            document.getElementById('searchResultsDisplay').innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Enter a keyword to search expenses.</p>';
+            currentSearchResults = [];
+        }
+
+        function filterAndDisplayExpenses() {
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const filteredExpensesDisplay = document.getElementById('filteredExpensesDisplay');
+            filteredExpensesDisplay.innerHTML = ''; // Clear previous results
+
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates for filtering.');
+                filteredExpenses = [];
+                updateFilteredDownloadButtons();
+                return;
+            }
+
+            filteredExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                return expenseDate >= start && expenseDate <= end;
+            });
+
+            if (filteredExpenses.length === 0) {
+                filteredExpensesDisplay.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No expenses found for the selected date range.</p>';
+                updateFilteredDownloadButtons();
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Recorded By</th>
+                        <th>Category</th>
+                        <th>Vendor</th>
+                        <th>Amount (₹)</th>
+                        <th>Note</th>
+                        <th>Receipt</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            `;
+            const tbody = table.querySelector('tbody');
+
+            filteredExpenses.forEach(expense => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td data-label="Date">${expense.date}</td>
+                    <td data-label="Time">${expense.time}</td>
+                    <td data-label="Recorded By">${expense.recordedBy}</td>
+                    <td data-label="Category">${expense.category}</td>
+                    <td data-label="Vendor">${expense.vendor}</td>
+                    <td data-label="Amount (₹)">${expense.amount.toFixed(2)}</td>
+                    <td data-label="Note">${expense.note || '-'}</td>
+                    <td data-label="Receipt">
+                        ${expense.receiptURL ? `<a href="${expense.receiptURL}" target="_blank" class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem; text-decoration: none; border-radius: 5px;">View</a>` : '-'}
+                    </td>
+                    <td data-label="Actions">
+                        <button class="btn-danger" onclick="deleteExpense('${expense.id}')">Delete</button>
+                    </td>
+                `;
+            });
+            filteredExpensesDisplay.appendChild(table);
+            updateFilteredDownloadButtons();
+        }
+
+        function updateFilteredDownloadButtons() {
+            const hasFilteredData = filteredExpenses.length > 0;
+            document.getElementById('downloadFilteredCsvBtn').disabled = !hasFilteredData;
+            document.getElementById('downloadFilteredPdfBtn').disabled = !hasFilteredData;
+        }
+
+        // --- Export Functions (No changes needed, they operate on 'expenses' array) ---
+        function convertToCSV(data) {
+            const header = ["Date", "Time", "Recorded By", "Category", "Vendor", "Amount", "Note", "Receipt URL"];
             const rows = data.map(expense => [
-                new Date(expense.date).toLocaleDateString(),
+                expense.date,
                 expense.time,
                 expense.recordedBy,
                 expense.category,
                 expense.vendor,
                 expense.amount.toFixed(2),
                 expense.note || '',
-                expense.receiptURL || 'N/A'
-            ]);
-            let csvContent = "data:text/csv;charset=utf-8,"
-                + header.join(",") + "\n"
-                + rows.map(e => e.join(",")).join("\n");
-            return encodeURI(csvContent);
+                expense.receiptURL || ''
+            ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')); // Enclose fields in quotes and escape internal quotes
+            return [header.join(','), ...rows].join('\n');
         }
 
-        function downloadExpensesCsv(expenses, filenamePrefix) {
+        function downloadCSV() {
             if (expenses.length === 0) {
-                alert("No expenses to download.");
+                alert("No data to download.");
                 return;
             }
-            const csvUrl = convertToCsv(expenses);
-            const link = document.createElement('a');
-            link.setAttribute('href', csvUrl);
-            link.setAttribute('download', `${filenamePrefix}_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const csvContent = convertToCSV(expenses);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'all_expenses.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
-        // PDF Download
-        function downloadExpensesPdf(expenses, filenamePrefix) {
+        function downloadFilteredCSV() {
+            if (filteredExpenses.length === 0) {
+                alert("No filtered data to download.");
+                return;
+            }
+            const csvContent = convertToCSV(filteredExpenses);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `filtered_expenses_${document.getElementById('filterStartDate').value}_to_${document.getElementById('filterEndDate').value}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadPDF() {
             if (expenses.length === 0) {
-                alert("No expenses to download.");
+                alert("No data to download.");
                 return;
             }
-
-            // Ensure jspdf is loaded globally if not imported via script module
-            if (typeof window.jsPDF === 'undefined' || typeof window.autoTable === 'undefined') {
-                console.error("jsPDF or jspdf-autotable not loaded.");
-                alert("PDF generation libraries are not loaded. Please try again later or check your internet connection.");
-                return;
-            }
-
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            const tableColumn = ["Date", "Time", "Recorded By", "Category", "Vendor", "Amount", "Note", "Receipt"];
-            const tableRows = expenses.map(expense => [
-                new Date(expense.date).toLocaleDateString(),
-                expense.time,
-                expense.recordedBy,
-                expense.category,
-                expense.vendor,
-                `₹${expense.amount.toFixed(2)}`,
-                expense.note || '',
-                expense.receiptURL ? "View" : "N/A" // Simplified for PDF
-            ]);
+            const tableColumn = ["Date", "Time", "By", "Category", "Vendor", "Amount (₹)", "Note", "Receipt"];
+            const tableRows = [];
 
-            doc.setFontSize(16);
-            doc.text(`${filenamePrefix.replace(/_/g, ' ').toUpperCase()} REPORT`, 14, 15);
+            expenses.forEach(expense => {
+                const expenseData = [
+                    expense.date,
+                    expense.time,
+                    expense.recordedBy,
+                    expense.category,
+                    expense.vendor,
+                    expense.amount.toFixed(2),
+                    expense.note || '-',
+                    expense.receiptURL ? 'View Receipt' : '-'
+                ];
+                tableRows.push(expenseData);
+            });
 
             doc.autoTable({
                 head: [tableColumn],
@@ -1324,7 +2103,50 @@
                 }
             });
 
-            doc.save(`${filenamePrefix}_${new Date().toISOString().split('T')[0]}.pdf`);
+            doc.save('all_expenses.pdf');
+        }
+
+        function downloadFilteredPDF() {
+            if (filteredExpenses.length === 0) {
+                alert("No filtered data to download.");
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const tableColumn = ["Date", "Time", "By", "Category", "Vendor", "Amount (₹)", "Note", "Receipt"];
+            const tableRows = [];
+
+            filteredExpenses.forEach(expense => {
+                const expenseData = [
+                    expense.date,
+                    expense.time,
+                    expense.recordedBy,
+                    expense.category,
+                    expense.vendor,
+                    expense.amount.toFixed(2),
+                    expense.note || '-',
+                    expense.receiptURL ? 'View Receipt' : '-'
+                ];
+                tableRows.push(expenseData);
+            });
+
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 20,
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [102, 126, 234], textColor: 255 },
+                margin: { top: 15, right: 10, bottom: 10, left: 10 },
+                didDrawPage: function(data) {
+                    // Footer
+                    let str = "Page " + doc.internal.getNumberOfPages()
+                    doc.setFontSize(8)
+                    doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+                }
+            });
+
+            doc.save(`filtered_expenses_${document.getElementById('filterStartDate').value}_to_${document.getElementById('filterEndDate').value}.pdf`);
         }
 
         function updateHeaderMonth() {
@@ -1338,7 +2160,5 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </body>
 </html>
