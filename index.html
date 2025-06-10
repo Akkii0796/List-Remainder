@@ -241,12 +241,15 @@
 
         .btn:active {
             transform: translateY(0);
+            /* Ensure it goes back to normal position */
+            background: #5a67d8; /* Slightly darker on active */
+            box-shadow: none;
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            background: #a0aec0; 
+            background: #a0aec0 !important; /* Use !important to override other styles if necessary */
             box-shadow: none;
             transform: none;
         }
@@ -321,25 +324,92 @@
             color: #1f2937;
         }
 
-        .table-container {
-            overflow-x: auto;
-            /* Allows horizontal scrolling for larger tables if absolutely necessary */
+        /* Table container for recent expenses */
+        #recentExpenses.table-container {
+            overflow-x: auto; /* Enable horizontal scroll for small screens */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
             margin-top: 15px;
             border-radius: 10px;
             border: 1px solid #e5e7eb;
             max-width: 100%; 
         }
 
-        table {
+        #recentExpenses table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
-            /* min-width: 700px; Removed min-width to allow shrinking */
+            min-width: 500px; /* Ensure minimum width for the table to prevent excessive squishing */
         }
 
-        th {
+        #recentExpenses th {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            /* Consistent header color */
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap; /* Prevent header text from wrapping */
+        }
+
+        #recentExpenses td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap; /* Prevent content from wrapping, forcing horizontal scroll */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+            max-width: 150px; /* Optional: Limit max-width for columns if content can be very long */
+        }
+
+        /* Adjustments for the specific Recent Expenses table on smaller screens */
+        @media (max-width: 600px) {
+            /* Keep Recent Expenses table in a single row with scroll */
+            #recentExpenses table {
+                display: table; /* Revert to default table display */
+                width: 100%;
+                min-width: 500px; /* Keep minimum width to force scroll */
+            }
+
+            #recentExpenses thead {
+                display: table-header-group; /* Revert to default header display */
+            }
+
+            #recentExpenses tr {
+                display: table-row; /* Revert to default row display */
+                margin-bottom: 0;
+                border: none;
+                background-color: transparent;
+            }
+
+            #recentExpenses td {
+                display: table-cell; /* Revert to default cell display */
+                text-align: left; /* Align text to left */
+                padding-left: 8px; /* Reset padding */
+                position: static; /* Reset position */
+                border-bottom: 1px solid #e5e7eb; /* Keep row separator */
+            }
+
+            #recentExpenses td::before {
+                content: none; /* Remove pseudo-element labels */
+            }
+        }
+        
+        /* General table styles (for search/filter results) - maintain wrapping for these */
+        .table-container:not(#recentExpenses) {
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            max-width: 100%; 
+        }
+
+        .table-container:not(#recentExpenses) table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 700px; /* Keep min-width for general tables */
+        }
+
+        .table-container:not(#recentExpenses) th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 12px 8px;
             text-align: left;
@@ -347,56 +417,48 @@
             white-space: nowrap; 
         }
 
-        td {
+        .table-container:not(#recentExpenses) td {
             padding: 12px 8px;
             border-bottom: 1px solid #e5e7eb;
-            white-space: normal; /* Allow wrapping by default for mobile friendliness */
+            white-space: normal; /* Allow wrapping by default for general tables */
             overflow: visible;
-            /* Ensure content is visible */
             text-overflow: clip;
-            /* Prevent ellipsis, allow full content */
             max-width: none;
-            /* Remove max-width constraints */
         }
         
-        /* Specific adjustments for smaller screens for better vertical display */
+        /* Specific adjustments for general tables for smaller screens (allows stacking) */
         @media (max-width: 600px) {
-            table {
+            .table-container:not(#recentExpenses) table {
                 display: block;
-                /* Make table behave like a block for stacking */
                 width: 100%;
             }
 
-            thead {
+            .table-container:not(#recentExpenses) thead {
                 display: none;
-                /* Hide table header */
             }
 
-            tr {
+            .table-container:not(#recentExpenses) tr {
                 display: block;
-                /* Make rows behave like blocks */
                 margin-bottom: 10px;
                 border: 1px solid #e5e7eb;
                 border-radius: 10px;
                 background-color: white;
             }
 
-            td {
+            .table-container:not(#recentExpenses) td {
                 display: block;
-                /* Make cells behave like blocks */
                 text-align: right;
-                padding-left: 50%; /* Make space for pseudo-element label */
+                padding-left: 50%;
                 position: relative;
-                border-bottom: 1px dashed #e5e7eb; /* Add dashed border for separation */
+                border-bottom: 1px dashed #e5e7eb;
             }
 
-            td:last-child {
+            .table-container:not(#recentExpenses) td:last-child {
                 border-bottom: none;
             }
 
-            td::before {
+            .table-container:not(#recentExpenses) td::before {
                 content: attr(data-label);
-                /* Use data-label for content */
                 position: absolute;
                 left: 10px;
                 width: calc(50% - 20px);
@@ -473,28 +535,22 @@
                 padding: 15px;
             }
             
+            /* Smaller font for all tables on very small screens */
             table {
                 font-size: 0.75rem;
-                /* Smaller font for tables on very small screens */
             }
             
             th, td {
                 padding: 8px 4px;
             }
-            td:nth-child(6) { white-space: normal;
-            } /* Ensure note wraps on small screens */
 
             .download-buttons {
                 flex-direction: row;
-                /* Keep buttons in a row by default */
                 justify-content: space-around;
-                /* Space them out */
             }
             .download-buttons .btn {
                 flex-basis: auto;
-                /* Let content dictate width */
                 min-width: 100px;
-                /* Ensure a minimum width */
                 padding: 10px 15px;
             }
         }
@@ -759,8 +815,7 @@
 
             <div class="card full-width">
                 <h2><span class="icon">📋</span> Recent Expenses</h2>
-                <div id="recentExpenses">
-                    </div>
+                <div id="recentExpenses" class="table-container"> </div>
             </div>
         </div>
 
@@ -1053,18 +1108,13 @@
                 });
 
             // Expenses listener
-            db.collection('users').doc(uid).collection('expenses').orderBy('date', 'desc').orderBy('time', 'desc')
+            db.collection('users').doc(uid).collection('expenses').orderBy('timestamp', 'desc') // Use timestamp for ordering
                 .onSnapshot((snapshot) => {
                     expenses = [];
                     snapshot.forEach((doc) => {
                         expenses.push({ id: doc.id, ...doc.data() });
                     });
-                    // Sort expenses (most recent first) after loading
-                    expenses.sort((a, b) => {
-                        const dateA = new Date(a.date + ' ' + a.time);
-                        const dateB = new Date(b.date + ' ' + b.time);
-                        return dateB - dateA;
-                    });
+                    // The order by timestamp will ensure most recent first naturally
                     updateDisplay();
                 }, (error) => {
                     console.error("Error fetching expenses:", error);
@@ -1077,30 +1127,41 @@
             const newBudget = parseFloat(budgetInput.value);
             const btn = event.target;
             const originalText = btn.textContent;
-            const originalBackground = btn.style.background; // Capture original background
+            const originalBackground = getComputedStyle(btn).backgroundImage || getComputedStyle(btn).backgroundColor; // Capture original background
 
             if (isNaN(newBudget) || newBudget < 0) {
                 alert('Please enter a valid budget amount (0 or greater)');
                 return;
             }
 
+            // Temporarily disable and change button appearance
+            btn.textContent = 'Setting...';
+            btn.disabled = true;
+            btn.style.background = '#a0aec0'; // Set to a neutral disabled color immediately
+
             try {
                 await db.collection('users').doc(uid).collection('budgets').doc('monthly').set({ amount: newBudget });
                 btn.textContent = '✅ Budget Set!';
-                btn.style.background = 'linear-gradient(135deg, #9fe6b0, #7ee793)'; // Lighter green
+                btn.style.background = 'linear-gradient(135deg, #9fe6b0, #7ee793)'; // Lighter green for success
+                
+                // Re-enable and restore after a short delay for visual feedback
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = originalBackground; // Restore original background
-                }, 2000);
+                    btn.disabled = false;
+                }, 1000); 
             } catch (e) {
                 console.error("Error setting budget: ", e);
                 alert("Error setting budget: " + e.message);
                 btn.textContent = '❌ Failed!';
-                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)'; // Red for failure
+                
+                // Re-enable and restore after a short delay for visual feedback
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = originalBackground; // Restore original background
-                }, 2000);
+                    btn.disabled = false;
+                }, 1000);
             }
         }
 
@@ -1147,8 +1208,9 @@
 
             const btn = event.target;
             const originalText = btn.textContent;
-            const originalBackground = btn.style.background; // Capture original background
+            const originalBackground = getComputedStyle(btn).backgroundImage || getComputedStyle(btn).backgroundColor; // Capture original background
 
+            // Temporarily disable and change button appearance
             btn.textContent = 'Adding...';
             btn.disabled = true;
             btn.style.background = '#a0aec0'; // Set to a neutral disabled color immediately
@@ -1186,23 +1248,24 @@
                 // Update UI display
                 updateDisplay();
 
-                // Restore button state immediately
+                // Restore button state after a short delay for visual feedback
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = originalBackground;
                     btn.disabled = false;
-                }, 1000); // Short delay for visual feedback of success/fail
+                }, 1000); 
             } catch (e) {
                 console.error("Error adding expense: ", e);
                 alert("Error adding expense: " + e.message);
                 btn.textContent = '❌ Failed!';
                 btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)'; // Red for failure
-                // Restore button state immediately
+                
+                // Restore button state after a short delay for visual feedback
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = originalBackground;
                     btn.disabled = false;
-                }, 1000); // Short delay for visual feedback of success/fail
+                }, 1000); 
             }
         }
 
@@ -1315,12 +1378,17 @@
             expensesToDisplay.forEach(expense => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
-                    <td data-label="Date">${expense.date}</td>
-                    <td data-label="Recorded By">${expense.recordedBy}</td>
-                    <td data-label="Category">${expense.category}</td>
-                    <td data-label="Vendor">${expense.vendor}</td>
-                    <td data-label="Amount (₹)">${expense.amount.toFixed(2)}</td>
+                    <td>${expense.date}</td>
+                    <td>${expense.recordedBy}</td>
+                    <td>${expense.category}</td>
+                    <td>${expense.vendor}</td>
+                    <td>${expense.amount.toFixed(2)}</td>
                 `;
+                // Add a delete button in the last cell for actions (if needed, based on original functionality)
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `<button class="btn-danger" onclick="deleteExpense('${expense.id}')">Delete</button>`;
+                actionCell.style.whiteSpace = 'nowrap'; // Keep button on one line
+                actionCell.style.width = 'fit-content'; // Adjust cell width to content
             });
             recentExpensesDiv.appendChild(table);
         }
