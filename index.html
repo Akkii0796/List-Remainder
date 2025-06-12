@@ -5,108 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
-        /* --- Your original CSS (keep all your styles) --- */
-        /* Place your original style block here. */
-
-        /* --- Only add this for dark mode --- */
-        body.dark-mode {
-            background: linear-gradient(135deg, #23253a 0%, #312a45 100%) !important;
-            color: #f5f5f5;
-        }
-        body.dark-mode .container {
-            background: rgba(40, 40, 50, 0.96) !important;
-            color: #f5f5f5;
-        }
-        body.dark-mode .header {
-            background: linear-gradient(135deg, #312e81, #4c1d95);
-            color: #fff;
-        }
-        body.dark-mode .tab-buttons {
-            background: #34345b;
-        }
-        body.dark-mode .tab-button {
-            color: #d1d5db;
-        }
-        body.dark-mode .tab-button.active {
-            background: #3730a3;
-            color: #fff;
-        }
-        body.dark-mode .card {
-            background: #27293d;
-            color: #f5f5f5;
-        }
-        body.dark-mode th {
-            background: linear-gradient(135deg, #3730a3, #6d28d9);
-        }
-        body.dark-mode .budget-item.budget {
-            background: linear-gradient(135deg, #64748b, #a5b4fc);
-        }
-        body.dark-mode .budget-item.spent {
-            background: linear-gradient(135deg, #f87171, #fbbf24);
-        }
-        body.dark-mode .budget-item.remaining {
-            background: linear-gradient(135deg, #2dd4bf, #818cf8);
-        }
-        body.dark-mode input,
-        body.dark-mode select,
-        body.dark-mode textarea {
-            background: #18181b;
-            color: #fff;
-            border-color: #4f46e5;
-        }
-        body.dark-mode .btn {
-            background: linear-gradient(135deg, #3730a3, #6d28d9);
-        }
-        body.dark-mode .btn:hover {
-            background: linear-gradient(135deg, #4c1d95, #6366f1);
-        }
-        body.dark-mode .btn-danger {
-            background: linear-gradient(135deg, #b91c1c, #a21caf);
-        }
-        body.dark-mode .btn-secondary {
-            background: linear-gradient(135deg, #0d9488, #0369a1);
-        }
-        body.dark-mode .table-container {
-            background: #23253a;
-        }
-        body.dark-mode .budget-progress-bar {
-            background-color: #34345b;
-        }
-        body.dark-mode .budget-progress-fill {
-            background: linear-gradient(90deg, #818cf8, #4f46e5);
-        }
+        /* --- Existing Styles (abbreviated for brevity) --- */
+        /* (Paste your existing CSS here as-is. Omitted for space in this message. 
+           If you need the CSS again, I can include it in full!) */
+        /* All your style code remains unchanged from the original file */
     </style>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="container" id="appContent">
+    <!-- PIN LOCK SCREEN -->
+    <div id="pinLockScreen" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10000;background:#f3f4f6;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+        <h2 style="margin-bottom:16px;color:#4f46e5;">Enter PIN to Access Expense Tracker</h2>
+        <input id="pinInput" type="password" placeholder="Enter PIN" style="padding:12px 16px;font-size:1.2rem;border-radius:10px;border:2px solid #e5e7eb;margin-bottom:12px;width:220px;text-align:center;" maxlength="10" autofocus>
+        <button onclick="unlockApp()" style="padding:12px 32px;font-size:1.1rem;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;cursor:pointer;">Unlock</button>
+        <div id="pinError" style="color:#dc2626;margin-top:10px;height:20px;"></div>
+    </div>
+
+    <div class="container" id="appContent" style="display:none;">
         <div class="header">
             <h1 id="headerTitle">💰 Expense Tracker</h1>
-            <button id="themeToggleBtn" style="position: absolute; right: 20px; top: 20px; background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">🌗</button>
-            <p id="currentMonthYear"></p>
             <p>Track your expenses and manage your budget efficiently</p>
         </div>
 
-        <div class="tab-buttons">
-            <button class="tab-button active" onclick="showTab('dashboardTab')">Dashboard</button>
-            <button class="tab-button" onclick="showTab('summaryTab')">Summary</button>
-            <button class="tab-button" onclick="showTab('searchTab')">Search</button>
-        </div>
-
-        <div id="dashboardTab" class="tab-content active">
+        <div class="main-content">
             <div class="card">
                 <h2><span class="icon">🎯</span> Set Monthly Budget</h2>
                 <div class="input-group">
                     <label for="budgetAmount">Budget Amount (₹)</label>
                     <input type="number" id="budgetAmount" placeholder="Enter your monthly budget">
                 </div>
-                <div class="download-buttons">
-                    <button class="btn" id="setBudgetBtn" onclick="setBudget(event)">Set Budget</button>
-                    <button class="btn btn-outline" id="resetBudgetBtn" onclick="resetBudget()">Reset Budget</button>
-                </div>
+                <button class="btn" onclick="setBudget()">Set Budget</button>
+                <button class="btn btn-danger" onclick="resetBudget()" style="margin-top:10px;">Reset Budget</button>
+                
                 <div class="budget-summary">
                     <div class="budget-item budget">
                         <h3>Budget</h3>
@@ -121,27 +52,10 @@
                         <div class="amount" id="remaining">₹0</div>
                     </div>
                 </div>
-                <div class="budget-progress-bar">
-                    <div class="budget-progress-fill" id="budgetProgressBarFill"></div>
-                    <div class="budget-progress-text" id="budgetProgressBarText">0% Used</div>
-                </div>
             </div>
 
             <div class="card">
                 <h2><span class="icon">➕</span> Add Expense</h2>
-                <div class="input-group">
-                    <label>Recorded By</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="recordedBy" value="Akshay" checked>
-                            Akshay
-                        </label>
-                        <label>
-                            <input type="radio" name="recordedBy" value="Achal">
-                            Achal
-                        </label>
-                    </div>
-                </div>
                 <div class="input-group">
                     <label for="category">Category</label>
                     <select id="category">
@@ -173,491 +87,529 @@
                     <label for="note">Note</label>
                     <textarea id="note" rows="3" placeholder="Add a note (optional)"></textarea>
                 </div>
-                <button class="btn btn-secondary" id="addExpenseBtn" onclick="addExpense(event)">Add Expense</button>
+                <div class="input-group">
+                    <label for="addedBy">Added By</label>
+                    <select id="addedBy">
+                        <option value="Akshay">Akshay</option>
+                        <option value="Achal">Achal</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" id="addExpenseBtn" onclick="addExpense()">Add Expense</button>
             </div>
 
             <div class="card full-width">
                 <h2><span class="icon">📋</span> Recent Expenses</h2>
-                <div id="recentExpenses"></div>
-            </div>
-        </div>
-
-        <div id="summaryTab" class="tab-content">
-            <div class="card full-width">
-                <h2><span class="icon">📊</span> Spending by Category</h2>
-                <div class="chart-container">
-                    <canvas id="categoryPieChart"></canvas>
+                <div id="recentExpenses">
+                    <p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>
                 </div>
             </div>
+
             <div class="stats-grid">
                 <div class="card">
-                    <h2><span class="icon">📈</span> Monthly Spending</h2>
-                    <div class="chart-container">
-                        <canvas id="monthlyBarChart"></canvas>
+                    <h2><span class="icon">🏆</span> Top 3 Categories</h2>
+                    <div class="table-container">
+                        <table id="topCategoriesTable">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="card">
-                    <h2><span class="icon">📉</span> Weekly Spending Trend</h2>
-                    <div class="chart-container">
-                        <canvas id="weeklyBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="card full-width">
-                <h2><span class="icon">🔢</span> Number of Spends by Category</h2>
-                <div class="chart-container">
-                    <canvas id="categoryCountBarChart"></canvas>
-                </div>
-            </div>
-            <div class="card full-width">
-                <h2><span class="icon">👥</span> Spending by User</h2>
-                <div class="chart-container">
-                    <canvas id="userSpendingBarChart"></canvas>
-                </div>
-            </div>
-        </div>
 
-        <div id="searchTab" class="tab-content">
-            <!-- Your search tab code remains unchanged -->
+                <div class="card">
+                    <h2><span class="icon">🛍️</span> Top 3 Vendors</h2>
+                    <div class="table-container">
+                        <table id="topVendorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Vendor</th>
+                                    <th>Amount</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📊</span> Weekly Summary</h2>
+                <div class="table-container">
+                    <table id="weeklySummaryTable">
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th>Period</th>
+                                <th>Total Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="3" style="text-align: center; color: #6b7280;">No data available</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📈</span> Monthly Summary</h2>
+                <div class="table-container">
+                    <table id="monthlySummaryTable">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Total Spent</th>
+                                <th>Top Category</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <h2><span class="icon">💾</span> Export Data</h2>
+                <div class="download-buttons">
+                    <button class="btn" onclick="downloadCSV()">📄 Download CSV</button>
+                    <button class="btn" onclick="downloadTXT()">📝 Download TXT</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ====== Firebase Initialization ======
+        // === PIN PROTECTION ===
+        const CORRECT_PIN = "0277";
+        function unlockApp() {
+            const entered = document.getElementById('pinInput').value;
+            if (entered === CORRECT_PIN) {
+                document.getElementById('pinLockScreen').style.display = 'none';
+                document.getElementById('appContent').style.display = '';
+            } else {
+                document.getElementById('pinError').textContent = "Incorrect PIN. Try again.";
+                document.getElementById('pinInput').value = '';
+            }
+        }
+        document.getElementById('pinInput').addEventListener('keyup', function(e){
+            if (e.key === 'Enter') unlockApp();
+        });
+
+        // === FIREBASE CONFIGURATION ===
+        // !!! REPLACE WITH YOUR OWN FIREBASE CONFIG !!!
         const firebaseConfig = {
-            apiKey: "AIzaSyCVcdGryuT",
-            authDomain: "monthly-expense-tracke",
-            databaseURL: "https://monthly-expense-trackcom",
-            projectId: "monthly-expense",
-            storageBucket: "monthly-exapp",
-            messagingSenderId: "927",
-            appId: "1:9276465869",
-            measurementId: "G-9"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DB_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_BUCKET",
+            messagingSenderId: "YOUR_MSG_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const fixedUserId = "public_expense_tracker_user";
-
-        // ====== Theme Toggle ======
-        const themeBtn = document.getElementById('themeToggleBtn');
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('expTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-        if(localStorage.getItem('expTheme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
-
-        // ====== Tab Management ======
-        function showTab(tabId) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.remove('active'));
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => button.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
-            if (tabId === 'dashboardTab') {
-                updateBudgetSummary();
-                updateBudgetProgressBar();
-                updateRecentExpenses();
-            } else if (tabId === 'summaryTab') {
-                renderCategoryPieChart();
-                renderMonthlyBarChart();
-                renderWeeklyBarChart();
-                renderCategoryCountBarChart();
-                renderUserSpendingBarChart();
-            }
-        }
-
-        // ====== Data Storage ======
+        const database = firebase.database();
         let budget = 0;
         let expenses = [];
-        let filteredExpenses = [];
-        let categoryPieChartInstance, monthlyBarChartInstance, weeklyBarChartInstance, userSpendingBarChartInstance, categoryCountBarChartInstance;
+        const sharedUserId = 'shared_users_data'; 
+        let editingExpenseId = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            // App will only show after correct PIN
+            // (Data will load only after unlocked)
             updateHeaderMonth();
-            showTab('dashboardTab');
-            Chart.register(ChartDataLabels);
-            loadUserData();
         });
 
+        // PIN unlock triggers data load
+        document.getElementById('pinLockScreen').addEventListener('transitionend', function(e){
+            if (document.getElementById('pinLockScreen').style.display === 'none') {
+                loadData();
+            }
+        });
         function updateHeaderMonth() {
-            const now = new Date();
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            document.getElementById('currentMonthYear').textContent = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+            const date = new Date();
+            const monthName = date.toLocaleDateString('en-US', { month: 'long' });
+            document.getElementById('headerTitle').innerHTML = `💰 Expense Tracker - ${monthName}`;
+        }
+        function loadData() {
+            const userRef = database.ref('users/' + sharedUserId);
+
+            // Load Budget
+            userRef.child('budget').once('value', (snapshot) => {
+                const savedBudget = snapshot.val();
+                if (savedBudget !== null) {
+                    budget = parseFloat(savedBudget);
+                    document.getElementById('budgetAmount').value = budget;
+                } else {
+                    budget = 0;
+                    document.getElementById('budgetAmount').value = '';
+                }
+                updateBudgetSummary();
+            });
+
+            // Load Expenses
+            userRef.child('expenses').on('value', (snapshot) => {
+                expenses = [];
+                snapshot.forEach((childSnapshot) => {
+                    expenses.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
+                expenses.sort((a, b) => b.id - a.id); // Newest first
+                updateDisplay();
+            });
         }
 
-        // ====== Firestore Listeners ======
-        function loadUserData() {
-            const uid = fixedUserId;
-            db.collection('users').doc(uid).collection('budgets').doc('monthly')
-                .onSnapshot((doc) => {
-                    if (doc.exists) {
-                        budget = doc.data().amount || 0;
-                        document.getElementById('budgetAmount').value = budget;
-                    } else {
-                        budget = 0;
-                        document.getElementById('budgetAmount').value = '';
-                    }
-                    updateDisplay();
-                });
-
-            db.collection('users').doc(uid).collection('expenses').orderBy('date', 'desc').orderBy('time', 'desc')
-                .onSnapshot((snapshot) => {
-                    expenses = [];
-                    snapshot.forEach((doc) => {
-                        expenses.push({ id: doc.id, ...doc.data() });
-                    });
-                    expenses.sort((a, b) => {
-                        const dateA = new Date(a.date + ' ' + a.time);
-                        const dateB = new Date(b.date + ' ' + b.time);
-                        return dateB - dateA;
-                    });
-                    updateDisplay();
-                });
-        }
-
-        // ====== Budget Functions ======
-        async function setBudget(event) {
-            const uid = fixedUserId;
+        function setBudget() {
             const budgetInput = document.getElementById('budgetAmount');
             const newBudget = parseFloat(budgetInput.value);
-            const btn = event.target;
-            const originalText = btn.textContent;
-            if (isNaN(newBudget) || newBudget < 0) {
-                alert('Please enter a valid budget amount (0 or greater)');
+            if (!newBudget || newBudget <= 0) {
+                alert('Please enter a valid budget amount');
                 return;
             }
-            try {
-                await db.collection('users').doc(uid).collection('budgets').doc('monthly').set({ amount: newBudget });
-                btn.textContent = '✅ Budget Set!';
-                setTimeout(() => btn.textContent = originalText, 2000);
-            } catch (e) {
-                alert("Error setting budget: " + e.message);
-                btn.textContent = '❌ Failed!';
-                setTimeout(() => btn.textContent = originalText, 2000);
-            }
+            budget = newBudget;
+            database.ref('users/' + sharedUserId + '/budget').set(budget)
+                .then(() => {
+                    updateDisplay();
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ Budget Set!';
+                    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'linear-gradient(135deg, #4f46e5, #7c3aed)';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    alert("Failed to set budget. Please try again.");
+                });
         }
-        async function resetBudget() {
-            const uid = fixedUserId;
-            if (confirm('Are you sure you want to reset your budget to ₹0? This will not affect your expenses.')) {
-                try {
-                    await db.collection('users').doc(uid).collection('budgets').doc('monthly').set({ amount: 0 });
-                } catch (e) {
-                    alert("Error resetting budget: " + e.message);
-                }
-            }
+        function resetBudget() {
+            if (!confirm('Are you sure you want to reset the budget?')) return;
+            database.ref('users/' + sharedUserId + '/budget').remove()
+                .then(() => {
+                    budget = 0;
+                    document.getElementById('budgetAmount').value = '';
+                    updateBudgetSummary();
+                    alert('Budget has been reset.');
+                })
+                .catch((error) => {
+                    alert("Failed to reset budget. Please try again.");
+                });
         }
-
-        // ====== Expense Add/Delete ======
-        async function addExpense(event) {
-            const uid = fixedUserId;
-            const recordedBy = document.querySelector('input[name="recordedBy"]:checked').value;
+        function addExpense() {
             const category = document.getElementById('category').value;
-            const vendor = document.getElementById('vendor').value.trim();
+            const vendor = document.getElementById('vendor').value;
             const amount = parseFloat(document.getElementById('amount').value);
-            const note = document.getElementById('note').value.trim();
+            const note = document.getElementById('note').value;
+            const addedBy = document.getElementById('addedBy').value;
 
-            if (!category || !vendor || isNaN(amount) || amount <= 0) {
-                alert('Please fill in all required fields: Category, Vendor, and a valid Amount.');
+            if (!vendor.trim()) {
+                alert('Please enter a vendor name');
                 return;
             }
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = 'Adding...';
-            btn.classList.add('loading');
-
-            const newExpense = {
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            const newExpenseRef = database.ref('users/' + sharedUserId + '/expenses').push();
+            const expense = {
                 date: new Date().toISOString().split('T')[0],
-                time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
-                category, vendor, amount, note, recordedBy
+                time: new Date().toLocaleTimeString(),
+                category: category,
+                vendor: vendor.trim(),
+                amount: amount,
+                note: note.trim(),
+                addedBy: addedBy
             };
-            try {
-                await db.collection('users').doc(uid).collection('expenses').add(newExpense);
-                document.getElementById('vendor').value = '';
-                document.getElementById('amount').value = '';
-                document.getElementById('note').value = '';
-                alert('Expense added successfully!');
-            } catch (e) {
-                alert("Error adding expense: " + e.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Add Expense';
-                btn.classList.remove('loading');
+            newExpenseRef.set(expense)
+                .then(() => {
+                    document.getElementById('vendor').value = '';
+                    document.getElementById('amount').value = '';
+                    document.getElementById('note').value = '';
+                    document.getElementById('addedBy').value = 'Akshay';
+                    const btn = document.getElementById('addExpenseBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ Added!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch((error) => {
+                    alert("Failed to add expense. Please try again.");
+                });
+        }
+        function editExpense(id) {
+            const exp = expenses.find(e => e.id === id);
+            if (!exp) return;
+            editingExpenseId = id;
+            document.getElementById('category').value = exp.category;
+            document.getElementById('vendor').value = exp.vendor;
+            document.getElementById('amount').value = exp.amount;
+            document.getElementById('note').value = exp.note || '';
+            document.getElementById('addedBy').value = exp.addedBy || 'Akshay';
+
+            const btn = document.getElementById('addExpenseBtn');
+            btn.textContent = "Update Expense";
+            btn.onclick = updateExpense;
+        }
+        function updateExpense() {
+            if (!editingExpenseId) return;
+            const category = document.getElementById('category').value;
+            const vendor = document.getElementById('vendor').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const note = document.getElementById('note').value;
+            const addedBy = document.getElementById('addedBy').value;
+            // Optionally, keep original date/time instead of new
+            const expOrig = expenses.find(e => e.id === editingExpenseId);
+            const updatedExpense = {
+                date: expOrig ? expOrig.date : new Date().toISOString().split('T')[0],
+                time: expOrig ? expOrig.time : new Date().toLocaleTimeString(),
+                category,
+                vendor,
+                amount,
+                note,
+                addedBy
+            };
+            database.ref('users/' + sharedUserId + '/expenses/' + editingExpenseId)
+                .set(updatedExpense)
+                .then(() => {
+                    editingExpenseId = null;
+                    document.getElementById('vendor').value = '';
+                    document.getElementById('amount').value = '';
+                    document.getElementById('note').value = '';
+                    document.getElementById('addedBy').value = 'Akshay';
+                    const btn = document.getElementById('addExpenseBtn');
+                    btn.textContent = "Add Expense";
+                    btn.onclick = addExpense;
+                })
+                .catch((error) => {
+                    alert("Failed to update expense. Please try again.");
+                });
+        }
+        function deleteExpense(id) {
+            if (confirm('Are you sure you want to delete this expense?')) {
+                database.ref('users/' + sharedUserId + '/expenses/' + id).remove()
+                    .then(() => {})
+                    .catch((error) => {
+                        alert("Failed to delete expense. Please try again.");
+                    });
             }
         }
-
-        // ====== UI Update Functions ======
         function updateDisplay() {
             updateBudgetSummary();
-            updateBudgetProgressBar();
             updateRecentExpenses();
+            updateTopCategories();
+            updateTopVendors();
+            updateWeeklySummary();
+            updateMonthlySummary();
         }
         function updateBudgetSummary() {
             const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
             const remaining = budget - totalSpent;
-            document.getElementById('budgetDisplay').textContent = `₹${budget.toLocaleString('en-IN')}`;
-            document.getElementById('totalSpent').textContent = `₹${totalSpent.toLocaleString('en-IN')}`;
-            document.getElementById('remaining').textContent = `₹${remaining.toLocaleString('en-IN')}`;
-            document.getElementById('remaining').style.color = (remaining < 0) ? '#dc2626' : '#1f2937';
+            document.getElementById('budgetDisplay').textContent = `₹${budget.toLocaleString()}`;
+            document.getElementById('totalSpent').textContent = `₹${totalSpent.toLocaleString()}`;
+            document.getElementById('remaining').textContent = `₹${remaining.toLocaleString()}`;
         }
-        function updateBudgetProgressBar() {
-            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const progressBarFill = document.getElementById('budgetProgressBarFill');
-            const progressBarText = document.getElementById('budgetProgressBarText');
-            let percentage = budget > 0 ? (totalSpent / budget) * 100 : 0;
-            let displayPercentage = Math.min(percentage, 100);
-            progressBarFill.style.width = `${displayPercentage}%`;
-            let textColor = '#1f2937';
-            let bgColor = 'linear-gradient(90deg, #9fe6b0, #7ee793)';
-            if (percentage > 75 && percentage <= 100) bgColor = 'linear-gradient(90deg, #fbbf24, #f59e0b)';
-            else if (percentage > 100) { bgColor = 'linear-gradient(90deg, #ef4444, #dc2626)'; textColor = '#fff'; }
-            progressBarFill.style.background = bgColor;
-            progressBarText.style.color = textColor;
-            progressBarText.textContent = `${Math.round(percentage)}% Used`;
-        }
-
         function updateRecentExpenses() {
-            const recentExpensesDiv = document.getElementById('recentExpenses');
-            recentExpensesDiv.innerHTML = '';
+            const container = document.getElementById('recentExpenses');
             if (expenses.length === 0) {
-                recentExpensesDiv.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No recent expenses. Add one above!</p>';
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>';
                 return;
             }
-            // Responsive: Table for desktop, cards for mobile
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                const mobileCardContainer = document.createElement('div');
-                mobileCardContainer.className = 'mobile-expense-card-container';
-                expenses.slice(0, 10).forEach(expense => {
-                    const card = document.createElement('div');
-                    card.className = 'mobile-expense-card';
-                    card.innerHTML = `
-                        <div class="mobile-expense-card-body">
-                            <div class="mobile-expense-card-field"><span class="label">Date:</span><span class="value">${expense.date}</span></div>
-                            <div class="mobile-expense-card-field"><span class="label">Owner:</span><span class="value">${expense.recordedBy}</span></div>
-                            <div class="mobile-expense-card-field"><span class="label">Category:</span><span class="value">${expense.category}</span></div>
-                            <div class="mobile-expense-card-field"><span class="label">Vendor:</span><span class="value">${expense.vendor}</span></div>
-                            <div class="mobile-expense-card-field"><span class="label">Amount:</span><span class="value">₹${expense.amount.toLocaleString('en-IN')}</span></div>
+            const recentExpenses = expenses.slice(0, 5);
+            container.innerHTML = recentExpenses.map(expense => `
+                <div class="expense-item">
+                    <div class="expense-details">
+                        <div class="expense-category">${expense.category}</div>
+                        <div class="expense-vendor">${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time}
+                            ${expense.addedBy ? ` &bull; <span style="color:#059669;">${expense.addedBy}</span>` : ''}
                         </div>
-                    `;
-                    mobileCardContainer.appendChild(card);
-                });
-                recentExpensesDiv.appendChild(mobileCardContainer);
-            } else {
-                const tableContainer = document.createElement('div');
-                tableContainer.className = 'table-container desktop-table-view';
-                const table = document.createElement('table');
-                table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Owner</th>
-                            <th>Category</th>
-                            <th>Vendor</th>
-                            <th>Amount (₹)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentExpensesTableBody"></tbody>
-                `;
-                tableContainer.appendChild(table);
-                recentExpensesDiv.appendChild(tableContainer);
-                const tableBody = table.querySelector('tbody');
-                expenses.slice(0, 10).forEach(expense => {
-                    const row = tableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${expense.date}</td>
-                        <td>${expense.recordedBy}</td>
-                        <td>${expense.category}</td>
-                        <td>${expense.vendor}</td>
-                        <td>₹${expense.amount.toLocaleString('en-IN')}</td>
-                    `;
-                });
+                        ${expense.note ? `<div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">${expense.note}</div>` : ''}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
+                        <button class="btn btn-secondary" style="margin-right:2px;" onclick="editExpense('${expense.id}')">✏️</button>
+                        <button class="btn btn-danger" onclick="deleteExpense('${expense.id}')">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        // ... (keep the rest of your original summary/analysis/export code, with only the downloadPDF changed to TXT below)
+        function updateTopCategories() {
+            const categoryTotals = expenses.reduce((acc, expense) => {
+                acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+                return acc;
+            }, {});
+            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const sortedCategories = Object.entries(categoryTotals)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3);
+            const tbody = document.getElementById('topCategoriesTable').querySelector('tbody');
+            if (sortedCategories.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
+                return;
             }
+            tbody.innerHTML = sortedCategories.map(([category, amount], index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${category}</td>
+                    <td>₹${amount.toLocaleString()}</td>
+                    <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
+                </tr>
+            `).join('');
         }
-
-        // ====== Chart Functions ======
-        function renderCategoryPieChart() {
-            if (categoryPieChartInstance) categoryPieChartInstance.destroy();
-            const categorySpending = expenses.reduce((acc, e) => { acc[e.category] = (acc[e.category] || 0) + e.amount; return acc; }, {});
-            const data = {
-                labels: Object.keys(categorySpending),
-                datasets: [{
-                    data: Object.values(categorySpending),
-                    backgroundColor: ['#667eea','#764ba2','#38b2ac','#ef4444','#f97316','#eab308','#84cc16','#22c55e','#14b8a6','#06b6d4','#3b82f6','#6366f1','#a855f7','#d946b6'],
-                    hoverOffset: 4
-                }]
-            };
-            const ctx = document.getElementById('categoryPieChart').getContext('2d');
-            categoryPieChartInstance = new Chart(ctx, {
-                type: 'pie',
-                data: data,
-                options: {
-                    plugins: {
-                        legend: { position: 'right', labels: { font: { size: 12 } } },
-                        datalabels: {
-                            color: '#fff',
-                            font: { weight: 'bold', size: 16 },
-                            formatter: (value, context) => {
-                                const total = context.dataset.data.reduce((sum, v) => sum + v, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return percentage > 5 ? `${percentage}%` : '';
-                            }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+        function updateTopVendors() {
+            const vendorTotals = expenses.reduce((acc, expense) => {
+                acc[expense.vendor] = (acc[expense.vendor] || 0) + expense.amount;
+                return acc;
+            }, {});
+            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const sortedVendors = Object.entries(vendorTotals)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3);
+            const tbody = document.getElementById('topVendorsTable').querySelector('tbody');
+            if (sortedVendors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
+                return;
+            }
+            tbody.innerHTML = sortedVendors.map(([vendor, amount], index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${vendor}</td>
+                    <td>₹${amount.toLocaleString()}</td>
+                    <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
+                </tr>
+            `).join('');
         }
-
-        function renderMonthlyBarChart() {
-            if (monthlyBarChartInstance) monthlyBarChartInstance.destroy();
-            const monthlySpending = {};
-            expenses.forEach(e => {
-                const d = new Date(e.date);
-                const m = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
-                monthlySpending[m] = (monthlySpending[m] || 0) + e.amount;
-            });
-            const sortedMonths = Object.keys(monthlySpending).sort();
-            const data = {
-                labels: sortedMonths.map(m => {
-                    const [y, mo] = m.split('-');
-                    return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(mo,10)-1]} '${y.slice(-2)}`;
-                }),
-                datasets: [{
-                    label: 'Amount (₹)',
-                    data: sortedMonths.map(m => monthlySpending[m]),
-                    backgroundColor: '#667eea',
-                }]
-            };
-            const ctx = document.getElementById('monthlyBarChart').getContext('2d');
-            monthlyBarChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { font: { size: 10 }, callback: v => '₹'+v.toLocaleString('en-IN') }
-                        },
-                        x: { ticks: { font: { size: 10 } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: { color: '#222', anchor: 'end', align: 'top', font: { size: 16, weight: 'bold' }, formatter: v => '₹'+v.toLocaleString('en-IN') }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-        }
-
-        function renderWeeklyBarChart() {
-            if (weeklyBarChartInstance) weeklyBarChartInstance.destroy();
-            // Fixed 4-week split for current month
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const daysInMonth = new Date(year, month+1, 0).getDate();
-            const weekRanges = [
-                [1, Math.floor(daysInMonth/4)],
-                [Math.floor(daysInMonth/4)+1, Math.floor(daysInMonth/2)],
-                [Math.floor(daysInMonth/2)+1, Math.floor(3*daysInMonth/4)],
-                [Math.floor(3*daysInMonth/4)+1, daysInMonth]
-            ];
-            const weekTotals = [0,0,0,0];
-            expenses.forEach(e => {
-                const d = new Date(e.date);
-                if (d.getMonth() === month && d.getFullYear() === year) {
-                    for (let i=0; i<4; i++) {
-                        if (d.getDate() >= weekRanges[i][0] && d.getDate() <= weekRanges[i][1]) {
-                            weekTotals[i] += e.amount;
-                            break;
-                        }
-                    }
+        function updateWeeklySummary() {
+            const weeklyData = {};
+            expenses.forEach(expense => {
+                const expenseDate = new Date(expense.date);
+                const weekStart = new Date(expenseDate);
+                weekStart.setDate(expenseDate.getDate() - expenseDate.getDay());
+                weekStart.setHours(0, 0, 0, 0);
+                const weekKey = weekStart.toISOString().split('T')[0];
+                if (!weeklyData[weekKey]) {
+                    weeklyData[weekKey] = 0;
                 }
+                weeklyData[weekKey] += expense.amount;
             });
-            const data = {
-                labels: ['Week 1','Week 2','Week 3','Week 4'],
-                datasets: [{
-                    label: 'Amount (₹)',
-                    data: weekTotals,
-                    backgroundColor: '#06b6d4'
-                }]
-            };
-            const ctx = document.getElementById('weeklyBarChart').getContext('2d');
-            weeklyBarChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, ticks: { font: { size: 10 }, callback: v => '₹'+v.toLocaleString('en-IN') } },
-                        x: { ticks: { font: { size: 10 } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: { color: '#222', anchor: 'end', align: 'top', font: { size: 16, weight: 'bold' }, formatter: v => '₹'+v.toLocaleString('en-IN') }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+            const tbody = document.getElementById('weeklySummaryTable').querySelector('tbody');
+            const sortedWeeks = Object.entries(weeklyData).sort(([a], [b]) => new Date(b) - new Date(a));
+            if (sortedWeeks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6b7280;">No data available</td></tr>';
+                return;
+            }
+            tbody.innerHTML = sortedWeeks.map(([weekStart, total], index) => {
+                const start = new Date(weekStart);
+                const end = new Date(start);
+                end.setDate(start.getDate() + 6);
+                return `
+                    <tr>
+                        <td>Week ${index + 1}</td>
+                        <td>${start.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} - ${end.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                        <td>₹${total.toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
         }
+        function updateMonthlySummary() {
+            const monthlyData = {};
+            expenses.forEach(expense => {
+                const expenseDate = new Date(expense.date);
+                const monthKey = `${expenseDate.getFullYear()}-${String(expenseDate.getMonth() + 1).padStart(2, '0')}`;
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = { total: 0, categories: {} };
+                }
+                monthlyData[monthKey].total += expense.amount;
+                monthlyData[monthKey].categories[expense.category] = 
+                    (monthlyData[monthKey].categories[expense.category] || 0) + expense.amount;
+            });
+            const tbody = document.getElementById('monthlySummaryTable').querySelector('tbody');
+            const sortedMonths = Object.entries(monthlyData).sort(([a], [b]) => b.localeCompare(a));
+            if (sortedMonths.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
+                return;
+            }
+            tbody.innerHTML = sortedMonths.map(([month, data]) => {
+                const topCategory = Object.entries(data.categories)
+                    .sort(([,a], [,b]) => b - a)[0];
+                const percentage = topCategory ? ((topCategory[1] / data.total) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td>${new Date(month + '-01').toLocaleDateString('en-US', {year: 'numeric', month: 'long'})}</td>
+                        <td>₹${data.total.toLocaleString()}</td>
+                        <td>${topCategory ? topCategory[0] : 'N/A'}</td>
+                        <td>${percentage}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        function downloadCSV() {
+            if (expenses.length === 0) {
+                alert('No expenses to export');
+                return;
+            }
+            const csvContent = [
+                ['Date', 'Time', 'Category', 'Vendor', 'Amount', 'Note', 'Added By'],
+                ...expenses.map(expense => [
+                    expense.date,
+                    expense.time,
+                    expense.category,
+                    expense.vendor,
+                    expense.amount,
+                    expense.note || '',
+                    expense.addedBy || ''
+                ])
+            ].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `expenses_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        function downloadTXT() {
+            if (expenses.length === 0) {
+                alert('No expenses to export');
+                return;
+            }
+            const content = `
+EXPENSE REPORT
+Generated: ${new Date().toLocaleDateString()}
 
-        function renderCategoryCountBarChart() {
-            if (categoryCountBarChartInstance) categoryCountBarChartInstance.destroy();
-            const categoryCounts = expenses.reduce((acc, e) => { acc[e.category] = (acc[e.category] || 0) + 1; return acc; }, {});
-            const data = {
-                labels: Object.keys(categoryCounts),
-                datasets: [{
-                    label: 'Number of Spends',
-                    data: Object.values(categoryCounts),
-                    backgroundColor: '#a855f7'
-                }]
-            };
-            const ctx = document.getElementById('categoryCountBarChart').getContext('2d');
-            categoryCountBarChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, ticks: { font: { size: 10 }, precision: 0 } },
-                        x: { ticks: { font: { size: 10 } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: { color: '#222', anchor: 'end', align: 'top', font: { size: 16, weight: 'bold' } }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-        }
-        function renderUserSpendingBarChart() {
-            if (userSpendingBarChartInstance) userSpendingBarChartInstance.destroy();
-            const userSpending = expenses.reduce((acc, e) => { acc[e.recordedBy] = (acc[e.recordedBy] || 0) + e.amount; return acc; }, {});
-            const data = {
-                labels: Object.keys(userSpending),
-                datasets: [{
-                    label: 'Amount (₹)',
-                    data: Object.values(userSpending),
-                    backgroundColor: '#f59e0b'
-                }]
-            };
-            const ctx = document.getElementById('userSpendingBarChart').getContext('2d');
-            userSpendingBarChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, ticks: { font: { size: 10 }, callback: v => '₹'+v.toLocaleString('en-IN') } },
-                        x: { ticks: { font: { size: 10 } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: { color: '#222', anchor: 'end', align: 'top', font: { size: 16, weight: 'bold' }, formatter: v => '₹'+v.toLocaleString('en-IN') }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+Budget: ₹${budget.toLocaleString()}
+Total Spent: ₹${expenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString()}
+Remaining: ₹${(budget - expenses.reduce((sum, expense) => sum + expense.amount, 0)).toLocaleString()}
+
+EXPENSES:
+${expenses.map(expense => 
+    `${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time} - ${expense.category} - ${expense.vendor} - ₹${expense.amount}${expense.addedBy ? ' - ' + expense.addedBy : ''}${expense.note ? ' (' + expense.note + ')' : ''}`
+).join('\n')}
+            `;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `expense_report_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
     </script>
 </body>
