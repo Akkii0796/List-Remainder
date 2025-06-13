@@ -339,6 +339,20 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .btn, .btn-danger {
+    height: 48px;
+    min-width: 120px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-sizing: border-box;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+}
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -460,6 +474,12 @@
 
             <div class="card full-width">
                 <h2><span class="icon">📋</span> Recent Expenses</h2>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        <label for="startDate" style="font-size:0.95em;">From:</label>
+        <input type="date" id="startDate" onchange="searchExpenses()" style="padding:6px;border-radius:6px;">
+        <label for="endDate" style="font-size:0.95em;">To:</label>
+        <input type="date" id="endDate" onchange="searchExpenses()" style="padding:6px;border-radius:6px;">
+    </div>
                 <div style="margin-bottom:10px;">
     <input
         type="text"
@@ -809,16 +829,29 @@
     }
 }
 let searchKeyword = "";
-
 function searchExpenses() {
     const input = document.getElementById('searchExpenseInput');
     searchKeyword = input.value.trim().toLowerCase();
-    updateRecentExpenses();
+
+    // Get date range values
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    updateRecentExpenses(startDate, endDate);
 }
 
-        function updateRecentExpenses() {
+
+        function updateRecentExpenses(startDate, endDate) {
     const container = document.getElementById('recentExpenses');
     let filteredExpenses = expenses;
+        // Filter by date range if provided
+    if (startDate) {
+        filteredExpenses = filteredExpenses.filter(exp => exp.date >= startDate);
+    }
+    if (endDate) {
+        filteredExpenses = filteredExpenses.filter(exp => exp.date <= endDate);
+    }
+
     if (searchKeyword) {
         filteredExpenses = expenses.filter(exp =>
             (exp.vendor && exp.vendor.toLowerCase().includes(searchKeyword)) ||
