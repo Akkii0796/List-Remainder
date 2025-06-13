@@ -79,6 +79,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
         .card:hover {
@@ -341,6 +342,14 @@
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+
+
 </head>
 <body>
     <!-- PIN LOCK SCREEN -->
@@ -364,8 +373,25 @@
                     <label for="budgetAmount">Budget Amount (₹)</label>
                     <input type="number" id="budgetAmount" placeholder="Enter your monthly budget">
                 </div>
-                <button class="btn" onclick="setBudget()">Set Budget</button>
-                <button class="btn btn-danger" onclick="resetBudget()" style="margin-top:10px;">Reset Budget</button>
+                <div style="display:flex;gap:10px;align-items:stretch;margin-bottom:10px;">
+  <button class="btn" style="flex:1;min-width:120px;height:48px;font-size:1rem;line-height:1;" onclick="setBudget(event)">Set Budget</button>
+  <button class="btn btn-danger" style="flex:1;min-width:120px;height:48px;font-size:1rem;line-height:1;" onclick="resetBudget()">Reset Budget</button>
+</div>
+
+
+</div>
+
+
+                <div id="budgetIndicatorWrapper" style="margin-top:15px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:1.2em;">📊</span>
+    <div style="flex:1;position:relative;background:#e5e7eb;border-radius:8px;height:24px;overflow:hidden;">
+      <div id="budgetIndicatorBar" style="height:100%;background:#10b981;width:100%;border-radius:8px 0 0 8px;transition:width 0.4s,background 0.4s;"></div>
+      <span id="budgetIndicatorText" style="position:absolute;left:0;right:0;text-align:center;top:0;line-height:24px;font-weight:bold;color:#1f2937;font-size:0.96em;">100% left</span>
+    </div>
+  </div>
+</div>
+
                 
                 <div class="budget-summary">
                     <div class="budget-item budget">
@@ -417,17 +443,33 @@
                     <textarea id="note" rows="3" placeholder="Add a note (optional)"></textarea>
                 </div>
                 <div class="input-group">
-                    <label for="addedBy">Added By</label>
-                    <select id="addedBy">
-                        <option value="Akshay">Akshay</option>
-                        <option value="Achal">Achal</option>
-                    </select>
-                </div>
+    <label>Added By</label>
+    <div style="display:flex;gap:20px;align-items:center;">
+        <label style="display:flex;align-items:center;">
+            <input type="radio" name="addedByRadio" value="Akshay" id="addedByAkshay" checked style="margin-right:6px;">
+            Akshay
+        </label>
+        <label style="display:flex;align-items:center;">
+            <input type="radio" name="addedByRadio" value="Achal" id="addedByAchal" style="margin-right:6px;">
+            Achal
+        </label>
+    </div>
+</div>
                 <button class="btn btn-secondary" id="addExpenseBtn" onclick="addExpense()">Add Expense</button>
             </div>
 
             <div class="card full-width">
                 <h2><span class="icon">📋</span> Recent Expenses</h2>
+                <div style="margin-bottom:10px;">
+    <input
+        type="text"
+        id="searchExpenseInput"
+        placeholder="🔎 Search expenses (vendor, note, category...)"
+        style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #e5e7eb;font-size:1rem;"
+        oninput="searchExpenses()"
+    >
+</div>
+
                 <div id="recentExpenses">
                     <p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>
                 </div>
@@ -474,65 +516,46 @@
             </div>
 
             <div class="card">
-                <h2><span class="icon">📊</span> Weekly Summary</h2>
-                <div class="table-container">
-                    <table id="weeklySummaryTable">
-                        <thead>
-                            <tr>
-                                <th>Week</th>
-                                <th>Period</th>
-                                <th>Total Spent</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td colspan="3" style="text-align: center; color: #6b7280;">No data available</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <h2><span class="icon">📊</span> Weekly Summary</h2>
+    <canvas id="weeklySummaryChart" style="width:100%;max-width:600px;height:240px;"></canvas>
+</div>
+
 
             <div class="card">
-                <h2><span class="icon">📈</span> Monthly Summary</h2>
-                <div class="table-container">
-                    <table id="monthlySummaryTable">
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Total Spent</th>
-                                <th>Top Category</th>
-                                <th>%</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+    <h2><span class="icon">📈</span> Monthly Summary</h2>
+    <canvas id="monthlySummaryChart" style="width:100%;max-width:600px;height:220px;"></canvas>
+</div>
+<div class="card full-width">
+    <h2><span class="icon">👥</span> Expenses by Person</h2>
+    <canvas id="byPersonChart" style="width:100%;max-width:600px;height:220px;"></canvas>
+</div>
             <div class="card full-width">
                 <h2><span class="icon">💾</span> Export Data</h2>
                 <div class="download-buttons">
                     <button class="btn" onclick="downloadCSV()">📄 Download CSV</button>
-                    <button class="btn" onclick="downloadTXT()">📝 Download TXT</button>
+                    <button class="btn" onclick="downloadPDF()">📝 Download PDF</button>
                 </div>
             </div>
         </div>
     </div>
+    
+
 
     <script>
         // === PIN PROTECTION ===
         const CORRECT_PIN = "0277";
         function unlockApp() {
-            const entered = document.getElementById('pinInput').value;
-            if (entered === CORRECT_PIN) {
-                document.getElementById('pinLockScreen').style.display = 'none';
-                document.getElementById('appContent').style.display = '';
-            } else {
-                document.getElementById('pinError').textContent = "Incorrect PIN. Try again.";
-                document.getElementById('pinInput').value = '';
-            }
-        }
+    const entered = document.getElementById('pinInput').value;
+    if (entered === CORRECT_PIN) {
+        document.getElementById('pinLockScreen').style.display = 'none';
+        document.getElementById('appContent').style.display = '';
+        loadData();  // <--- Add this line here!
+    } else {
+        document.getElementById('pinError').textContent = "Incorrect PIN. Try again.";
+        document.getElementById('pinInput').value = '';
+    }
+}
+
         document.getElementById('pinInput').addEventListener('keyup', function(e){
             if (e.key === 'Enter') unlockApp();
         });
@@ -540,15 +563,16 @@
         // === FIREBASE CONFIGURATION ===
         // !!! REPLACE WITH YOUR OWN FIREBASE CONFIG !!!
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DB_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_BUCKET",
-            messagingSenderId: "YOUR_MSG_ID",
-            appId: "YOUR_APP_ID",
-            measurementId: "YOUR_MEASUREMENT_ID"
-        };
+      apiKey: "AIzaSyCVc",
+      authDomain: "monthly-expe",
+      databaseURL:
+        "https://monthly-expenseo.com",
+      projectId: "monthly-expense-tracker-179de",
+      storageBucket: "monthly-expensepp",
+      messagingSenderId: "927646586236",
+      appId: "1:927646",
+      measurementId: "KH9"
+    };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         let budget = 0;
@@ -562,12 +586,12 @@
             updateHeaderMonth();
         });
 
-        // PIN unlock triggers data load
-        document.getElementById('pinLockScreen').addEventListener('transitionend', function(e){
-            if (document.getElementById('pinLockScreen').style.display === 'none') {
-                loadData();
-            }
-        });
+        // // PIN unlock triggers data load
+        // document.getElementById('pinLockScreen').addEventListener('transitionend', function(e){
+        //     if (document.getElementById('pinLockScreen').style.display === 'none') {
+        //         loadData();
+        //     }
+        // });
         function updateHeaderMonth() {
             const date = new Date();
             const monthName = date.toLocaleDateString('en-US', { month: 'long' });
@@ -603,7 +627,7 @@
             });
         }
 
-        function setBudget() {
+        function setBudget(event) {
             const budgetInput = document.getElementById('budgetAmount');
             const newBudget = parseFloat(budgetInput.value);
             if (!newBudget || newBudget <= 0) {
@@ -645,7 +669,7 @@
             const vendor = document.getElementById('vendor').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const note = document.getElementById('note').value;
-            const addedBy = document.getElementById('addedBy').value;
+            const addedBy = document.querySelector('input[name="addedByRadio"]:checked').value;
 
             if (!vendor.trim()) {
                 alert('Please enter a vendor name');
@@ -670,7 +694,7 @@
                     document.getElementById('vendor').value = '';
                     document.getElementById('amount').value = '';
                     document.getElementById('note').value = '';
-                    document.getElementById('addedBy').value = 'Akshay';
+                  document.getElementById("addedByAkshay").checked = true; 
                     const btn = document.getElementById('addExpenseBtn');
                     const originalText = btn.textContent;
                     btn.textContent = '✅ Added!';
@@ -690,7 +714,11 @@
             document.getElementById('vendor').value = exp.vendor;
             document.getElementById('amount').value = exp.amount;
             document.getElementById('note').value = exp.note || '';
-            document.getElementById('addedBy').value = exp.addedBy || 'Akshay';
+            if (exp.addedBy === "Achal") {
+    document.getElementById("addedByAchal").checked = true;
+} else {
+    document.getElementById("addedByAkshay").checked = true;
+}
 
             const btn = document.getElementById('addExpenseBtn');
             btn.textContent = "Update Expense";
@@ -702,7 +730,7 @@
             const vendor = document.getElementById('vendor').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const note = document.getElementById('note').value;
-            const addedBy = document.getElementById('addedBy').value;
+            const addedBy = document.querySelector('input[name="addedByRadio"]:checked').value;
             // Optionally, keep original date/time instead of new
             const expOrig = expenses.find(e => e.id === editingExpenseId);
             const updatedExpense = {
@@ -721,7 +749,7 @@
                     document.getElementById('vendor').value = '';
                     document.getElementById('amount').value = '';
                     document.getElementById('note').value = '';
-                    document.getElementById('addedBy').value = 'Akshay';
+                    document.getElementById("addedByAkshay").checked = true; 
                     const btn = document.getElementById('addExpenseBtn');
                     btn.textContent = "Add Expense";
                     btn.onclick = addExpense;
@@ -746,38 +774,88 @@
             updateTopVendors();
             updateWeeklySummary();
             updateMonthlySummary();
+            updateByPersonChart();
+
         }
         function updateBudgetSummary() {
-            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const remaining = budget - totalSpent;
-            document.getElementById('budgetDisplay').textContent = `₹${budget.toLocaleString()}`;
-            document.getElementById('totalSpent').textContent = `₹${totalSpent.toLocaleString()}`;
-            document.getElementById('remaining').textContent = `₹${remaining.toLocaleString()}`;
+    const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const remaining = budget - totalSpent;
+    
+    document.getElementById('budgetDisplay').textContent = `₹${budget.toLocaleString()}`;
+    document.getElementById('totalSpent').textContent = `₹${totalSpent.toLocaleString()}`;
+    document.getElementById('remaining').textContent = `₹${remaining.toLocaleString()}`;
+    
+    // --- Budget Battery Indicator ---
+    const bar = document.getElementById('budgetIndicatorBar');
+    const text = document.getElementById('budgetIndicatorText');
+    if (budget > 0) {
+        let percent = ((remaining / budget) * 100);
+        percent = Math.max(0, Math.min(100, percent)); // Clamp between 0–100
+        bar.style.width = percent + "%";
+        text.textContent = `${percent.toFixed(0)}% left`;
+
+        // Color code: green >60%, yellow 30-60%, red <30%
+        if (percent > 60) {
+            bar.style.background = "#10b981"; // green
+        } else if (percent > 30) {
+            bar.style.background = "#facc15"; // yellow
+        } else {
+            bar.style.background = "#ef4444"; // red
         }
+    } else {
+        bar.style.width = "100%";
+        bar.style.background = "#e5e7eb";
+        text.textContent = "No budget";
+    }
+}
+let searchKeyword = "";
+
+function searchExpenses() {
+    const input = document.getElementById('searchExpenseInput');
+    searchKeyword = input.value.trim().toLowerCase();
+    updateRecentExpenses();
+}
+
         function updateRecentExpenses() {
-            const container = document.getElementById('recentExpenses');
-            if (expenses.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>';
-                return;
-            }
-            const recentExpenses = expenses.slice(0, 5);
-            container.innerHTML = recentExpenses.map(expense => `
-                <div class="expense-item">
-                    <div class="expense-details">
-                        <div class="expense-category">${expense.category}</div>
-                        <div class="expense-vendor">${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time}
-                            ${expense.addedBy ? ` &bull; <span style="color:#059669;">${expense.addedBy}</span>` : ''}
-                        </div>
-                        ${expense.note ? `<div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">${expense.note}</div>` : ''}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
-                        <button class="btn btn-secondary" style="margin-right:2px;" onclick="editExpense('${expense.id}')">✏️</button>
-                        <button class="btn btn-danger" onclick="deleteExpense('${expense.id}')">🗑️</button>
-                    </div>
+    const container = document.getElementById('recentExpenses');
+    let filteredExpenses = expenses;
+    if (searchKeyword) {
+        filteredExpenses = expenses.filter(exp =>
+            (exp.vendor && exp.vendor.toLowerCase().includes(searchKeyword)) ||
+            (exp.note && exp.note.toLowerCase().includes(searchKeyword)) ||
+            (exp.category && exp.category.toLowerCase().includes(searchKeyword)) ||
+            (exp.addedBy && exp.addedBy.toLowerCase().includes(searchKeyword)) ||
+            (exp.amount && exp.amount.toString().includes(searchKeyword))
+        );
+    } else {
+        filteredExpenses = expenses.slice(0, 5);
+    }
+
+    if (filteredExpenses.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No expenses found</p>';
+        return;
+    }
+
+    container.innerHTML = filteredExpenses.map(expense => `
+        <div class="expense-item">
+            <div class="expense-details">
+                <div class="expense-category">${expense.category}</div>
+                <div class="expense-vendor">
+                    ${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time}
+                    ${expense.addedBy ? ` &bull; <span style="color:#059669;">${expense.addedBy}</span>` : ''}
                 </div>
-            `).join('');
-        }
+                ${expense.note ? `<div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">${expense.note}</div>` : ''}
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
+                <button class="btn btn-secondary" style="margin-right:4px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;" title="Edit" onclick="editExpense('${expense.id}')">✏️</button>
+                <button class="btn btn-danger" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;" title="Delete" onclick="deleteExpense('${expense.id}')">🗑️</button>
+
+            </div>
+        </div>
+    `).join('');
+}
+
         // ... (keep the rest of your original summary/analysis/export code, with only the downloadPDF changed to TXT below)
         function updateTopCategories() {
             const categoryTotals = expenses.reduce((acc, expense) => {
@@ -825,70 +903,177 @@
                 </tr>
             `).join('');
         }
-        function updateWeeklySummary() {
-            const weeklyData = {};
-            expenses.forEach(expense => {
-                const expenseDate = new Date(expense.date);
-                const weekStart = new Date(expenseDate);
-                weekStart.setDate(expenseDate.getDate() - expenseDate.getDay());
-                weekStart.setHours(0, 0, 0, 0);
-                const weekKey = weekStart.toISOString().split('T')[0];
-                if (!weeklyData[weekKey]) {
-                    weeklyData[weekKey] = 0;
+        let weeklyChart;
+
+function updateWeeklySummary() {
+    // Aggregate expenses per week (Sunday to Saturday)
+    const weeklyData = {};
+    expenses.forEach(expense => {
+        const expenseDate = new Date(expense.date);
+        const weekStart = new Date(expenseDate);
+        weekStart.setDate(expenseDate.getDate() - expenseDate.getDay());
+        weekStart.setHours(0, 0, 0, 0);
+        const weekKey = weekStart.toISOString().split('T')[0];
+        if (!weeklyData[weekKey]) weeklyData[weekKey] = 0;
+        weeklyData[weekKey] += expense.amount;
+    });
+
+    // Prepare labels and data (oldest week first)
+    const sortedWeeks = Object.entries(weeklyData).sort(([a], [b]) => new Date(a) - new Date(b));
+    const labels = sortedWeeks.map(([weekStart]) => {
+        const d = new Date(weekStart);
+        const dEnd = new Date(d);
+        dEnd.setDate(d.getDate() + 6);
+        return `${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${dEnd.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+    });
+    const data = sortedWeeks.map(([, total]) => total);
+
+    // Draw chart
+    const ctx = document.getElementById('weeklySummaryChart').getContext('2d');
+    if (weeklyChart) weeklyChart.destroy();
+    weeklyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Spent',
+                data: data,
+                borderRadius: 7,
+                backgroundColor: '#7c3aed'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    font: { weight: 'bold' },
+                    formatter: value => '₹' + value.toLocaleString(),
+                    color: '#4f46e5',
+                    clamp: true,
+                    clip: true
                 }
-                weeklyData[weekKey] += expense.amount;
-            });
-            const tbody = document.getElementById('weeklySummaryTable').querySelector('tbody');
-            const sortedWeeks = Object.entries(weeklyData).sort(([a], [b]) => new Date(b) - new Date(a));
-            if (sortedWeeks.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6b7280;">No data available</td></tr>';
-                return;
-            }
-            tbody.innerHTML = sortedWeeks.map(([weekStart, total], index) => {
-                const start = new Date(weekStart);
-                const end = new Date(start);
-                end.setDate(start.getDate() + 6);
-                return `
-                    <tr>
-                        <td>Week ${index + 1}</td>
-                        <td>${start.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} - ${end.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                        <td>₹${total.toLocaleString()}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-        function updateMonthlySummary() {
-            const monthlyData = {};
-            expenses.forEach(expense => {
-                const expenseDate = new Date(expense.date);
-                const monthKey = `${expenseDate.getFullYear()}-${String(expenseDate.getMonth() + 1).padStart(2, '0')}`;
-                if (!monthlyData[monthKey]) {
-                    monthlyData[monthKey] = { total: 0, categories: {} };
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => '₹' + v }
                 }
-                monthlyData[monthKey].total += expense.amount;
-                monthlyData[monthKey].categories[expense.category] = 
-                    (monthlyData[monthKey].categories[expense.category] || 0) + expense.amount;
-            });
-            const tbody = document.getElementById('monthlySummaryTable').querySelector('tbody');
-            const sortedMonths = Object.entries(monthlyData).sort(([a], [b]) => b.localeCompare(a));
-            if (sortedMonths.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
-                return;
             }
-            tbody.innerHTML = sortedMonths.map(([month, data]) => {
-                const topCategory = Object.entries(data.categories)
-                    .sort(([,a], [,b]) => b - a)[0];
-                const percentage = topCategory ? ((topCategory[1] / data.total) * 100).toFixed(1) : 0;
-                return `
-                    <tr>
-                        <td>${new Date(month + '-01').toLocaleDateString('en-US', {year: 'numeric', month: 'long'})}</td>
-                        <td>₹${data.total.toLocaleString()}</td>
-                        <td>${topCategory ? topCategory[0] : 'N/A'}</td>
-                        <td>${percentage}%</td>
-                    </tr>
-                `;
-            }).join('');
-        }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
+        let monthlyChart;
+
+function updateMonthlySummary() {
+    // Aggregate expenses per month
+    const monthlyData = {};
+    expenses.forEach(expense => {
+        const expenseDate = new Date(expense.date);
+        const monthKey = `${expenseDate.getFullYear()}-${String(expenseDate.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthlyData[monthKey]) monthlyData[monthKey] = 0;
+        monthlyData[monthKey] += expense.amount;
+    });
+
+    // Prepare labels and data (oldest month first)
+    const sortedMonths = Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b));
+    const labels = sortedMonths.map(([month]) =>
+        new Date(month + '-01').toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+    );
+    const data = sortedMonths.map(([, total]) => total);
+
+    // Draw chart
+    const ctx = document.getElementById('monthlySummaryChart').getContext('2d');
+    if (monthlyChart) monthlyChart.destroy();
+    monthlyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Spent',
+                data: data,
+                borderRadius: 7,
+                backgroundColor: '#4f46e5'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    font: { weight: 'bold' },
+                    formatter: value => '₹' + value.toLocaleString(),
+                    color: '#7c3aed',
+                    clamp: true,
+                    clip: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => '₹' + v }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
+let byPersonChart;
+
+function updateByPersonChart() {
+    // Calculate total spent by each person
+    const people = ['Akshay', 'Achal'];
+    const totals = [0, 0];
+    expenses.forEach(exp => {
+        if (exp.addedBy === 'Akshay') totals[0] += exp.amount;
+        else if (exp.addedBy === 'Achal') totals[1] += exp.amount;
+    });
+
+    const ctx = document.getElementById('byPersonChart').getContext('2d');
+    if (byPersonChart) byPersonChart.destroy();
+
+    byPersonChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: people,
+            datasets: [{
+                label: 'Total Spent',
+                data: totals,
+                backgroundColor: ['#4f46e5', '#10b981'], // Akshay: purple, Achal: green
+                borderRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    font: { weight: 'bold' },
+                    formatter: value => '₹' + value.toLocaleString(),
+                    color: '#222',
+                    clamp: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => '₹' + v }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
         function downloadCSV() {
             if (expenses.length === 0) {
                 alert('No expenses to export');
@@ -914,32 +1099,67 @@
             a.click();
             window.URL.revokeObjectURL(url);
         }
-        function downloadTXT() {
-            if (expenses.length === 0) {
-                alert('No expenses to export');
-                return;
-            }
-            const content = `
-EXPENSE REPORT
-Generated: ${new Date().toLocaleDateString()}
+        function downloadPDF() {
+    if (expenses.length === 0) {
+        alert('No expenses to export');
+        return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
 
-Budget: ₹${budget.toLocaleString()}
-Total Spent: ₹${expenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString()}
-Remaining: ₹${(budget - expenses.reduce((sum, expense) => sum + expense.amount, 0)).toLocaleString()}
+    // Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(76, 55, 190); // nice purple
+    doc.text("💰 Expense Report", 14, 18);
 
-EXPENSES:
-${expenses.map(expense => 
-    `${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time} - ${expense.category} - ${expense.vendor} - ₹${expense.amount}${expense.addedBy ? ' - ' + expense.addedBy : ''}${expense.note ? ' (' + expense.note + ')' : ''}`
-).join('\n')}
-            `;
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `expense_report_${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
+    // Subheading with date
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(80, 80, 80);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 26);
+
+    // Budget summary
+    doc.setFontSize(12);
+    doc.setTextColor(20, 20, 20);
+    doc.text([
+      `Budget: ₹${budget.toLocaleString()}`,
+      `Total Spent: ₹${expenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString()}`,
+      `Remaining: ₹${(budget - expenses.reduce((sum, expense) => sum + expense.amount, 0)).toLocaleString()}`
+    ].join("    "), 14, 34);
+
+    // Table columns
+    const tableColumn = ["Date", "Category", "Vendor", "Amount", "Note", "Added By"];
+    // Table rows
+    const tableRows = expenses.map(exp => [
+        exp.date,
+        exp.category,
+        exp.vendor,
+        `₹${exp.amount.toLocaleString()}`,
+        exp.note || "",
+        exp.addedBy || ""
+    ]);
+
+    // Add the table using autoTable
+    doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 40,
+        headStyles: { fillColor: [124, 58, 237], textColor: 255, fontSize: 11 },
+        styles: { font: "helvetica", fontSize: 10, cellPadding: 2 },
+        alternateRowStyles: { fillColor: [245, 245, 255] },
+        margin: { left: 10, right: 10 }
+    });
+
+    // Save PDF
+    doc.save(`expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
+}
+
+
     </script>
 </body>
 </html>
