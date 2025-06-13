@@ -41,17 +41,27 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    padding: 10px 16px 8px 16px;  /* Reduce vertical padding */
+    text-align: center;
+}
+.header h1 {
+    font-size: 1.3rem;            /* Smaller font for mobile */
+    margin-bottom: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+}
 
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
+@media (max-width: 480px) {
+    .header {
+        padding: 7px 8px 6px 8px;
+    }
+    .header h1 {
+        font-size: 1.08rem;
+    }
+}
+
 
         .main-content {
             display: grid;
@@ -203,6 +213,7 @@
         font-size: 1rem;
     }
 }
+
 
 
         .budget-item {
@@ -381,6 +392,54 @@
     padding-top: 0;
     padding-bottom: 0;
 }
+@media (max-width: 480px) {
+    .card {
+        padding: 10px 7px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
+    .card h2 {
+        font-size: 1.08rem;
+        margin-bottom: 7px;
+    }
+    .input-group {
+        margin-bottom: 7px;
+    }
+    .input-group label {
+        font-size: 0.92rem;
+        margin-bottom: 2px;
+    }
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+        padding: 7px 9px;
+        font-size: 0.96rem;
+        border-radius: 7px;
+    }
+    #addExpenseBtn {
+        padding: 8px 0;
+        font-size: 1.04rem;
+        margin-top: 6px;
+        border-radius: 8px;
+    }
+}
+@media (max-width: 480px) {
+    .main-content {
+        gap: 7px;
+        padding: 7px;
+    }
+    .card {
+        margin-bottom: 7px;
+        border-radius: 10px;
+    }
+}
+@media (max-width: 480px) {
+    #addExpenseBtn {
+        height: 34px;
+        font-size: 0.98rem;
+    }
+}
+
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -404,9 +463,9 @@
 
     <div class="container" id="appContent" style="display:none;">
         <div class="header">
-            <h1 id="headerTitle">💰 Expense Tracker</h1>
-            <p>Track your expenses and manage your budget efficiently</p>
-        </div>
+    <h1 id="headerTitle"></h1>
+</div>
+
 
         <div class="main-content">
             <div class="card">
