@@ -72,16 +72,15 @@
             }
         }
 
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            border: 1.5px solid #d1d5db;;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
+        .card, .card.full-width {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #4b5563; /* Dark gray: modern but strong */
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
@@ -601,16 +600,14 @@
     if (entered === CORRECT_PIN) {
         document.getElementById('pinLockScreen').style.display = 'none';
         document.getElementById('appContent').style.display = '';
-        loadData();  // <--- Add this line here!
+        updateHeaderMonth();  // ✅ now runs at the right time
+        loadData();           // already present
     } else {
         document.getElementById('pinError').textContent = "Incorrect PIN. Try again.";
         document.getElementById('pinInput').value = '';
     }
 }
 
-        document.getElementById('pinInput').addEventListener('keyup', function(e){
-            if (e.key === 'Enter') unlockApp();
-        });
 
         // === FIREBASE CONFIGURATION ===
         // !!! REPLACE WITH YOUR OWN FIREBASE CONFIG !!!
@@ -632,11 +629,11 @@
         const sharedUserId = 'shared_users_data'; 
         let editingExpenseId = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // App will only show after correct PIN
-            // (Data will load only after unlocked)
-            updateHeaderMonth();
-        });
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     // App will only show after correct PIN
+        //     // (Data will load only after unlocked)
+        //     updateHeaderMonth();
+        // });
 
         // // PIN unlock triggers data load
         // document.getElementById('pinLockScreen').addEventListener('transitionend', function(e){
