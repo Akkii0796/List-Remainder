@@ -393,6 +393,20 @@
         border: 2px solid #cbd5e1; /* slightly darker */
     }
 }
+    .btn-square {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin: 0 !important;
+}
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -896,8 +910,9 @@
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
-                        <button class="btn btn-secondary"style="width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:0px;font-size:10px;"title="Edit" onclick="editExpense('${expense.id}')">✏️</button>
-                        <button class="btn btn-danger"style="width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:0px;font-size:10px;"title="Delete" onclick="deleteExpense('${expense.id}')">🗑️</button>
+                        <button class="btn btn-secondary btn-square" title="Edit" onclick="editExpense('${expense.id}')">✏️</button>
+                         <button class="btn btn-danger btn-square" title="Delete" onclick="deleteExpense('${expense.id}')">🗑️</button>
+
                     </div>
                 </div>
             `).join('');
