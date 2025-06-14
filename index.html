@@ -21,7 +21,8 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            /*background: rgba(255, 255, 255, 0.95);*/
+            background: rgba(243, 244, 246, 0.95);
             border-radius: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -72,12 +73,19 @@
             }
         }
 
+        @media (max-width: 480px) {
+  .card {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+
         .card, .card.full-width {
   background: #ffffff;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: 1.5px solid #4b5563; /* Dark gray: modern but strong */
+  border: 1.5px ssolid #e5e7eb; 
   margin-bottom: 20px;
   transition: all 0.3s ease;
 }
@@ -427,7 +435,7 @@
 </div>
 
 
-                <div id="budgetIndicatorWrapper" style="margin-top:15px;">
+                <div id="budgetIndicatorWrapper" style="margin-top:4px;">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:1.2em;">📊</span>
     <div style="flex:1;position:relative;background:#e5e7eb;border-radius:8px;height:24px;overflow:hidden;">
@@ -836,27 +844,32 @@
     
     // --- Budget Battery Indicator ---
     const bar = document.getElementById('budgetIndicatorBar');
-    const text = document.getElementById('budgetIndicatorText');
-    if (budget > 0) {
-        let percent = ((remaining / budget) * 100);
-        percent = Math.max(0, Math.min(100, percent)); // Clamp between 0–100
-        bar.style.width = percent + "%";
-        text.textContent = `${percent.toFixed(0)}% left`;
+const text = document.getElementById('budgetIndicatorText');
 
-        // Color code: green >60%, yellow 30-60%, red <30%
-        if (percent > 60) {
-            bar.style.background = "#10b981"; // green
-        } else if (percent > 30) {
-            bar.style.background = "#facc15"; // yellow
-        } else {
-            bar.style.background = "#ef4444"; // red
-        }
+if (budget > 0) {
+    let percent = ((remaining / budget) * 100);
+    percent = Math.max(0, Math.min(100, percent)); // Clamp between 0–100
+    bar.style.width = percent + "%";
+    text.textContent = `${percent.toFixed(0)}% left`;
+
+    const spentRatio = totalSpent / budget;
+
+    // ✅ Change color based on spent %
+    if (spentRatio >= 0.9) {
+        bar.style.background = "#ef4444"; // red
+    } else if (spentRatio >= 0.5) {
+        bar.style.background = "#f97316"; // orange
     } else {
-        bar.style.width = "100%";
-        bar.style.background = "#e5e7eb";
-        text.textContent = "No budget";
+        bar.style.background = "#10b981"; // green
     }
+
+} else {
+    bar.style.width = "100%";
+    bar.style.background = "#e5e7eb";
+    text.textContent = "No budget";
 }
+}
+
 let searchKeyword = "";
 function searchExpenses() {
     const input = document.getElementById('searchExpenseInput');
