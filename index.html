@@ -942,9 +942,12 @@ function clearExpenseSearch() {
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
-                        <button class="btn btn-secondary btn-square" title="Edit" onclick="editExpense('${expense.id}')">✏️</button>
-                         <button class="btn btn-danger btn-square" title="Delete" onclick="deleteExpense('${expense.id}')">🗑️</button>
-
+                        <button class="btn btn-secondary btn-square" title="Edit" onclick="editExpense('${expense.id}')">
+  <span style="font-size:0.85em;line-height:1;">✏️</span>
+</button>
+<button class="btn btn-danger btn-square" title="Delete" onclick="deleteExpense('${expense.id}')">
+  <span style="font-size:0.85em;line-height:1;">🗑️</span>
+</button>
                     </div>
                 </div>
             `).join('');
