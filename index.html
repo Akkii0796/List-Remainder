@@ -926,7 +926,7 @@ function clearExpenseSearch() {
                     <div class="expense-details">
                         <div class="expense-category">${expense.category}</div>
                         <div class="expense-vendor">
-                            ${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.time}
+                            ${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.Vendor}
                             ${expense.addedBy ? ` &bull; <span style="color:#059669;">${expense.addedBy}</span>` : ''}
                         </div>
                         ${expense.note ? `<div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">${expense.note}</div>` : ''}
