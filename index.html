@@ -525,11 +525,13 @@
             <div class="card full-width">
                 <h2><span class="icon">📋</span> Recent Expenses</h2>
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
-        <label for="startDate" style="font-size:0.95em;">From:</label>
-        <input type="date" id="startDate" onchange="searchExpenses()" style="padding:6px;border-radius:6px;">
-        <label for="endDate" style="font-size:0.95em;">To:</label>
-        <input type="date" id="endDate" onchange="searchExpenses()" style="padding:6px;border-radius:6px;">
-    </div>
+    <label for="startDate" style="font-size:0.95em;">From:</label>
+    <input type="date" id="startDate" style="padding:6px;border-radius:6px;">
+    <label for="endDate" style="font-size:0.95em;">To:</label>
+    <input type="date" id="endDate" style="padding:6px;border-radius:6px;">
+    <button class="btn btn-secondary" style="width:auto;padding:4px 14px;margin-left:10px;font-size:0.96em;" onclick="searchExpenses()">Search</button>
+    <button class="btn btn-danger" style="width:auto;padding:4px 14px;margin-left:6px;font-size:0.96em;" onclick="clearExpenseSearch()">Clear</button>
+</div>
                 <div style="margin-bottom:10px;">
     <input
         type="text"
@@ -821,6 +823,14 @@
             updateByPersonChart();
         }
 
+function clearExpenseSearch() {
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById('searchExpenseInput').value = '';
+    searchKeyword = "";
+    updateRecentExpenses();
+}
+        
         function updateBudgetSummary() {
             const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
             const remaining = budget - totalSpent;
