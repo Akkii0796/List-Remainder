@@ -407,6 +407,14 @@
     margin: 0 !important;
 }
 
+        .btn-sm {
+    font-size: 0.96em !important;
+    padding: 4px 16px !important;
+    min-width: unset !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+}
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -529,18 +537,21 @@
     <input type="date" id="startDate" style="padding:6px;border-radius:6px;">
     <label for="endDate" style="font-size:0.95em;">To:</label>
     <input type="date" id="endDate" style="padding:6px;border-radius:6px;">
-    <button class="btn btn-secondary" style="width:auto;padding:4px 14px;margin-left:10px;font-size:0.96em;" onclick="searchExpenses()">Search</button>
-    <button class="btn btn-danger" style="width:auto;padding:4px 14px;margin-left:6px;font-size:0.96em;" onclick="clearExpenseSearch()">Clear</button>
 </div>
-                <div style="margin-bottom:10px;">
+<div style="margin-bottom:6px;">
     <input
         type="text"
         id="searchExpenseInput"
         placeholder="🔎 Search expenses (vendor, note, category...)"
         style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #e5e7eb;font-size:1rem;"
-        oninput="searchExpenses()"
-    >
+    />
 </div>
+<!-- BUTTONS BELOW SEARCH BAR -->
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;">
+    <button class="btn btn-secondary btn-sm" style="padding:4px 16px;min-width:unset;font-size:0.97em;border-radius:8px;" onclick="searchExpenses()">Search</button>
+    <button class="btn btn-danger btn-sm" style="padding:4px 16px;min-width:unset;font-size:0.97em;border-radius:8px;" onclick="clearExpenseSearch()">Clear</button>
+</div>
+
 
                 <div id="recentExpenses">
                     <p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>
