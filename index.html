@@ -587,17 +587,19 @@
 
             <div class="card">
     <h2><span class="icon">📊</span> Weekly Summary</h2>
-    <canvas id="weeklySummaryChart" style="width:100%;max-width:600px;height:240px;"></canvas>
+    <canvas id="weeklySummaryChart" style="width:100%;max-width:600px;height:320px;"></canvas>
+
 </div>
 
 
             <div class="card">
     <h2><span class="icon">📈</span> Monthly Summary</h2>
-    <canvas id="monthlySummaryChart" style="width:100%;max-width:600px;height:220px;"></canvas>
+    <canvas id="monthlySummaryChart" style="width:100%;max-width:600px;height:320px;"></canvas>
+
 </div>
 <div class="card full-width">
     <h2><span class="icon">👥</span> Expenses by Person</h2>
-    <canvas id="byPersonChart" style="width:100%;max-width:600px;height:220px;"></canvas>
+    <canvas id="byPersonChart" style="width:100%;max-width:600px;height:320px;"></canvas>
 </div>
             <div class="card full-width">
                 <h2><span class="icon">💾</span> Export Data</h2>
@@ -1004,6 +1006,11 @@
                 },
                 options: {
                     responsive: true,
+                    layout: {
+        padding: {
+            top: 30   // This adds space above the chart
+        }
+    },
                     plugins: {
                         legend: { display: false },
                         datalabels: {
@@ -1059,6 +1066,11 @@
                 },
                 options: {
                     responsive: true,
+                    layout: {
+        padding: {
+            top: 30   // This adds space above the chart
+        }
+    },
                     plugins: {
                         legend: { display: false },
                         datalabels: {
@@ -1108,6 +1120,11 @@
                 },
                 options: {
                     responsive: true,
+                    layout: {
+        padding: {
+            top: 30   // This adds space above the chart
+        }
+    },
                     plugins: {
                         legend: { display: false },
                         datalabels: {
