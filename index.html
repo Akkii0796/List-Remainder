@@ -965,13 +965,14 @@ function clearExpenseSearch() {
                 return;
             }
             tbody.innerHTML = sortedCategories.map(([category, amount], index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${category}</td>
-                    <td>₹${amount.toLocaleString()}</td>
-                    <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
-                </tr>
-            `).join('');
+    <tr ${amount > 5000 ? 'style="background:#fee2e2;"' : ''}>
+        <td>${index + 1}</td>
+        <td>${category}</td>
+        <td style="font-weight:bold;">₹${amount.toLocaleString()}</td>
+        <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
+    </tr>
+`).join('');
+
         }
 
         function updateTopVendors() {
@@ -988,14 +989,15 @@ function clearExpenseSearch() {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
                 return;
             }
-            tbody.innerHTML = sortedVendors.map(([vendor, amount], index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${vendor}</td>
-                    <td>₹${amount.toLocaleString()}</td>
-                    <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = sortedCategories.map(([category, amount], index) => `
+    <tr ${amount > 5000 ? 'style="background:#fee2e2;"' : ''}>
+        <td>${index + 1}</td>
+        <td>${category}</td>
+        <td style="font-weight:bold;">₹${amount.toLocaleString()}</td>
+        <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
+    </tr>
+`).join('');
+
         }
 
         let weeklyChart;
