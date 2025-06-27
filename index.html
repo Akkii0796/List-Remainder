@@ -3,1279 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+    <title>Our Tasks</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-               * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .gradient-text {
+            background: linear-gradient(to right, #7c3aed, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            /*background: rgba(255, 255, 255, 0.95);*/
-            background: rgba(243, 244, 246, 0.95);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-/*             overflow: hidden; */
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-  .card {
-    margin-left: 12px;
-    margin-right: 12px;
-  }
-}
-
-        .card, .card.full-width {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: 1.5px ssolid #e5e7eb; 
-  margin-bottom: 20px;
-  transition: all 0.3s ease;
-}
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .card h2 {
-            color: #4f46e5;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #374151;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .input-group input,
-        .input-group select,
-        .input-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-
-        .input-group input:focus,
-        .input-group select:focus,
-        .input-group textarea:focus {
-            outline: none;
-            border-color: #4f46e5;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            width: auto;
-            margin: 0;
-        }
-
-        .budget-summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
-}
-.budget-item {
-    text-align: center;
-    padding: 8px 4px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-}
-.budget-item h3 {
-    font-size: 0.78rem;
-    color: #6b7280;
-    margin-bottom: 2px;
-}
-.budget-item .amount {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #1f2937;
-}
-@media (max-width: 480px) {
-    .budget-summary {
-        gap: 6px;
-        margin-top: 8px;
-    }
-    .budget-item {
-        padding: 4px 2px;
-        border-radius: 8px;
-    }
-    .budget-item h3 {
-        font-size: 0.7rem;
-        margin-bottom: 0;
-    }
-    .budget-item .amount {
-        font-size: 1rem;
-    }
-}
-
-
-        .budget-item {
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        }
-
-        .budget-item.budget {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-        }
-
-        .budget-item.spent {
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-        }
-
-        .budget-item.remaining {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-        }
-
-        .budget-item h3 {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 5px;
-        }
-
-        .budget-item .amount {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 15px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        th {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            grid-column: 1 / -1;
-        }
-
-        @media (min-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .icon {
-            font-size: 1.2rem;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .download-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .download-buttons .btn {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .main-content {
-                padding: 15px;
-                gap: 15px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            table {
-                font-size: 0.8rem;
-            }
-            
-            th, td {
-                padding: 8px 4px;
-            }
-        }
-
-        .expense-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .expense-item:last-child {
-            border-bottom: none;
-        }
-
-        .expense-details {
-            flex-grow: 1;
-        }
-
-        .expense-category {
-            font-weight: 600;
-            color: #4f46e5;
-        }
-
-        .expense-vendor {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .expense-amount {
-            font-weight: bold;
-            color: #1f2937;
-            margin-right: 10px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .btn, .btn-danger {
-    height: 48px;
-    min-width: 120px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    box-sizing: border-box;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-@media (max-width: 480px) {
-    .card {
-        border: 2px solid #cbd5e1; /* slightly darker */
-    }
-}
-    .btn-square {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    padding: 0 !important;
-    border-radius: 8px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    margin: 0 !important;
-}
-
-    .input-group textarea {
-    height: 38px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-radius: 10px;
-    resize: none;
-    font-size: 1rem;
-}
-
-        .btn-sm {
-    font-size: 0.96em !important;
-    padding: 4px 16px !important;
-    min-width: unset !important;
-    height: 32px !important;
-    border-radius: 8px !important;
-}
-
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-
-
-
 </head>
 <body>
-    <div id="pinLockScreen" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10000;background:#f3f4f6;display:flex;align-items:center;justify-content:center;flex-direction:column;">
-        <h2 style="margin-bottom:16px;color:#4f46e5;">Please enter the PIN </h2>
-        <input id="pinInput" type="password" placeholder="Enter PIN" style="padding:12px 16px;font-size:1.2rem;border-radius:10px;border:2px solid #e5e7eb;margin-bottom:12px;width:220px;text-align:center;" maxlength="10" autofocus>
-        <button onclick="unlockApp()" style="padding:12px 32px;font-size:1.1rem;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;cursor:pointer;">Unlock</button>
-        <div id="pinError" style="color:#dc2626;margin-top:10px;height:20px;"></div>
-    </div>
+    <div id="root"></div>
 
-    <div class="container" id="appContent" style="display:none;">
-        <div class="header">
-            <h1 id="headerTitle">💰 Expense Tracker</h1>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Plus, X, GripVertical, Edit2, Check, ShoppingCart, Bell, List, Clock } = lucide;
 
-        <div class="main-content">
-            <div class="card">
-                <h2><span class="icon">🎯</span> Set Monthly Budget</h2>
-                <div class="input-group">
-                    <label for="budgetAmount">Budget Amount (₹)</label>
-                    <input type="number" id="budgetAmount" placeholder="Enter your monthly budget">
-                </div>
-                <div style="display:flex;gap:10px;align-items:stretch;margin-bottom:0;">
-  <button class="btn" style="flex:1;min-width:100px;height:38px;font-size:0.85rem;line-height:1;" onclick="setBudget(event)">Set Budget</button>
-<button class="btn btn-danger" style="flex:1;min-width:100px;height:38px;font-size:0.85rem;line-height:1;" onclick="resetBudget()">Reset Budget</button>
-</div>
+        function TaskManager() {
+            const [tasks, setTasks] = useState([]);
+            const [newTask, setNewTask] = useState('');
+            const [taskType, setTaskType] = useState('list');
+            const [editingId, setEditingId] = useState(null);
+            const [editText, setEditText] = useState('');
+            const [draggedIndex, setDraggedIndex] = useState(null);
 
-
-</div>
-
-
-                <div id="budgetIndicatorWrapper" style="margin-top:4px;">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-size:1.2em;">📊</span>
-    <div style="flex:1;position:relative;background:#e5e7eb;border-radius:8px;height:24px;overflow:hidden;">
-      <div id="budgetIndicatorBar" style="height:100%;background:#10b981;width:100%;border-radius:8px 0 0 8px;transition:width 0.4s,background 0.4s;"></div>
-      <span id="budgetIndicatorText" style="position:absolute;left:0;right:0;text-align:center;top:0;line-height:24px;font-weight:bold;color:#1f2937;font-size:0.96em;">100% left</span>
-    </div>
-  </div>
-</div>
-
-                
-                <div class="budget-summary">
-                    <div class="budget-item budget">
-                        <h3>Budget</h3>
-                        <div class="amount" id="budgetDisplay">₹0</div>
-                    </div>
-                    <div class="budget-item spent">
-                        <h3>Expenses</h3>
-                        <div class="amount" id="totalSpent">₹0</div>
-                    </div>
-                    <div class="budget-item remaining">
-                        <h3>Balance</h3>
-                        <div class="amount" id="remaining">₹0</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><span class="icon">➕</span> Add Expense</h2>
-                <div class="input-group">
-                    <label for="category">Category</label>
-                    <select id="category">
-                        <option value="Grocery">Grocery</option>
-                        <option value="Bills">Bills</option>
-                        <option value="Online shopping">Online shopping</option>
-                        <option value="Travelling">Travelling</option>
-                        <option value="Food">Food</option>
-                        <option value="Medical expenses">Medical expenses</option>
-                        <option value="Debt">Debt</option>
-                        <option value="Petrol">Petrol</option>
-                        <option value="Home expenses other than grocery">Home expenses other than grocery</option>
-                        <option value="Maintenance">Maintenance</option>
-                        <option value="EMI">EMI</option>
-                        <option value="Investment">Investment</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="vendor">Vendor</label>
-                    <input type="text" id="vendor" placeholder="Enter vendor name">
-                </div>
-                <div class="input-group">
-                    <label for="amount">Amount (₹)</label>
-                    <input type="number" id="amount" placeholder="Enter amount">
-                </div>
-                <div class="input-group">
-                    <label for="note">Note</label>
-                    <textarea id="note" rows="1" placeholder="Add a note (optional)"></textarea>
-                </div>
-                <div class="input-group">
-    <label>Added By</label>
-    <div style="display:flex;gap:20px;align-items:center;">
-        <label style="display:flex;align-items:center;">
-            <input type="radio" name="addedByRadio" value="Akshay" id="addedByAkshay" checked style="margin-right:6px;">
-            Akshay
-        </label>
-        <label style="display:flex;align-items:center;">
-            <input type="radio" name="addedByRadio" value="Achal" id="addedByAchal" style="margin-right:6px;">
-            Achal
-        </label>
-    </div>
-</div>
-                <button class="btn btn-secondary" id="addExpenseBtn" onclick="addExpense()">Add Expense</button>
-            </div>
-
-            <div class="card full-width">
-                <h2><span class="icon">📋</span> Recent Expenses</h2>
-                <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
-    <label for="startDate" style="font-size:0.95em;">From:</label>
-    <input type="date" id="startDate" style="padding:6px;border-radius:6px;">
-    <label for="endDate" style="font-size:0.95em;">To:</label>
-    <input type="date" id="endDate" style="padding:6px;border-radius:6px;">
-</div>
-<div style="margin-bottom:6px;">
-    <input
-        type="text"
-        id="searchExpenseInput"
-        placeholder="🔎 Search expenses (vendor, note, category...)"
-        style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #e5e7eb;font-size:1rem;"
-    />
-</div>
-<!-- BUTTONS BELOW SEARCH BAR -->
-<div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;">
-    <button class="btn btn-secondary btn-sm" style="padding:4px 16px;min-width:unset;font-size:0.97em;border-radius:8px;" onclick="searchExpenses()">Search</button>
-    <button class="btn btn-danger btn-sm" style="padding:4px 16px;min-width:unset;font-size:0.97em;border-radius:8px;" onclick="clearExpenseSearch()">Clear</button>
-</div>
-
-
-                <div id="recentExpenses">
-                    <p style="text-align: center; color: #6b7280; padding: 20px;">No expenses added yet</p>
-                </div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="card">
-                    <h2><span class="icon">🏆</span> Top 3 Categories</h2>
-                    <div class="table-container">
-                        <table id="topCategoriesTable">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>%</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2><span class="icon">🛍️</span> Top 3 Vendors</h2>
-                    <div class="table-container">
-                        <table id="topVendorsTable">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Vendor</th>
-                                    <th>Amount</th>
-                                    <th>%</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-    <h2><span class="icon">📊</span> Weekly Summary</h2>
-    <canvas id="weeklySummaryChart" style="width:100%;max-width:600px;height:250px;"></canvas>
-
-</div>
-
-
-            <div class="card">
-    <h2><span class="icon">📈</span> Monthly Summary</h2>
-    <canvas id="monthlySummaryChart" style="width:100%;max-width:600px;height:250px;"></canvas>
-
-</div>
-<div class="card full-width">
-    <h2><span class="icon">👥</span> Expenses by Person</h2>
-    <canvas id="byPersonChart" style="width:100%;max-width:600px;height:250px;"></canvas>
-</div>
-            <div class="card full-width">
-                <h2><span class="icon">💾</span> Export Data</h2>
-                <div class="download-buttons">
-                    <button class="btn" onclick="downloadCSV()">📄 Download CSV</button>
-                    <button class="btn" onclick="downloadPDF()">📝 Download PDF</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    <script>
-        // === PIN PROTECTION ===
-        const CORRECT_PIN = "0277";
-        function unlockApp() {
-            const entered = document.getElementById('pinInput').value;
-            if (entered === CORRECT_PIN) {
-                document.getElementById('pinLockScreen').style.display = 'none';
-                document.getElementById('appContent').style.display = '';
-                updateHeaderMonth(); 
-                loadData();           
-            } else {
-                document.getElementById('pinError').textContent = "Incorrect PIN. Try again.";
-                document.getElementById('pinInput').value = '';
-            }
-        }
-
-        // === LOCAL STORAGE CONFIGURATION ===
-        const LOCAL_STORAGE_BUDGET_KEY = 'expenseTrackerBudget';
-        const LOCAL_STORAGE_EXPENSES_KEY = 'expenseTrackerExpenses';
-        
-        let budget = 0;
-        let expenses = [];
-        let editingExpenseId = null;
-
-        function updateHeaderMonth() {
-            const date = new Date();
-            const monthName = date.toLocaleDateString('en-US', { month: 'long' });
-            document.getElementById('headerTitle').innerHTML = `💰 Expense Tracker - ${monthName}`;
-        }
-
-        function loadData() {
-            // Load Budget from Local Storage
-            const savedBudget = localStorage.getItem(LOCAL_STORAGE_BUDGET_KEY);
-            if (savedBudget !== null) {
-                budget = parseFloat(savedBudget);
-                document.getElementById('budgetAmount').value = budget;
-            } else {
-                budget = 0;
-                document.getElementById('budgetAmount').value = '';
-            }
-
-            // Load Expenses from Local Storage
-            const savedExpenses = localStorage.getItem(LOCAL_STORAGE_EXPENSES_KEY);
-            if (savedExpenses) {
-                expenses = JSON.parse(savedExpenses);
-                expenses.sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp, newest first
-            } else {
-                expenses = [];
-            }
-            updateDisplay();
-        }
-
-        function saveData() {
-            localStorage.setItem(LOCAL_STORAGE_BUDGET_KEY, budget.toString());
-            localStorage.setItem(LOCAL_STORAGE_EXPENSES_KEY, JSON.stringify(expenses));
-            updateDisplay();
-        }
-
-        function setBudget(event) {
-            const budgetInput = document.getElementById('budgetAmount');
-            const newBudget = parseFloat(budgetInput.value);
-            if (isNaN(newBudget) || newBudget <= 0) {
-                alert('Please enter a valid budget amount');
-                return;
-            }
-            budget = newBudget;
-            saveData(); 
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Budget Set!';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = 'linear-gradient(135deg, #4f46e5, #7c3aed)';
-            }, 2000);
-        }
-
-        function resetBudget() {
-            if (!confirm('Are you sure you want to reset the budget?')) return;
-            budget = 0;
-            document.getElementById('budgetAmount').value = '';
-            saveData();
-            alert('Budget has been reset.');
-        }
-
-        function addExpense() {
-            const category = document.getElementById('category').value;
-            const vendor = document.getElementById('vendor').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const note = document.getElementById('note').value;
-            const addedBy = document.querySelector('input[name="addedByRadio"]:checked').value;
-
-            if (!vendor.trim()) {
-                alert('Please enter a vendor name');
-                return;
-            }
-            if (isNaN(amount) || amount <= 0) {
-                alert('Please enter a valid amount');
-                return;
-            }
-            
-            const newExpense = {
-                id: Date.now().toString(), // Unique ID for each expense
-                timestamp: Date.now(), // For sorting
-                date: new Date().toISOString().split('T')[0],
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                category: category,
-                vendor: vendor.trim(),
-                amount: amount,
-                note: note.trim(),
-                addedBy: addedBy
-            };
-
-            expenses.push(newExpense);
-            saveData(); 
-
-            document.getElementById('vendor').value = '';
-            document.getElementById('amount').value = '';
-            document.getElementById('note').value = '';
-            document.getElementById("addedByAkshay").checked = true; 
-
-            const btn = document.getElementById('addExpenseBtn');
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Added!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
-        }
-
-        function editExpense(id) {
-            const exp = expenses.find(e => e.id === id);
-            if (!exp) return;
-            editingExpenseId = id;
-
-            document.getElementById('category').value = exp.category;
-            document.getElementById('vendor').value = exp.vendor;
-            document.getElementById('amount').value = exp.amount;
-            document.getElementById('note').value = exp.note || '';
-            if (exp.addedBy === "Achal") {
-                document.getElementById("addedByAchal").checked = true;
-            } else {
-                document.getElementById("addedByAkshay").checked = true;
-            }
-
-            const btn = document.getElementById('addExpenseBtn');
-            btn.textContent = "Update Expense";
-            btn.onclick = updateExpense;
-        }
-
-        function updateExpense() {
-            if (!editingExpenseId) return;
-
-            const index = expenses.findIndex(e => e.id === editingExpenseId);
-            if (index === -1) return;
-
-            const category = document.getElementById('category').value;
-            const vendor = document.getElementById('vendor').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const note = document.getElementById('note').value;
-            const addedBy = document.querySelector('input[name="addedByRadio"]:checked').value;
-
-            if (!vendor.trim()) {
-                alert('Please enter a vendor name');
-                return;
-            }
-            if (isNaN(amount) || amount <= 0) {
-                alert('Please enter a valid amount');
-                return;
-            }
-
-            // Update the existing expense object
-            expenses[index] = {
-                ...expenses[index], // Keep original ID, timestamp, date, time
-                category,
-                vendor: vendor.trim(),
-                amount,
-                note: note.trim(),
-                addedBy
-            };
-            
-            saveData(); // Save updated expenses to local storage
-
-            editingExpenseId = null;
-            document.getElementById('vendor').value = '';
-            document.getElementById('amount').value = '';
-            document.getElementById('note').value = '';
-            document.getElementById("addedByAkshay").checked = true; 
-            const btn = document.getElementById('addExpenseBtn');
-            btn.textContent = "Add Expense";
-            btn.onclick = addExpense; // Reset button to Add Expense functionality
-        }
-
-        function deleteExpense(id) {
-            if (confirm('Are you sure you want to delete this expense?')) {
-                expenses = expenses.filter(exp => exp.id !== id);
-                saveData(); // Save updated expenses to local storage
-            }
-        }
-
-        function updateDisplay() {
-            updateBudgetSummary();
-            updateRecentExpenses();
-            updateTopCategories();
-            updateTopVendors();
-            updateWeeklySummary();
-            updateMonthlySummary();
-            updateByPersonChart();
-        }
-
-function clearExpenseSearch() {
-    document.getElementById('startDate').value = '';
-    document.getElementById('endDate').value = '';
-    document.getElementById('searchExpenseInput').value = '';
-    searchKeyword = "";
-    updateRecentExpenses();
-}
-        
-        function updateBudgetSummary() {
-            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const remaining = budget - totalSpent;
-            
-            document.getElementById('budgetDisplay').textContent = `₹${budget.toLocaleString()}`;
-            document.getElementById('totalSpent').textContent = `₹${totalSpent.toLocaleString()}`;
-            document.getElementById('remaining').textContent = `₹${remaining.toLocaleString()}`;
-            
-            // --- Budget Battery Indicator ---
-            const bar = document.getElementById('budgetIndicatorBar');
-            const text = document.getElementById('budgetIndicatorText');
-
-            if (budget > 0) {
-                let percent = ((remaining / budget) * 100);
-                percent = Math.max(0, Math.min(100, percent)); // Clamp between 0–100
-                bar.style.width = percent + "%";
-                text.textContent = `${percent.toFixed(0)}% left`;
-
-                const spentRatio = totalSpent / budget;
-
-                // Change color based on spent %
-                if (spentRatio >= 0.9) {
-                    bar.style.background = "#ef4444"; // red
-                } else if (spentRatio >= 0.5) {
-                    bar.style.background = "#f97316"; // orange
+            // Load tasks from localStorage on component mount
+            useEffect(() => {
+                const savedTasks = localStorage.getItem('ourTasks');
+                if (savedTasks) {
+                    setTasks(JSON.parse(savedTasks));
                 } else {
-                    bar.style.background = "#10b981"; // green
+                    // Default tasks if none saved
+                    setTasks([
+                        { id: 1, text: 'Buy groceries', type: 'list', completed: false },
+                        { id: 2, text: 'Pay electricity bill', type: 'reminder', completed: false },
+                        { id: 3, text: 'Clean the kitchen', type: 'list', completed: true },
+                        { id: 4, text: 'Doctor appointment at 3 PM', type: 'reminder', completed: false }
+                    ]);
                 }
+            }, []);
 
-            } else {
-                bar.style.width = "100%";
-                bar.style.background = "#e5e7eb";
-                text.textContent = "No budget";
-            }
-        }
+            // Save tasks to localStorage whenever tasks change
+            useEffect(() => {
+                if (tasks.length > 0) {
+                    localStorage.setItem('ourTasks', JSON.stringify(tasks));
+                }
+            }, [tasks]);
 
-        let searchKeyword = "";
-        function searchExpenses() {
-            const input = document.getElementById('searchExpenseInput');
-            searchKeyword = input.value.trim().toLowerCase();
+            const addTask = () => {
+                if (newTask.trim()) {
+                    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id), 0) + 1 : 1;
+                    setTasks([...tasks, {
+                        id: newId,
+                        text: newTask.trim(),
+                        type: taskType,
+                        completed: false
+                    }]);
+                    setNewTask('');
+                }
+            };
 
-            // Get date range values
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const deleteTask = (id) => {
+                setTasks(tasks.filter(task => task.id !== id));
+            };
 
-            updateRecentExpenses(startDate, endDate);
-        }
+            const toggleTask = (id) => {
+                setTasks(tasks.map(task => 
+                    task.id === id ? { ...task, completed: !task.completed } : task
+                ));
+            };
 
-        function updateRecentExpenses(startDate, endDate) {
-            const container = document.getElementById('recentExpenses');
-            let filteredExpenses = [...expenses]; // Create a shallow copy to filter
+            const startEditing = (id, text) => {
+                setEditingId(id);
+                setEditText(text);
+            };
 
-            // Filter by date range if provided
-            if (startDate) {
-                filteredExpenses = filteredExpenses.filter(exp => exp.date >= startDate);
-            }
-            if (endDate) {
-                filteredExpenses = filteredExpenses.filter(exp => exp.date <= endDate);
-            }
+            const saveEdit = () => {
+                if (editText.trim()) {
+                    setTasks(tasks.map(task => 
+                        task.id === editingId ? { ...task, text: editText.trim() } : task
+                    ));
+                }
+                setEditingId(null);
+                setEditText('');
+            };
 
-            if (searchKeyword) {
-                filteredExpenses = filteredExpenses.filter(exp =>
-                    (exp.vendor && exp.vendor.toLowerCase().includes(searchKeyword)) ||
-                    (exp.note && exp.note.toLowerCase().includes(searchKeyword)) ||
-                    (exp.category && exp.category.toLowerCase().includes(searchKeyword)) ||
-                    (exp.addedBy && exp.addedBy.toLowerCase().includes(searchKeyword)) ||
-                    (exp.amount && exp.amount.toString().includes(searchKeyword))
-                );
-            } 
-            // Only show the 5 most recent if no search keyword and no date filter
-            else if (!startDate && !endDate) {
-                filteredExpenses = expenses.slice(0, 5);
-            }
+            const cancelEdit = () => {
+                setEditingId(null);
+                setEditText('');
+            };
 
-            if (filteredExpenses.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No expenses found</p>';
-                return;
-            }
-
-            container.innerHTML = filteredExpenses.map(expense => `
-                <div class="expense-item">
-                    <div class="expense-details">
-                        <div class="expense-category">${expense.category}</div>
-                        <div class="expense-vendor">
-                            ${new Date(expense.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} ${expense.vendor}
-                            ${expense.addedBy ? ` &bull; <span style="color:#059669;">${expense.addedBy}</span>` : ''}
-                        </div>
-                        ${expense.note ? `<div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">${expense.note}</div>` : ''}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div class="expense-amount">₹${expense.amount.toLocaleString()}</div>
-                        <button class="btn btn-secondary btn-square" title="Edit" onclick="editExpense('${expense.id}')">
-  <span style="font-size:0.85em;line-height:1;">✏️</span>
-</button>
-<button class="btn btn-danger btn-square" title="Delete" onclick="deleteExpense('${expense.id}')">
-  <span style="font-size:0.85em;line-height:1;">🗑️</span>
-</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateTopCategories() {
-            const categoryTotals = expenses.reduce((acc, expense) => {
-                acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
-                return acc;
-            }, {});
-            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const sortedCategories = Object.entries(categoryTotals)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 3);
-            const tbody = document.getElementById('topCategoriesTable').querySelector('tbody');
-            if (sortedCategories.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
-                return;
-            }
-            tbody.innerHTML = sortedCategories.map(([category, amount], index) => `
-    <tr ${amount > 5000 ? 'style="background:#fee2e2;"' : ''}>
-        <td>${index + 1}</td>
-        <td>${category}</td>
-        <td style="font-weight:bold;">₹${amount.toLocaleString()}</td>
-        <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
-    </tr>
-`).join('');
-
-        }
-
-        function updateTopVendors() {
-            const vendorTotals = expenses.reduce((acc, expense) => {
-                acc[expense.vendor] = (acc[expense.vendor] || 0) + expense.amount;
-                return acc;
-            }, {});
-            const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const sortedVendors = Object.entries(vendorTotals)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 3);
-            const tbody = document.getElementById('topVendorsTable').querySelector('tbody');
-            if (sortedVendors.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No data available</td></tr>';
-                return;
-            }
-            tbody.innerHTML = sortedVendors.map(([vendor, amount], index) => `
-    <tr ${amount > 5000 ? 'style="background:#fee2e2;"' : ''}>
-        <td>${index + 1}</td>
-        <td>${vendor}</td>
-        <td style="font-weight:bold;">₹${amount.toLocaleString()}</td>
-        <td>${((amount / totalSpent) * 100).toFixed(1)}%</td>
-    </tr>
-`).join('');
-
-
-        }
-
-        let weeklyChart;
-
-        function updateWeeklySummary() {
-            const weeklyData = {};
-            expenses.forEach(expense => {
-                const expenseDate = new Date(expense.date);
-                const weekStart = new Date(expenseDate);
-                weekStart.setDate(expenseDate.getDate() - expenseDate.getDay());
-                weekStart.setHours(0, 0, 0, 0);
-                const weekKey = weekStart.toISOString().split('T')[0];
-                if (!weeklyData[weekKey]) weeklyData[weekKey] = 0;
-                weeklyData[weekKey] += expense.amount;
-            });
-
-            const sortedWeeks = Object.entries(weeklyData).sort(([a], [b]) => new Date(a) - new Date(b));
-            const labels = sortedWeeks.map(([weekStart]) => {
-                const d = new Date(weekStart);
-                const dEnd = new Date(d);
-                dEnd.setDate(d.getDate() + 6);
-                return `${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${dEnd.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
-            });
-            const data = sortedWeeks.map(([, total]) => total);
-
-            const ctx = document.getElementById('weeklySummaryChart').getContext('2d');
-            if (weeklyChart) weeklyChart.destroy();
-            weeklyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Spent',
-                        data: data,
-                        borderRadius: 7,
-                        backgroundColor: '#7c3aed',
-                        maxBarThickness: 80,
-                        barPercentage: 0.7
-                    }]
-                },
-                options: {
-                    responsive: true,
-        //             layout: {
-        // padding: {
-        //     top: 50   // This adds space above the chart
-        // }
-    // },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            anchor: 'center',
-        align: 'center',
-        font: {
-            weight: 'bold',
-            size: 14
-        },
-        color: '#fff',
-        formatter: value => '₹' + value.toLocaleString(),
-                            clamp: true,
-                            clip: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: v => '₹' + v }
-                        }
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter') {
+                    if (editingId) {
+                        saveEdit();
+                    } else {
+                        addTask();
                     }
+                } else if (e.key === 'Escape' && editingId) {
+                    cancelEdit();
+                }
+            };
+
+            const handleDragStart = (e, index, type) => {
+                setDraggedIndex({ index, type });
+                e.dataTransfer.effectAllowed = 'move';
+            };
+
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            const handleDrop = (e, dropIndex, dropType) => {
+                e.preventDefault();
+                if (!draggedIndex || draggedIndex.type !== dropType) return;
+
+                const tasksOfType = tasks.filter(task => task.type === dropType);
+                const otherTasks = tasks.filter(task => task.type !== dropType);
+                
+                const draggedTask = tasksOfType[draggedIndex.index];
+                const newTasksOfType = [...tasksOfType];
+                
+                newTasksOfType.splice(draggedIndex.index, 1);
+                newTasksOfType.splice(dropIndex, 0, draggedTask);
+                
+                setTasks([...otherTasks, ...newTasksOfType].sort((a, b) => {
+                    if (a.type === 'list' && b.type === 'reminder') return -1;
+                    if (a.type === 'reminder' && b.type === 'list') return 1;
+                    return 0;
+                }));
+                setDraggedIndex(null);
+            };
+
+            const listTasks = tasks.filter(task => task.type === 'list');
+            const reminderTasks = tasks.filter(task => task.type === 'reminder');
+
+            const TaskItem = ({ task, index, type }) => (
+                React.createElement('div', {
+                    draggable: true,
+                    onDragStart: (e) => handleDragStart(e, index, type),
+                    onDragOver: handleDragOver,
+                    onDrop: (e) => handleDrop(e, index, type),
+                    onDragEnd: () => setDraggedIndex(null),
+                    className: `bg-white rounded-xl shadow-sm p-4 flex items-center gap-3 transition-all duration-200 hover:shadow-md border border-gray-100 ${
+                        draggedIndex?.index === index && draggedIndex?.type === type ? 'opacity-50 scale-95' : ''
+                    } ${task.completed ? 'bg-gray-50' : ''}`
                 },
-                plugins: [ChartDataLabels]
-            });
-        }
-
-        let monthlyChart;
-
-        function updateMonthlySummary() {
-            const monthlyData = {};
-            expenses.forEach(expense => {
-                const expenseDate = new Date(expense.date);
-                const monthKey = `${expenseDate.getFullYear()}-${String(expenseDate.getMonth() + 1).padStart(2, '0')}`;
-                if (!monthlyData[monthKey]) monthlyData[monthKey] = 0;
-                monthlyData[monthKey] += expense.amount;
-            });
-
-            const sortedMonths = Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b));
-            const labels = sortedMonths.map(([month]) =>
-                new Date(month + '-01').toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+                    React.createElement('div', {
+                        className: 'text-gray-400 cursor-grab active:cursor-grabbing'
+                    }, React.createElement(GripVertical, { size: 18 })),
+                    
+                    React.createElement('div', {
+                        onClick: () => toggleTask(task.id),
+                        className: 'cursor-pointer'
+                    },
+                        React.createElement('div', {
+                            className: `w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                task.completed 
+                                    ? 'bg-green-500 border-green-500 text-white' 
+                                    : 'border-gray-300 hover:border-green-400'
+                            }`
+                        }, task.completed && React.createElement(Check, { size: 12 }))
+                    ),
+                    
+                    React.createElement('div', { className: 'flex-1' },
+                        editingId === task.id ? 
+                            React.createElement('input', {
+                                type: 'text',
+                                value: editText,
+                                onChange: (e) => setEditText(e.target.value),
+                                onKeyDown: handleKeyPress,
+                                onBlur: saveEdit,
+                                className: 'w-full p-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500',
+                                autoFocus: true
+                            }) :
+                            React.createElement('span', {
+                                className: `text-gray-800 ${task.completed ? 'line-through text-gray-500' : ''}`,
+                                onDoubleClick: () => startEditing(task.id, task.text)
+                            }, task.text)
+                    ),
+                    
+                    React.createElement('button', {
+                        onClick: () => startEditing(task.id, task.text),
+                        className: 'text-blue-400 hover:text-blue-600 p-1 transition-colors'
+                    }, React.createElement(Edit2, { size: 16 })),
+                    
+                    React.createElement('button', {
+                        onClick: () => deleteTask(task.id),
+                        className: 'text-red-400 hover:text-red-600 p-1 transition-colors'
+                    }, React.createElement(X, { size: 16 }))
+                )
             );
-            const data = sortedMonths.map(([, total]) => total);
 
-            const ctx = document.getElementById('monthlySummaryChart').getContext('2d');
-            if (monthlyChart) monthlyChart.destroy();
-            monthlyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Spent',
-                        data: data,
-                        borderRadius: 7,
-                        backgroundColor: '#4f46e5',
-                        maxBarThickness: 80,
-                        barPercentage: 0.7
-                    }]
-                },
-                options: {
-                    responsive: true,
-    //                 layout: {
-    //     padding: {
-    //         top: 50   // This adds space above the chart
-    //     }
-    // },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            anchor: 'center',
-        align: 'center',
-        font: {
-            weight: 'bold',
-            size: 14
-        },
-        color: '#fff',
-        formatter: value => '₹' + value.toLocaleString(),
-                            clamp: true,
-                            clip: true
-                        }
+            return React.createElement('div', {
+                className: 'min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4'
+            },
+                React.createElement('div', { className: 'max-w-2xl mx-auto' },
+                    // Header
+                    React.createElement('div', { className: 'text-center mb-8' },
+                        React.createElement('div', {
+                            className: 'inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mb-4'
+                        }, React.createElement(List, { className: 'text-white', size: 28 })),
+                        React.createElement('h1', {
+                            className: 'text-3xl font-bold gradient-text mb-2'
+                        }, 'Our Tasks'),
+                        React.createElement('p', { className: 'text-gray-600' }, 'Stay organized together')
+                    ),
+
+                    // Add Task Input
+                    React.createElement('div', {
+                        className: 'bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100'
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: v => '₹' + v }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-        }
+                        React.createElement('div', { className: 'space-y-4' },
+                            // Task Type Selector
+                            React.createElement('div', { className: 'flex gap-2' },
+                                React.createElement('button', {
+                                    onClick: () => setTaskType('list'),
+                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
+                                        taskType === 'list' 
+                                            ? 'bg-green-500 text-white shadow-md' 
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`
+                                },
+                                    React.createElement(ShoppingCart, { size: 18 }),
+                                    React.createElement('span', { className: 'font-medium' }, 'List Item')
+                                ),
+                                React.createElement('button', {
+                                    onClick: () => setTaskType('reminder'),
+                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
+                                        taskType === 'reminder' 
+                                            ? 'bg-orange-500 text-white shadow-md' 
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`
+                                },
+                                    React.createElement(Bell, { size: 18 }),
+                                    React.createElement('span', { className: 'font-medium' }, 'Reminder')
+                                )
+                            ),
+                            
+                            // Input
+                            React.createElement('div', { className: 'flex gap-3' },
+                                React.createElement('input', {
+                                    type: 'text',
+                                    value: newTask,
+                                    onChange: (e) => setNewTask(e.target.value),
+                                    onKeyDown: handleKeyPress,
+                                    placeholder: `Add a new ${taskType}...`,
+                                    className: 'flex-1 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base',
+                                    autoFocus: true
+                                }),
+                                React.createElement('button', {
+                                    onClick: addTask,
+                                    className: 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white p-4 rounded-xl transition-all shadow-md hover:shadow-lg'
+                                }, React.createElement(Plus, { size: 20 }))
+                            )
+                        )
+                    ),
 
-        let byPersonChart;
+                    React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
+                        // Lists Section
+                        React.createElement('div', {
+                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
+                        },
+                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
+                                React.createElement('div', {
+                                    className: 'w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'
+                                }, React.createElement(ShoppingCart, { className: 'text-green-600', size: 20 })),
+                                React.createElement('div', {},
+                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Lists'),
+                                    React.createElement('p', { className: 'text-sm text-gray-500' },
+                                        `${listTasks.filter(t => !t.completed).length} pending`
+                                    )
+                                )
+                            ),
+                            
+                            React.createElement('div', { className: 'space-y-3' },
+                                listTasks.length === 0 ? 
+                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
+                                        React.createElement(ShoppingCart, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
+                                        React.createElement('p', {}, 'No list items yet')
+                                    ) :
+                                    listTasks.map((task, index) => 
+                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'list' })
+                                    )
+                            )
+                        ),
 
-        function updateByPersonChart() {
-            const people = ['Akshay', 'Achal'];
-            const totals = [0, 0];
-            expenses.forEach(exp => {
-                if (exp.addedBy === 'Akshay') totals[0] += exp.amount;
-                else if (exp.addedBy === 'Achal') totals[1] += exp.amount;
-            });
+                        // Reminders Section
+                        React.createElement('div', {
+                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
+                        },
+                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
+                                React.createElement('div', {
+                                    className: 'w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center'
+                                }, React.createElement(Bell, { className: 'text-orange-600', size: 20 })),
+                                React.createElement('div', {},
+                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Reminders'),
+                                    React.createElement('p', { className: 'text-sm text-gray-500' },
+                                        `${reminderTasks.filter(t => !t.completed).length} pending`
+                                    )
+                                )
+                            ),
+                            
+                            React.createElement('div', { className: 'space-y-3' },
+                                reminderTasks.length === 0 ? 
+                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
+                                        React.createElement(Clock, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
+                                        React.createElement('p', {}, 'No reminders yet')
+                                    ) :
+                                    reminderTasks.map((task, index) => 
+                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'reminder' })
+                                    )
+                            )
+                        )
+                    ),
 
-            const ctx = document.getElementById('byPersonChart').getContext('2d');
-            if (byPersonChart) byPersonChart.destroy();
-
-            byPersonChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: people,
-                    datasets: [{
-                        label: 'Total Spent',
-                        data: totals,
-                        backgroundColor: ['#4f46e5', '#10b981'], 
-                        borderRadius: 7,
-                        maxBarThickness: 80,
-                        barPercentage: 0.7
-                    }]
-                },
-                options: {
-                    responsive: true,
-    //                 layout: {
-    //     padding: {
-    //         top: 50   // This adds space above the chart
-    //     }
-    // },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            anchor: 'center',
-        align: 'center',
-        font: {
-            weight: 'bold',
-            size: 14
-        },
-        color: '#fff',
-        formatter: value => '₹' + value.toLocaleString(),
-                            clamp: true
-                        }
+                    // Summary
+                    React.createElement('div', {
+                        className: 'text-center mt-8 p-4 bg-white/50 rounded-2xl backdrop-blur-sm'
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: v => '₹' + v }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+                        React.createElement('p', { className: 'text-gray-600' },
+                            React.createElement('span', { className: 'font-semibold text-green-600' },
+                                tasks.filter(t => t.completed).length
+                            ),
+                            ' completed • ',
+                            React.createElement('span', { className: 'font-semibold text-blue-600 ml-1' },
+                                tasks.filter(t => !t.completed).length
+                            ),
+                            ' remaining'
+                        )
+                    )
+                )
+            );
         }
 
-        function downloadCSV() {
-            if (expenses.length === 0) {
-                alert('No expenses to export');
-                return;
-            }
-            const csvContent = [
-                ['Date', 'Time', 'Category', 'Vendor', 'Amount', 'Note', 'Added By'],
-                ...expenses.map(expense => [
-                    expense.date,
-                    expense.time,
-                    expense.category,
-                    expense.vendor,
-                    expense.amount,
-                    expense.note || '',
-                    expense.addedBy || ''
-                ])
-            ].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `expenses_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
-
-        function downloadPDF() {
-            if (expenses.length === 0) {
-                alert('No expenses to export');
-                return;
-            }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: "portrait",
-                unit: "mm",
-                format: "a4"
-            });
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(18);
-            doc.setTextColor(76, 55, 190); 
-            doc.text("💰 Expense Report", 14, 18);
-
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(11);
-            doc.setTextColor(80, 80, 80);
-            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 26);
-
-            doc.setFontSize(12);
-            doc.setTextColor(20, 20, 20);
-            doc.text([
-              `Budget: ₹${budget.toLocaleString()}`,
-              `Total Spent: ₹${expenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString()}`,
-              `Remaining: ₹${(budget - expenses.reduce((sum, expense) => sum + expense.amount, 0)).toLocaleString()}`
-            ].join("    "), 14, 34);
-
-            const tableColumn = ["Date", "Category", "Vendor", "Amount", "Note", "Added By"];
-            const tableRows = expenses.map(exp => [
-                exp.date,
-                exp.category,
-                exp.vendor,
-                `₹${exp.amount.toLocaleString()}`,
-                exp.note || "",
-                exp.addedBy || ""
-            ]);
-
-            doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: 40,
-                headStyles: { fillColor: [124, 58, 237], textColor: 255, fontSize: 11 },
-                styles: { font: "helvetica", fontSize: 10, cellPadding: 2 },
-                alternateRowStyles: { fillColor: [245, 245, 255] },
-                margin: { left: 10, right: 10 }
-            });
-
-            doc.save(`expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
-        }
+        ReactDOM.render(React.createElement(TaskManager), document.getElementById('root'));
     </script>
 </body>
 </html>
