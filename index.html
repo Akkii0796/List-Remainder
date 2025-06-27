@@ -1,247 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Our Tasks</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .gradient-text {
-      background: linear-gradient(to right, #7c3aed, #2563eb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Tasks</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(to right, #7c3aed, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
+    <div id="root"></div>
 
-  <script>
-    const { useState, useEffect } = React;
-    const { Plus, X, GripVertical, Edit2, Check, ShoppingCart, Bell, List, Clock } = lucide;
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Plus, X, GripVertical, Edit2, Check, ShoppingCart, Bell, List, Clock } = lucide;
 
-    function TaskManager() {
-      const [tasks, setTasks] = useState([]);
-      const [newTask, setNewTask] = useState('');
-      const [taskType, setTaskType] = useState('list');
-      const [editingId, setEditingId] = useState(null);
-      const [editText, setEditText] = useState('');
-      const [draggedIndex, setDraggedIndex] = useState(null);
+        function TaskManager() {
+            const [tasks, setTasks] = useState([]);
+            const [newTask, setNewTask] = useState('');
+            const [taskType, setTaskType] = useState('list');
+            const [editingId, setEditingId] = useState(null);
+            const [editText, setEditText] = useState('');
+            const [draggedIndex, setDraggedIndex] = useState(null);
 
-      useEffect(() => {
-        const saved = localStorage.getItem('ourTasks');
-        if (saved) {
-          setTasks(JSON.parse(saved));
-        } else {
-          setTasks([
-            { id: 1, text: 'Buy groceries', type: 'list', completed: false },
-            { id: 2, text: 'Pay electricity bill', type: 'reminder', completed: false },
-            { id: 3, text: 'Clean the kitchen', type: 'list', completed: true },
-            { id: 4, text: 'Doctor appointment at 3 PM', type: 'reminder', completed: false }
-          ]);
-        }
-      }, []);
+            // Load tasks from localStorage on component mount
+            useEffect(() => {
+                const savedTasks = localStorage.getItem('ourTasks');
+                if (savedTasks) {
+                    setTasks(JSON.parse(savedTasks));
+                } else {
+                    // Default tasks if none saved
+                    setTasks([
+                        { id: 1, text: 'Buy groceries', type: 'list', completed: false },
+                        { id: 2, text: 'Pay electricity bill', type: 'reminder', completed: false },
+                        { id: 3, text: 'Clean the kitchen', type: 'list', completed: true },
+                        { id: 4, text: 'Doctor appointment at 3 PM', type: 'reminder', completed: false }
+                    ]);
+                }
+            }, []);
 
-      useEffect(() => {
-        localStorage.setItem('ourTasks', JSON.stringify(tasks));
-      }, [tasks]);
+            // Save tasks to localStorage whenever tasks change
+            useEffect(() => {
+                if (tasks.length > 0) {
+                    localStorage.setItem('ourTasks', JSON.stringify(tasks));
+                }
+            }, [tasks]);
 
-      const addTask = () => {
-        if (newTask.trim()) {
-          const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id), 0) + 1 : 1;
-          setTasks([...tasks, { id: newId, text: newTask.trim(), type: taskType, completed: false }]);
-          setNewTask('');
-        }
-      };
+            const addTask = () => {
+                if (newTask.trim()) {
+                    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id), 0) + 1 : 1;
+                    setTasks([...tasks, {
+                        id: newId,
+                        text: newTask.trim(),
+                        type: taskType,
+                        completed: false
+                    }]);
+                    setNewTask('');
+                }
+            };
 
-      const deleteTask = id => setTasks(tasks.filter(t => t.id !== id));
-      const toggleTask = id => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-      const startEditing = (id, text) => { setEditingId(id); setEditText(text); };
-      const saveEdit = () => {
-        if (editText.trim()) {
-          setTasks(tasks.map(t => t.id === editingId ? { ...t, text: editText.trim() } : t));
-        }
-        setEditingId(null); setEditText('');
-      };
-      const cancelEdit = () => { setEditingId(null); setEditText(''); };
+            const deleteTask = (id) => {
+                setTasks(tasks.filter(task => task.id !== id));
+            };
 
-      const handleKeyPress = e => {
-        if (e.key === 'Enter') editingId ? saveEdit() : addTask();
-        if (e.key === 'Escape' && editingId) cancelEdit();
-      };
+            const toggleTask = (id) => {
+                setTasks(tasks.map(task => 
+                    task.id === id ? { ...task, completed: !task.completed } : task
+                ));
+            };
 
-      const handleDragStart = (e, index, type) => {
-        setDraggedIndex({ index, type });
-        e.dataTransfer.effectAllowed = 'move';
-      };
-      const handleDragOver = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
-      const handleDrop = (e, dropIndex, dropType) => {
-        e.preventDefault();
-        if (!draggedIndex || draggedIndex.type !== dropType) return;
-        const sameType = tasks.filter(t => t.type === dropType);
-        const others = tasks.filter(t => t.type !== dropType);
-        const moved = sameType[draggedIndex.index];
-        const reordered = [...sameType];
-        reordered.splice(draggedIndex.index, 1);
-        reordered.splice(dropIndex, 0, moved);
-        setTasks([...others, ...reordered].sort((a, b) => a.type.localeCompare(b.type)));
-        setDraggedIndex(null);
-      };
+            const startEditing = (id, text) => {
+                setEditingId(id);
+                setEditText(text);
+            };
 
-      const TaskItem = ({ task, index, type }) => React.createElement("div", {
-        draggable: true,
-        onDragStart: e => handleDragStart(e, index, type),
-        onDragOver: handleDragOver,
-        onDrop: e => handleDrop(e, index, type),
-        onDragEnd: () => setDraggedIndex(null),
-        className: `bg-white rounded-xl shadow-sm p-4 flex items-center gap-3 transition-all duration-200 hover:shadow-md border border-gray-100 ${
-          draggedIndex?.index === index && draggedIndex?.type === type ? 'opacity-50 scale-95' : ''
-        } ${task.completed ? 'bg-gray-50' : ''}`
-      },
-        React.createElement("div", { className: "text-gray-400 cursor-grab active:cursor-grabbing" },
-          React.createElement(GripVertical, { size: 18 })
-        ),
-        React.createElement("div", { onClick: () => toggleTask(task.id), className: "cursor-pointer" },
-          React.createElement("div", {
-            className: `w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-              task.completed ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 hover:border-green-400'
-            }`
-          }, task.completed && React.createElement(Check, { size: 12 }))
-        ),
-        React.createElement("div", { className: "flex-1" },
-          editingId === task.id
-            ? React.createElement("input", {
-                type: "text",
-                value: editText,
-                onChange: e => setEditText(e.target.value),
-                onKeyDown: handleKeyPress,
-                onBlur: saveEdit,
-                autoFocus: true,
-                className: "w-full p-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              })
-            : React.createElement("span", {
-                className: `text-gray-800 ${task.completed ? 'line-through text-gray-500' : ''}`,
-                onDoubleClick: () => startEditing(task.id, task.text)
-              }, task.text)
-        ),
-        React.createElement("button", {
-          onClick: () => startEditing(task.id, task.text),
-          className: "text-blue-400 hover:text-blue-600 p-1 transition-colors"
-        }, React.createElement(Edit2, { size: 16 })),
-        React.createElement("button", {
-          onClick: () => deleteTask(task.id),
-          className: "text-red-400 hover:text-red-600 p-1 transition-colors"
-        }, React.createElement(X, { size: 16 }))
-      );
+            const saveEdit = () => {
+                if (editText.trim()) {
+                    setTasks(tasks.map(task => 
+                        task.id === editingId ? { ...task, text: editText.trim() } : task
+                    ));
+                }
+                setEditingId(null);
+                setEditText('');
+            };
 
-      const listTasks = tasks.filter(t => t.type === 'list');
-      const reminderTasks = tasks.filter(t => t.type === 'reminder');
+            const cancelEdit = () => {
+                setEditingId(null);
+                setEditText('');
+            };
 
-      return React.createElement("div", { className: "min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4" },
-        React.createElement("div", { className: "max-w-2xl mx-auto" },
-          React.createElement("div", { className: "text-center mb-8" },
-            React.createElement("div", { className: "inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mb-4" },
-              React.createElement(List, { className: "text-white", size: 28 })
-            ),
-            React.createElement("h1", { className: "text-3xl font-bold gradient-text mb-2" }, "Our Tasks"),
-            React.createElement("p", { className: "text-gray-600" }, "Stay organized together")
-          ),
-          React.createElement("div", { className: "bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100" },
-            React.createElement("div", { className: "space-y-4" },
-              React.createElement("div", { className: "flex gap-2" },
-                ["list", "reminder"].map(type =>
-                  React.createElement("button", {
-                    key: type,
-                    onClick: () => setTaskType(type),
-                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
-                      taskType === type
-                        ? type === 'list'
-                          ? 'bg-green-500 text-white shadow-md'
-                          : 'bg-orange-500 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`
-                  },
-                    React.createElement(type === 'list' ? ShoppingCart : Bell, { size: 18 }),
-                    React.createElement("span", { className: "font-medium" }, type === 'list' ? 'List Item' : 'Reminder')
-                  )
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter') {
+                    if (editingId) {
+                        saveEdit();
+                    } else {
+                        addTask();
+                    }
+                } else if (e.key === 'Escape' && editingId) {
+                    cancelEdit();
+                }
+            };
+
+            const handleDragStart = (e, index, type) => {
+                setDraggedIndex({ index, type });
+                e.dataTransfer.effectAllowed = 'move';
+            };
+
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            const handleDrop = (e, dropIndex, dropType) => {
+                e.preventDefault();
+                if (!draggedIndex || draggedIndex.type !== dropType) return;
+
+                const tasksOfType = tasks.filter(task => task.type === dropType);
+                const otherTasks = tasks.filter(task => task.type !== dropType);
+                
+                const draggedTask = tasksOfType[draggedIndex.index];
+                const newTasksOfType = [...tasksOfType];
+                
+                newTasksOfType.splice(draggedIndex.index, 1);
+                newTasksOfType.splice(dropIndex, 0, draggedTask);
+                
+                setTasks([...otherTasks, ...newTasksOfType].sort((a, b) => {
+                    if (a.type === 'list' && b.type === 'reminder') return -1;
+                    if (a.type === 'reminder' && b.type === 'list') return 1;
+                    return 0;
+                }));
+                setDraggedIndex(null);
+            };
+
+            const listTasks = tasks.filter(task => task.type === 'list');
+            const reminderTasks = tasks.filter(task => task.type === 'reminder');
+
+            const TaskItem = ({ task, index, type }) => (
+                React.createElement('div', {
+                    draggable: true,
+                    onDragStart: (e) => handleDragStart(e, index, type),
+                    onDragOver: handleDragOver,
+                    onDrop: (e) => handleDrop(e, index, type),
+                    onDragEnd: () => setDraggedIndex(null),
+                    className: `bg-white rounded-xl shadow-sm p-4 flex items-center gap-3 transition-all duration-200 hover:shadow-md border border-gray-100 ${
+                        draggedIndex?.index === index && draggedIndex?.type === type ? 'opacity-50 scale-95' : ''
+                    } ${task.completed ? 'bg-gray-50' : ''}`
+                },
+                    React.createElement('div', {
+                        className: 'text-gray-400 cursor-grab active:cursor-grabbing'
+                    }, React.createElement(GripVertical, { size: 18 })),
+                    
+                    React.createElement('div', {
+                        onClick: () => toggleTask(task.id),
+                        className: 'cursor-pointer'
+                    },
+                        React.createElement('div', {
+                            className: `w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                task.completed 
+                                    ? 'bg-green-500 border-green-500 text-white' 
+                                    : 'border-gray-300 hover:border-green-400'
+                            }`
+                        }, task.completed && React.createElement(Check, { size: 12 }))
+                    ),
+                    
+                    React.createElement('div', { className: 'flex-1' },
+                        editingId === task.id ? 
+                            React.createElement('input', {
+                                type: 'text',
+                                value: editText,
+                                onChange: (e) => setEditText(e.target.value),
+                                onKeyDown: handleKeyPress,
+                                onBlur: saveEdit,
+                                className: 'w-full p-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500',
+                                autoFocus: true
+                            }) :
+                            React.createElement('span', {
+                                className: `text-gray-800 ${task.completed ? 'line-through text-gray-500' : ''}`,
+                                onDoubleClick: () => startEditing(task.id, task.text)
+                            }, task.text)
+                    ),
+                    
+                    React.createElement('button', {
+                        onClick: () => startEditing(task.id, task.text),
+                        className: 'text-blue-400 hover:text-blue-600 p-1 transition-colors'
+                    }, React.createElement(Edit2, { size: 16 })),
+                    
+                    React.createElement('button', {
+                        onClick: () => deleteTask(task.id),
+                        className: 'text-red-400 hover:text-red-600 p-1 transition-colors'
+                    }, React.createElement(X, { size: 16 }))
                 )
-              ),
-              React.createElement("div", { className: "flex gap-3" },
-                React.createElement("input", {
-                  type: "text",
-                  value: newTask,
-                  onChange: e => setNewTask(e.target.value),
-                  onKeyDown: handleKeyPress,
-                  placeholder: `Add a new ${taskType}...`,
-                  className: "flex-1 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base",
-                  autoFocus: true
-                }),
-                React.createElement("button", {
-                  onClick: addTask,
-                  className: "bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white p-4 rounded-xl transition-all shadow-md hover:shadow-lg"
-                }, React.createElement(Plus, { size: 20 }))
-              )
-            )
-          ),
-          React.createElement("div", { className: "grid md:grid-cols-2 gap-6" },
-            ["list", "reminder"].map(type =>
-              React.createElement("div", {
-                key: type,
-                className: "bg-white rounded-2xl shadow-lg p-6 border border-gray-100"
-              },
-                React.createElement("div", { className: "flex items-center gap-3 mb-6" },
-                  React.createElement("div", {
-                    className: `w-10 h-10 ${
-                      type === 'list' ? 'bg-green-100' : 'bg-orange-100'
-                    } rounded-full flex items-center justify-center`
-                  },
-                    React.createElement(type === 'list' ? ShoppingCart : Bell, {
-                      className: type === 'list' ? 'text-green-600' : 'text-orange-600',
-                      size: 20
-                    })
-                  ),
-                  React.createElement("div", {},
-                    React.createElement("h2", { className: "text-xl font-bold text-gray-800" }, type === 'list' ? "Lists" : "Reminders"),
-                    React.createElement("p", { className: "text-sm text-gray-500" },
-                      `${(type === 'list' ? listTasks : reminderTasks).filter(t => !t.completed).length} pending`
+            );
+
+            return React.createElement('div', {
+                className: 'min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4'
+            },
+                React.createElement('div', { className: 'max-w-2xl mx-auto' },
+                    // Header
+                    React.createElement('div', { className: 'text-center mb-8' },
+                        React.createElement('div', {
+                            className: 'inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mb-4'
+                        }, React.createElement(List, { className: 'text-white', size: 28 })),
+                        React.createElement('h1', {
+                            className: 'text-3xl font-bold gradient-text mb-2'
+                        }, 'Our Tasks'),
+                        React.createElement('p', { className: 'text-gray-600' }, 'Stay organized together')
+                    ),
+
+                    // Add Task Input
+                    React.createElement('div', {
+                        className: 'bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100'
+                    },
+                        React.createElement('div', { className: 'space-y-4' },
+                            // Task Type Selector
+                            React.createElement('div', { className: 'flex gap-2' },
+                                React.createElement('button', {
+                                    onClick: () => setTaskType('list'),
+                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
+                                        taskType === 'list' 
+                                            ? 'bg-green-500 text-white shadow-md' 
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`
+                                },
+                                    React.createElement(ShoppingCart, { size: 18 }),
+                                    React.createElement('span', { className: 'font-medium' }, 'List Item')
+                                ),
+                                React.createElement('button', {
+                                    onClick: () => setTaskType('reminder'),
+                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
+                                        taskType === 'reminder' 
+                                            ? 'bg-orange-500 text-white shadow-md' 
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`
+                                },
+                                    React.createElement(Bell, { size: 18 }),
+                                    React.createElement('span', { className: 'font-medium' }, 'Reminder')
+                                )
+                            ),
+                            
+                            // Input
+                            React.createElement('div', { className: 'flex gap-3' },
+                                React.createElement('input', {
+                                    type: 'text',
+                                    value: newTask,
+                                    onChange: (e) => setNewTask(e.target.value),
+                                    onKeyDown: handleKeyPress,
+                                    placeholder: `Add a new ${taskType}...`,
+                                    className: 'flex-1 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base',
+                                    autoFocus: true
+                                }),
+                                React.createElement('button', {
+                                    onClick: addTask,
+                                    className: 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white p-4 rounded-xl transition-all shadow-md hover:shadow-lg'
+                                }, React.createElement(Plus, { size: 20 }))
+                            )
+                        )
+                    ),
+
+                    React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
+                        // Lists Section
+                        React.createElement('div', {
+                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
+                        },
+                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
+                                React.createElement('div', {
+                                    className: 'w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'
+                                }, React.createElement(ShoppingCart, { className: 'text-green-600', size: 20 })),
+                                React.createElement('div', {},
+                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Lists'),
+                                    React.createElement('p', { className: 'text-sm text-gray-500' },
+                                        `${listTasks.filter(t => !t.completed).length} pending`
+                                    )
+                                )
+                            ),
+                            
+                            React.createElement('div', { className: 'space-y-3' },
+                                listTasks.length === 0 ? 
+                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
+                                        React.createElement(ShoppingCart, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
+                                        React.createElement('p', {}, 'No list items yet')
+                                    ) :
+                                    listTasks.map((task, index) => 
+                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'list' })
+                                    )
+                            )
+                        ),
+
+                        // Reminders Section
+                        React.createElement('div', {
+                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
+                        },
+                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
+                                React.createElement('div', {
+                                    className: 'w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center'
+                                }, React.createElement(Bell, { className: 'text-orange-600', size: 20 })),
+                                React.createElement('div', {},
+                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Reminders'),
+                                    React.createElement('p', { className: 'text-sm text-gray-500' },
+                                        `${reminderTasks.filter(t => !t.completed).length} pending`
+                                    )
+                                )
+                            ),
+                            
+                            React.createElement('div', { className: 'space-y-3' },
+                                reminderTasks.length === 0 ? 
+                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
+                                        React.createElement(Clock, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
+                                        React.createElement('p', {}, 'No reminders yet')
+                                    ) :
+                                    reminderTasks.map((task, index) => 
+                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'reminder' })
+                                    )
+                            )
+                        )
+                    ),
+
+                    // Summary
+                    React.createElement('div', {
+                        className: 'text-center mt-8 p-4 bg-white/50 rounded-2xl backdrop-blur-sm'
+                    },
+                        React.createElement('p', { className: 'text-gray-600' },
+                            React.createElement('span', { className: 'font-semibold text-green-600' },
+                                tasks.filter(t => t.completed).length
+                            ),
+                            ' completed • ',
+                            React.createElement('span', { className: 'font-semibold text-blue-600 ml-1' },
+                                tasks.filter(t => !t.completed).length
+                            ),
+                            ' remaining'
+                        )
                     )
-                  )
-                ),
-                React.createElement("div", { className: "space-y-3" },
-                  (type === 'list' ? listTasks : reminderTasks).length === 0
-                    ? React.createElement("div", { className: "text-center py-8 text-gray-400" },
-                        React.createElement(type === 'list' ? ShoppingCart : Clock, {
-                          size: 32,
-                          className: "mx-auto mb-2 opacity-50"
-                        }),
-                        React.createElement("p", {}, type === 'list' ? "No list items yet" : "No reminders yet")
-                      )
-                    : (type === 'list' ? listTasks : reminderTasks).map((task, index) =>
-                        React.createElement(TaskItem, { key: task.id, task, index, type })
-                      )
                 )
-              )
-            )
-          ),
-          React.createElement("div", {
-            className: "text-center mt-8 p-4 bg-white/50 rounded-2xl backdrop-blur-sm"
-          },
-            React.createElement("p", { className: "text-gray-600" },
-              React.createElement("span", { className: "font-semibold text-green-600" }, tasks.filter(t => t.completed).length),
-              " completed • ",
-              React.createElement("span", { className: "font-semibold text-blue-600 ml-1" }, tasks.filter(t => !t.completed).length),
-              " remaining"
-            )
-          )
-        )
-      );
-    }
+            );
+        }
 
-    ReactDOM.render(React.createElement(TaskManager), document.getElementById("root"));
-  </script>
+        ReactDOM.render(React.createElement(TaskManager), document.getElementById('root'));
+    </script>
 </body>
 </html>
