@@ -1,350 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Tasks</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .gradient-text {
-            background: linear-gradient(to right, #7c3aed, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Manager</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f0f4f8;
+      padding: 10px;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+      background: #1e1e1e;
+      color: #f0f0f0;
+    }
+    h1, .date-display {
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .input-box input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .type-options {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .type-options label {
+      font-size: 13px;
+    }
+    .add-btn, .voice-btn, .dark-toggle {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+    }
+    .add-btn { background: #6a11cb; color: #fff; }
+    .voice-btn { background: #00b894; color: #fff; }
+    .dark-toggle { background: none; font-size: 18px; border: none; position: absolute; top: 10px; right: 10px; cursor: pointer; }
+
+    .task-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+    body.dark .section {
+      background: #2c2c2c;
+    }
+    #list-section { border-left: 5px solid #4CAF50; }
+    #reminder-section { border-left: 5px solid #FF9800; }
+
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px;
+      background: #fdfdfd;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: grab;
+      transition: all 0.2s ease-in-out;
+    }
+    .task:hover {
+      background-color: #eef3f8;
+    }
+    body.dark .task { background: #3a3a3a; }
+    .task-content { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .task span { font-size: 13px; }
+    .completed span { text-decoration: line-through; color: gray; }
+
+    .actions button {
+      background: none;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      color: #888;
+      margin-left: 4px;
+    }
+    .edit-input {
+      border: 1px solid #ccc;
+      padding: 3px;
+      font-size: 13px;
+      border-radius: 3px;
+    }
+    .summary {
+      text-align: center;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .priority-choose {
+      display: flex;
+      gap: 5px;
+    }
+    .priority-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .priority-high { background: red; }
+    .priority-medium { background: orange; }
+    .priority-low { background: green; }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
+  <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
+  <div class="date-display" id="dateDisplay"></div>
+  <h1>🗂️ Life Task Manager</h1>
+  <div class="input-box">
+    <input type="text" id="task-input" placeholder="Add a new task...">
+    <div class="type-options">
+      <label><input type="radio" name="task-type" value="list" checked> List</label>
+      <label><input type="radio" name="task-type" value="reminder"> Reminder</label>
+      <button class="add-btn" id="add-task">+</button>
+      <button class="voice-btn" onclick="startVoiceInput()">🎤</button>
+    </div>
+  </div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { Plus, X, GripVertical, Edit2, Check, ShoppingCart, Bell, List, Clock } = lucide;
+  <div class="task-columns">
+    <div class="section" id="list-section">
+      <h3>🛒 Lists</h3>
+      <div id="list-tasks"></div>
+    </div>
+    <div class="section" id="reminder-section">
+      <h3>🔔 Reminders</h3>
+      <div id="reminder-tasks"></div>
+    </div>
+  </div>
 
-        function TaskManager() {
-            const [tasks, setTasks] = useState([]);
-            const [newTask, setNewTask] = useState('');
-            const [taskType, setTaskType] = useState('list');
-            const [editingId, setEditingId] = useState(null);
-            const [editText, setEditText] = useState('');
-            const [draggedIndex, setDraggedIndex] = useState(null);
+  <div class="summary" id="summary"></div>
 
-            // Load tasks from localStorage on component mount
-            useEffect(() => {
-                const savedTasks = localStorage.getItem('ourTasks');
-                if (savedTasks) {
-                    setTasks(JSON.parse(savedTasks));
-                } else {
-                    // Default tasks if none saved
-                    setTasks([
-                        { id: 1, text: 'Buy groceries', type: 'list', completed: false },
-                        { id: 2, text: 'Pay electricity bill', type: 'reminder', completed: false },
-                        { id: 3, text: 'Clean the kitchen', type: 'list', completed: true },
-                        { id: 4, text: 'Doctor appointment at 3 PM', type: 'reminder', completed: false }
-                    ]);
-                }
-            }, []);
+  <script>
+    const input = document.getElementById("task-input");
+    const addBtn = document.getElementById("add-task");
+    const summary = document.getElementById("summary");
+    let lastDeletedTask = null;
 
-            // Save tasks to localStorage whenever tasks change
-            useEffect(() => {
-                if (tasks.length > 0) {
-                    localStorage.setItem('ourTasks', JSON.stringify(tasks));
-                }
-            }, [tasks]);
+    input.addEventListener("keypress", (e) => { if (e.key === "Enter") addTask(); });
+    addBtn.onclick = () => addTask();
 
-            const addTask = () => {
-                if (newTask.trim()) {
-                    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id), 0) + 1 : 1;
-                    setTasks([...tasks, {
-                        id: newId,
-                        text: newTask.trim(),
-                        type: taskType,
-                        completed: false
-                    }]);
-                    setNewTask('');
-                }
-            };
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
 
-            const deleteTask = (id) => {
-                setTasks(tasks.filter(task => task.id !== id));
-            };
+    function startVoiceInput() {
+      if (!('webkitSpeechRecognition' in window)) return alert("Not supported");
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.start();
+      recognition.onresult = (e) => {
+        input.value = e.results[0][0].transcript;
+        input.focus();
+      };
+    }
 
-            const toggleTask = (id) => {
-                setTasks(tasks.map(task => 
-                    task.id === id ? { ...task, completed: !task.completed } : task
-                ));
-            };
+    function addTask() {
+      const text = input.value.trim();
+      const type = document.querySelector('input[name="task-type"]:checked').value;
+      if (!text) return;
+      const tasks = getTasks();
+      const task = { text, done: false, type };
+      if (type === "reminder") task.priority = null;
+      tasks.push(task);
+      saveTasks(tasks);
+      input.value = "";
+      renderTasks();
+    }
 
-            const startEditing = (id, text) => {
-                setEditingId(id);
-                setEditText(text);
-            };
+    function getTasks() {
+      return JSON.parse(localStorage.getItem("tasks") || "[]");
+    }
 
-            const saveEdit = () => {
-                if (editText.trim()) {
-                    setTasks(tasks.map(task => 
-                        task.id === editingId ? { ...task, text: editText.trim() } : task
-                    ));
-                }
-                setEditingId(null);
-                setEditText('');
-            };
+    function saveTasks(tasks) {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
 
-            const cancelEdit = () => {
-                setEditingId(null);
-                setEditText('');
-            };
+    function renderTasks() {
+      const tasks = getTasks();
+      const lists = tasks.filter(t => t.type === "list");
+      const reminders = tasks.filter(t => t.type === "reminder");
+      renderSection("list-tasks", lists, "list");
+      renderSection("reminder-tasks", reminders, "reminder");
+      const completed = tasks.filter(t => t.done).length;
+      const pending = tasks.length - completed;
+      summary.innerHTML = `${completed} completed • ${pending} remaining ${lastDeletedTask ? "<button onclick='undoDelete()'>Undo Delete</button>" : ""}`;
+    }
 
-            const handleKeyPress = (e) => {
-                if (e.key === 'Enter') {
-                    if (editingId) {
-                        saveEdit();
-                    } else {
-                        addTask();
-                    }
-                } else if (e.key === 'Escape' && editingId) {
-                    cancelEdit();
-                }
-            };
+    function renderSection(containerId, tasks, type) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      tasks.forEach((task, index) => {
+        const div = document.createElement("div");
+        div.className = "task" + (task.done ? " completed" : "");
+        div.draggable = true;
 
-            const handleDragStart = (e, index, type) => {
-                setDraggedIndex({ index, type });
-                e.dataTransfer.effectAllowed = 'move';
-            };
+        const span = document.createElement("span");
+        span.textContent = task.text;
 
-            const handleDragOver = (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-            };
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.done;
+        checkbox.onchange = () => {
+          const all = getTasks();
+          const match = all.find(t => t.text === task.text && t.type === task.type);
+          match.done = checkbox.checked;
+          saveTasks(all);
+          renderTasks();
+        };
 
-            const handleDrop = (e, dropIndex, dropType) => {
-                e.preventDefault();
-                if (!draggedIndex || draggedIndex.type !== dropType) return;
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = "❌";
+        deleteBtn.onclick = () => {
+          lastDeletedTask = task;
+          const all = getTasks().filter(t => !(t.text === task.text && t.type === task.type));
+          saveTasks(all);
+          renderTasks();
+        };
 
-                const tasksOfType = tasks.filter(task => task.type === dropType);
-                const otherTasks = tasks.filter(task => task.type !== dropType);
-                
-                const draggedTask = tasksOfType[draggedIndex.index];
-                const newTasksOfType = [...tasksOfType];
-                
-                newTasksOfType.splice(draggedIndex.index, 1);
-                newTasksOfType.splice(dropIndex, 0, draggedTask);
-                
-                setTasks([...otherTasks, ...newTasksOfType].sort((a, b) => {
-                    if (a.type === 'list' && b.type === 'reminder') return -1;
-                    if (a.type === 'reminder' && b.type === 'list') return 1;
-                    return 0;
-                }));
-                setDraggedIndex(null);
-            };
+        const editBtn = document.createElement("button");
+        editBtn.innerHTML = "✏️";
+        editBtn.onclick = () => {
+          const inputBox = document.createElement("input");
+          inputBox.value = task.text;
+          inputBox.className = "edit-input";
+          span.replaceWith(inputBox);
+          inputBox.focus();
+          inputBox.onblur = () => {
+            const all = getTasks();
+            const match = all.find(t => t.text === task.text && t.type === task.type);
+            match.text = inputBox.value;
+            saveTasks(all);
+            renderTasks();
+          };
+        };
 
-            const listTasks = tasks.filter(task => task.type === 'list');
-            const reminderTasks = tasks.filter(task => task.type === 'reminder');
+        const content = document.createElement("div");
+        content.className = "task-content";
+        content.appendChild(checkbox);
+        content.appendChild(span);
 
-            const TaskItem = ({ task, index, type }) => (
-                React.createElement('div', {
-                    draggable: true,
-                    onDragStart: (e) => handleDragStart(e, index, type),
-                    onDragOver: handleDragOver,
-                    onDrop: (e) => handleDrop(e, index, type),
-                    onDragEnd: () => setDraggedIndex(null),
-                    className: `bg-white rounded-xl shadow-sm p-4 flex items-center gap-3 transition-all duration-200 hover:shadow-md border border-gray-100 ${
-                        draggedIndex?.index === index && draggedIndex?.type === type ? 'opacity-50 scale-95' : ''
-                    } ${task.completed ? 'bg-gray-50' : ''}`
-                },
-                    React.createElement('div', {
-                        className: 'text-gray-400 cursor-grab active:cursor-grabbing'
-                    }, React.createElement(GripVertical, { size: 18 })),
-                    
-                    React.createElement('div', {
-                        onClick: () => toggleTask(task.id),
-                        className: 'cursor-pointer'
-                    },
-                        React.createElement('div', {
-                            className: `w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                                task.completed 
-                                    ? 'bg-green-500 border-green-500 text-white' 
-                                    : 'border-gray-300 hover:border-green-400'
-                            }`
-                        }, task.completed && React.createElement(Check, { size: 12 }))
-                    ),
-                    
-                    React.createElement('div', { className: 'flex-1' },
-                        editingId === task.id ? 
-                            React.createElement('input', {
-                                type: 'text',
-                                value: editText,
-                                onChange: (e) => setEditText(e.target.value),
-                                onKeyDown: handleKeyPress,
-                                onBlur: saveEdit,
-                                className: 'w-full p-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500',
-                                autoFocus: true
-                            }) :
-                            React.createElement('span', {
-                                className: `text-gray-800 ${task.completed ? 'line-through text-gray-500' : ''}`,
-                                onDoubleClick: () => startEditing(task.id, task.text)
-                            }, task.text)
-                    ),
-                    
-                    React.createElement('button', {
-                        onClick: () => startEditing(task.id, task.text),
-                        className: 'text-blue-400 hover:text-blue-600 p-1 transition-colors'
-                    }, React.createElement(Edit2, { size: 16 })),
-                    
-                    React.createElement('button', {
-                        onClick: () => deleteTask(task.id),
-                        className: 'text-red-400 hover:text-red-600 p-1 transition-colors'
-                    }, React.createElement(X, { size: 16 }))
-                )
-            );
+        const actions = document.createElement("div");
+        actions.className = "actions";
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
 
-            return React.createElement('div', {
-                className: 'min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4'
-            },
-                React.createElement('div', { className: 'max-w-2xl mx-auto' },
-                    // Header
-                    React.createElement('div', { className: 'text-center mb-8' },
-                        React.createElement('div', {
-                            className: 'inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mb-4'
-                        }, React.createElement(List, { className: 'text-white', size: 28 })),
-                        React.createElement('h1', {
-                            className: 'text-3xl font-bold gradient-text mb-2'
-                        }, 'Our Tasks'),
-                        React.createElement('p', { className: 'text-gray-600' }, 'Stay organized together')
-                    ),
-
-                    // Add Task Input
-                    React.createElement('div', {
-                        className: 'bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100'
-                    },
-                        React.createElement('div', { className: 'space-y-4' },
-                            // Task Type Selector
-                            React.createElement('div', { className: 'flex gap-2' },
-                                React.createElement('button', {
-                                    onClick: () => setTaskType('list'),
-                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
-                                        taskType === 'list' 
-                                            ? 'bg-green-500 text-white shadow-md' 
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`
-                                },
-                                    React.createElement(ShoppingCart, { size: 18 }),
-                                    React.createElement('span', { className: 'font-medium' }, 'List Item')
-                                ),
-                                React.createElement('button', {
-                                    onClick: () => setTaskType('reminder'),
-                                    className: `flex-1 flex items-center justify-center gap-2 p-3 rounded-xl transition-all ${
-                                        taskType === 'reminder' 
-                                            ? 'bg-orange-500 text-white shadow-md' 
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`
-                                },
-                                    React.createElement(Bell, { size: 18 }),
-                                    React.createElement('span', { className: 'font-medium' }, 'Reminder')
-                                )
-                            ),
-                            
-                            // Input
-                            React.createElement('div', { className: 'flex gap-3' },
-                                React.createElement('input', {
-                                    type: 'text',
-                                    value: newTask,
-                                    onChange: (e) => setNewTask(e.target.value),
-                                    onKeyDown: handleKeyPress,
-                                    placeholder: `Add a new ${taskType}...`,
-                                    className: 'flex-1 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base',
-                                    autoFocus: true
-                                }),
-                                React.createElement('button', {
-                                    onClick: addTask,
-                                    className: 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white p-4 rounded-xl transition-all shadow-md hover:shadow-lg'
-                                }, React.createElement(Plus, { size: 20 }))
-                            )
-                        )
-                    ),
-
-                    React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
-                        // Lists Section
-                        React.createElement('div', {
-                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
-                        },
-                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
-                                React.createElement('div', {
-                                    className: 'w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'
-                                }, React.createElement(ShoppingCart, { className: 'text-green-600', size: 20 })),
-                                React.createElement('div', {},
-                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Lists'),
-                                    React.createElement('p', { className: 'text-sm text-gray-500' },
-                                        `${listTasks.filter(t => !t.completed).length} pending`
-                                    )
-                                )
-                            ),
-                            
-                            React.createElement('div', { className: 'space-y-3' },
-                                listTasks.length === 0 ? 
-                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
-                                        React.createElement(ShoppingCart, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
-                                        React.createElement('p', {}, 'No list items yet')
-                                    ) :
-                                    listTasks.map((task, index) => 
-                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'list' })
-                                    )
-                            )
-                        ),
-
-                        // Reminders Section
-                        React.createElement('div', {
-                            className: 'bg-white rounded-2xl shadow-lg p-6 border border-gray-100'
-                        },
-                            React.createElement('div', { className: 'flex items-center gap-3 mb-6' },
-                                React.createElement('div', {
-                                    className: 'w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center'
-                                }, React.createElement(Bell, { className: 'text-orange-600', size: 20 })),
-                                React.createElement('div', {},
-                                    React.createElement('h2', { className: 'text-xl font-bold text-gray-800' }, 'Reminders'),
-                                    React.createElement('p', { className: 'text-sm text-gray-500' },
-                                        `${reminderTasks.filter(t => !t.completed).length} pending`
-                                    )
-                                )
-                            ),
-                            
-                            React.createElement('div', { className: 'space-y-3' },
-                                reminderTasks.length === 0 ? 
-                                    React.createElement('div', { className: 'text-center py-8 text-gray-400' },
-                                        React.createElement(Clock, { size: 32, className: 'mx-auto mb-2 opacity-50' }),
-                                        React.createElement('p', {}, 'No reminders yet')
-                                    ) :
-                                    reminderTasks.map((task, index) => 
-                                        React.createElement(TaskItem, { key: task.id, task, index, type: 'reminder' })
-                                    )
-                            )
-                        )
-                    ),
-
-                    // Summary
-                    React.createElement('div', {
-                        className: 'text-center mt-8 p-4 bg-white/50 rounded-2xl backdrop-blur-sm'
-                    },
-                        React.createElement('p', { className: 'text-gray-600' },
-                            React.createElement('span', { className: 'font-semibold text-green-600' },
-                                tasks.filter(t => t.completed).length
-                            ),
-                            ' completed • ',
-                            React.createElement('span', { className: 'font-semibold text-blue-600 ml-1' },
-                                tasks.filter(t => !t.completed).length
-                            ),
-                            ' remaining'
-                        )
-                    )
-                )
-            );
+        div.appendChild(content);
+        if (type === "reminder") {
+          if (!task.priority) {
+            const choose = document.createElement("div");
+            choose.className = "priority-choose";
+            ["high", "medium", "low"].forEach(p => {
+              const dot = document.createElement("div");
+              dot.className = `priority-dot priority-${p}`;
+              dot.onclick = () => {
+                const all = getTasks();
+                const match = all.find(t => t.text === task.text && t.type === task.type);
+                match.priority = p;
+                saveTasks(all);
+                renderTasks();
+              };
+              choose.appendChild(dot);
+            });
+            content.appendChild(choose);
+          } else {
+            const dot = document.createElement("div");
+            dot.className = `priority-dot priority-${task.priority}`;
+            content.appendChild(dot);
+          }
         }
+        div.appendChild(actions);
 
-        ReactDOM.render(React.createElement(TaskManager), document.getElementById('root'));
-    </script>
+        div.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", JSON.stringify({ text: task.text, type: task.type }));
+        });
+        div.addEventListener("dragover", (e) => e.preventDefault());
+        div.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const draggedData = JSON.parse(e.dataTransfer.getData("text"));
+          const all = getTasks();
+          const draggedIndex = all.findIndex(t => t.text === draggedData.text && t.type === draggedData.type);
+          const targetIndex = all.findIndex(t => t.text === task.text && t.type === task.type);
+          const [moved] = all.splice(draggedIndex, 1);
+          all.splice(targetIndex, 0, moved);
+          saveTasks(all);
+          renderTasks();
+        });
+
+        container.appendChild(div);
+      });
+    }
+
+    function undoDelete() {
+      if (lastDeletedTask) {
+        const all = getTasks();
+        all.push(lastDeletedTask);
+        saveTasks(all);
+        lastDeletedTask = null;
+        renderTasks();
+      }
+    }
+
+    function updateDate() {
+      const date = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById("dateDisplay").textContent = date.toLocaleDateString(undefined, options);
+    }
+
+    updateDate();
+    renderTasks();
+  </script>
 </body>
 </html>
