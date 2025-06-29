@@ -35,7 +35,7 @@
 
         .header {
             background: linear-gradient(45deg, #ff6b6b, #ffd93d);
-            padding: 25px 20px;
+            padding: 15px 20px;
             text-align: center;
             color: white;
             position: relative;
@@ -59,35 +59,27 @@
         }
 
         .header h1 {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 5px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
             position: relative;
             z-index: 1;
         }
 
         .input-section {
-            padding: 25px 20px;
+            padding: 15px 20px;
             background: #f8f9fa;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .input-group input[type="text"], .input-group input[type="date"] {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid #e9ecef;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             transition: all 0.3s ease;
             background: white;
         }
@@ -99,10 +91,16 @@
             transform: translateY(-2px);
         }
 
+        .controls-row {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
         .radio-group {
             display: flex;
-            gap: 15px;
-            margin: 15px 0;
+            gap: 8px;
+            flex: 1;
         }
 
         .radio-option {
@@ -117,14 +115,15 @@
 
         .radio-option label {
             display: block;
-            padding: 15px;
+            padding: 10px 8px;
             background: white;
             border: 2px solid #e9ecef;
-            border-radius: 12px;
+            border-radius: 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
+            font-size: 12px;
         }
 
         .radio-option input[type="radio"]:checked + label {
@@ -132,6 +131,24 @@
             color: white;
             border-color: #4ecdc4;
             transform: scale(1.05);
+        }
+
+        .add-btn {
+            padding: 10px 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .priority-section {
@@ -431,8 +448,6 @@
     <div class="container">
         <div class="header">
             <h1>🚀 TaskMaster Pro</h1>
-            <p>Organize your life, one task at a time!</p>
-            <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;" id="currentDate"></div>
         </div>
 
         <div class="input-section">
@@ -440,19 +455,22 @@
                 <input type="text" id="taskInput" placeholder="What needs to be done? ✨">
             </div>
 
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="listOption" name="taskType" value="list" checked>
-                    <label for="listOption">📝 List</label>
+            <div class="controls-row">
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="listOption" name="taskType" value="list" checked>
+                        <label for="listOption">📝 List</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="reminderOption" name="taskType" value="reminder">
+                        <label for="reminderOption">⏰ Reminder</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                    <input type="radio" id="reminderOption" name="taskType" value="reminder">
-                    <label for="reminderOption">⏰ Reminder</label>
-                </div>
+                <button class="add-btn" onclick="addTask()">+ Add</button>
             </div>
 
             <div class="priority-section" id="prioritySection">
-                <h4 style="margin-bottom: 10px; color: #333;">Priority Level:</h4>
+                <h4 style="margin-bottom: 10px; color: #333; font-size: 12px;">Priority:</h4>
                 <div class="priority-buttons">
                     <button class="priority-btn high" data-priority="high">🔥 High</button>
                     <button class="priority-btn medium" data-priority="medium">⚡ Medium</button>
@@ -463,8 +481,6 @@
             <div class="date-section" id="dateSection">
                 <input type="date" id="dueDateInput">
             </div>
-
-            <button class="add-btn" onclick="addTask()">✨ Add Task</button>
         </div>
 
         <div class="tasks-section">
@@ -496,7 +512,6 @@
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            updateCurrentDate();
             updateTaskDisplay();
             
             // Show/hide priority and date sections based on task type
@@ -663,17 +678,6 @@
         function closeModal() {
             document.getElementById('editModal').style.display = 'none';
             currentEditIndex = -1;
-        }
-
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
         }
 
         // Close modal when clicking outside
