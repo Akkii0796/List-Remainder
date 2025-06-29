@@ -1,338 +1,687 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Manager</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: #f0f4f8;
-      padding: 10px;
-      transition: background 0.3s, color 0.3s;
-    }
-    body.dark {
-      background: #1e1e1e;
-      color: #f0f0f0;
-    }
-    h1, .date-display {
-      text-align: center;
-      margin: 0.5rem 0;
-    }
-    .input-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-    .input-box input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .type-options {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .type-options label {
-      font-size: 13px;
-    }
-    .add-btn, .voice-btn, .dark-toggle {
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-    }
-    .add-btn { background: #6a11cb; color: #fff; }
-    .voice-btn { background: #00b894; color: #fff; }
-    .dark-toggle { background: none; font-size: 18px; border: none; position: absolute; top: 10px; right: 10px; cursor: pointer; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .task-columns {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .section {
-      background: white;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 13px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      transition: background 0.3s;
-    }
-    body.dark .section {
-      background: #2c2c2c;
-    }
-    #list-section { border-left: 5px solid #4CAF50; }
-    #reminder-section { border-left: 5px solid #FF9800; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
 
-    .task {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px;
-      background: #fdfdfd;
-      margin-bottom: 6px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: grab;
-      transition: all 0.2s ease-in-out;
-    }
-    .task:hover {
-      background-color: #eef3f8;
-    }
-    body.dark .task { background: #3a3a3a; }
-    .task-content { display: flex; align-items: center; gap: 8px; flex: 1; }
-    .task span { font-size: 13px; }
-    .completed span { text-decoration: line-through; color: gray; }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
 
-    .actions button {
-      background: none;
-      border: none;
-      font-size: 12px;
-      cursor: pointer;
-      color: #888;
-      margin-left: 4px;
-    }
-    .edit-input {
-      border: 1px solid #ccc;
-      padding: 3px;
-      font-size: 13px;
-      border-radius: 3px;
-    }
-    .summary {
-      text-align: center;
-      font-size: 13px;
-      margin-top: 10px;
-    }
-    .priority-choose {
-      display: flex;
-      gap: 5px;
-    }
-    .priority-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    .priority-high { background: red; }
-    .priority-medium { background: orange; }
-    .priority-low { background: green; }
-  </style>
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-section {
+            padding: 25px 20px;
+            background: #f8f9fa;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input[type="text"], .input-group input[type="date"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input[type="text"]:focus, .input-group input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border-color: #4ecdc4;
+            transform: scale(1.05);
+        }
+
+        .priority-section {
+            display: none;
+            margin: 15px 0;
+        }
+
+        .priority-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .priority-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .priority-btn.high {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .priority-btn.medium {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .priority-btn.low {
+            background: #6bcf7f;
+            color: white;
+        }
+
+        .priority-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .priority-btn.selected {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .date-section {
+            display: none;
+            margin: 15px 0;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .tasks-section {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .task-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 3px solid #e9ecef;
+        }
+
+        .task-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+            background: #f8f9fa;
+        }
+
+        .task-item.priority-high {
+            border-left-color: #ff6b6b;
+        }
+
+        .task-item.priority-medium {
+            border-left-color: #ffd93d;
+        }
+
+        .task-item.priority-low {
+            border-left-color: #6bcf7f;
+        }
+
+        .task-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .task-text-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .priority-dot.high {
+            background: #ff6b6b;
+        }
+
+        .priority-dot.medium {
+            background: #ffd93d;
+        }
+
+        .priority-dot.low {
+            background: #6bcf7f;
+        }
+
+        .task-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .task-date {
+            font-size: 11px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .complete-btn {
+            background: #6bcf7f;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-btn.save {
+            background: #6bcf7f;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .priority-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
-  <div class="date-display" id="dateDisplay"></div>
-  <h1>🗂️ Life Task Manager</h1>
-  <div class="input-box">
-    <input type="text" id="task-input" placeholder="Add a new task...">
-    <div class="type-options">
-      <label><input type="radio" name="task-type" value="list" checked> List</label>
-      <label><input type="radio" name="task-type" value="reminder"> Reminder</label>
-      <button class="add-btn" id="add-task">+</button>
-      <button class="voice-btn" onclick="startVoiceInput()">🎤</button>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 TaskMaster Pro</h1>
+            <p>Organize your life, one task at a time!</p>
+            <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;" id="currentDate"></div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="What needs to be done? ✨">
+            </div>
+
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="listOption" name="taskType" value="list" checked>
+                    <label for="listOption">📝 List</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="reminderOption" name="taskType" value="reminder">
+                    <label for="reminderOption">⏰ Reminder</label>
+                </div>
+            </div>
+
+            <div class="priority-section" id="prioritySection">
+                <h4 style="margin-bottom: 10px; color: #333;">Priority Level:</h4>
+                <div class="priority-buttons">
+                    <button class="priority-btn high" data-priority="high">🔥 High</button>
+                    <button class="priority-btn medium" data-priority="medium">⚡ Medium</button>
+                    <button class="priority-btn low" data-priority="low">🌟 Low</button>
+                </div>
+            </div>
+
+            <div class="date-section" id="dateSection">
+                <input type="date" id="dueDateInput">
+            </div>
+
+            <button class="add-btn" onclick="addTask()">✨ Add Task</button>
+        </div>
+
+        <div class="tasks-section">
+            <div class="section-title">📝 My Lists</div>
+            <div id="listTasks"></div>
+
+            <div class="section-title" style="margin-top: 30px;">⏰ My Reminders</div>
+            <div id="reminderTasks"></div>
+        </div>
     </div>
-  </div>
 
-  <div class="task-columns">
-    <div class="section" id="list-section">
-      <h3>🛒 Lists</h3>
-      <div id="list-tasks"></div>
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Task</div>
+            <input type="text" id="editTaskInput" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; margin-bottom: 15px;">
+            <input type="date" id="editDateInput" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px;">
+            <div class="modal-actions">
+                <button class="modal-btn save" onclick="saveEdit()">Save</button>
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
     </div>
-    <div class="section" id="reminder-section">
-      <h3>🔔 Reminders</h3>
-      <div id="reminder-tasks"></div>
-    </div>
-  </div>
 
-  <div class="summary" id="summary"></div>
+    <script>
+        let tasks = [];
+        let currentEditIndex = -1;
+        let selectedPriority = 'medium';
 
-  <script>
-    const input = document.getElementById("task-input");
-    const addBtn = document.getElementById("add-task");
-    const summary = document.getElementById("summary");
-    let lastDeletedTask = null;
-
-    input.addEventListener("keypress", (e) => { if (e.key === "Enter") addTask(); });
-    addBtn.onclick = () => addTask();
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
-
-    function startVoiceInput() {
-      if (!('webkitSpeechRecognition' in window)) return alert("Not supported");
-      const recognition = new webkitSpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.start();
-      recognition.onresult = (e) => {
-        input.value = e.results[0][0].transcript;
-        input.focus();
-      };
-    }
-
-    function addTask() {
-      const text = input.value.trim();
-      const type = document.querySelector('input[name="task-type"]:checked').value;
-      if (!text) return;
-      const tasks = getTasks();
-      const task = { text, done: false, type };
-      if (type === "reminder") task.priority = null;
-      tasks.push(task);
-      saveTasks(tasks);
-      input.value = "";
-      renderTasks();
-    }
-
-    function getTasks() {
-      return JSON.parse(localStorage.getItem("tasks") || "[]");
-    }
-
-    function saveTasks(tasks) {
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
-
-    function renderTasks() {
-      const tasks = getTasks();
-      const lists = tasks.filter(t => t.type === "list");
-      const reminders = tasks.filter(t => t.type === "reminder");
-      renderSection("list-tasks", lists, "list");
-      renderSection("reminder-tasks", reminders, "reminder");
-      const completed = tasks.filter(t => t.done).length;
-      const pending = tasks.length - completed;
-      summary.innerHTML = `${completed} completed • ${pending} remaining ${lastDeletedTask ? "<button onclick='undoDelete()'>Undo Delete</button>" : ""}`;
-    }
-
-    function renderSection(containerId, tasks, type) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      tasks.forEach((task, index) => {
-        const div = document.createElement("div");
-        div.className = "task" + (task.done ? " completed" : "");
-        div.draggable = true;
-
-        const span = document.createElement("span");
-        span.textContent = task.text;
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.done;
-        checkbox.onchange = () => {
-          const all = getTasks();
-          const match = all.find(t => t.text === task.text && t.type === task.type);
-          match.done = checkbox.checked;
-          saveTasks(all);
-          renderTasks();
-        };
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.innerHTML = "❌";
-        deleteBtn.onclick = () => {
-          lastDeletedTask = task;
-          const all = getTasks().filter(t => !(t.text === task.text && t.type === task.type));
-          saveTasks(all);
-          renderTasks();
-        };
-
-        const editBtn = document.createElement("button");
-        editBtn.innerHTML = "✏️";
-        editBtn.onclick = () => {
-          const inputBox = document.createElement("input");
-          inputBox.value = task.text;
-          inputBox.className = "edit-input";
-          span.replaceWith(inputBox);
-          inputBox.focus();
-          inputBox.onblur = () => {
-            const all = getTasks();
-            const match = all.find(t => t.text === task.text && t.type === task.type);
-            match.text = inputBox.value;
-            saveTasks(all);
-            renderTasks();
-          };
-        };
-
-        const content = document.createElement("div");
-        content.className = "task-content";
-        content.appendChild(checkbox);
-        content.appendChild(span);
-
-        const actions = document.createElement("div");
-        actions.className = "actions";
-        actions.appendChild(editBtn);
-        actions.appendChild(deleteBtn);
-
-        div.appendChild(content);
-        if (type === "reminder") {
-          if (!task.priority) {
-            const choose = document.createElement("div");
-            choose.className = "priority-choose";
-            ["high", "medium", "low"].forEach(p => {
-              const dot = document.createElement("div");
-              dot.className = `priority-dot priority-${p}`;
-              dot.onclick = () => {
-                const all = getTasks();
-                const match = all.find(t => t.text === task.text && t.type === task.type);
-                match.priority = p;
-                saveTasks(all);
-                renderTasks();
-              };
-              choose.appendChild(dot);
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            updateTaskDisplay();
+            
+            // Show/hide priority and date sections based on task type
+            document.querySelectorAll('input[name="taskType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const prioritySection = document.getElementById('prioritySection');
+                    const dateSection = document.getElementById('dateSection');
+                    
+                    if (this.value === 'reminder') {
+                        prioritySection.style.display = 'block';
+                        dateSection.style.display = 'block';
+                    } else {
+                        prioritySection.style.display = 'none';
+                        dateSection.style.display = 'none';
+                    }
+                });
             });
-            content.appendChild(choose);
-          } else {
-            const dot = document.createElement("div");
-            dot.className = `priority-dot priority-${task.priority}`;
-            content.appendChild(dot);
-          }
+
+            // Priority button selection
+            document.querySelectorAll('.priority-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPriority = this.dataset.priority;
+                });
+            });
+
+            // Enter key to add task
+            document.getElementById('taskInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+        });
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskType = document.querySelector('input[name="taskType"]:checked').value;
+            const dueDateInput = document.getElementById('dueDateInput');
+            
+            if (taskInput.value.trim() === '') {
+                taskInput.style.borderColor = '#ff6b6b';
+                setTimeout(() => {
+                    taskInput.style.borderColor = '#e9ecef';
+                }, 1000);
+                return;
+            }
+
+            const task = {
+                id: Date.now(),
+                text: taskInput.value.trim(),
+                type: taskType,
+                completed: false,
+                priority: taskType === 'reminder' ? selectedPriority : null,
+                dueDate: taskType === 'reminder' && dueDateInput.value ? dueDateInput.value : null,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.push(task);
+            taskInput.value = '';
+            dueDateInput.value = '';
+            
+            // Reset to list option
+            document.getElementById('listOption').checked = true;
+            document.getElementById('prioritySection').style.display = 'none';
+            document.getElementById('dateSection').style.display = 'none';
+            
+            updateTaskDisplay();
         }
-        div.appendChild(actions);
 
-        div.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", JSON.stringify({ text: task.text, type: task.type }));
+        function updateTaskDisplay() {
+            const listContainer = document.getElementById('listTasks');
+            const reminderContainer = document.getElementById('reminderTasks');
+            
+            const listTasks = tasks.filter(task => task.type === 'list');
+            const reminderTasks = tasks.filter(task => task.type === 'reminder');
+            
+            listContainer.innerHTML = listTasks.length ? 
+                listTasks.map(task => createTaskHTML(task)).join('') :
+                '<div class="empty-state"><div class="empty-icon">📝</div><p>No lists yet. Add your first task!</p></div>';
+            
+            reminderContainer.innerHTML = reminderTasks.length ?
+                reminderTasks.sort((a, b) => {
+                    const priorityOrder = { high: 3, medium: 2, low: 1 };
+                    return priorityOrder[b.priority] - priorityOrder[a.priority];
+                }).map(task => createTaskHTML(task)).join('') :
+                '<div class="empty-state"><div class="empty-icon">⏰</div><p>No reminders yet. Set your first reminder!</p></div>';
+        }
+
+        function createTaskHTML(task) {
+            const priorityClass = task.priority ? `priority-${task.priority}` : '';
+            const completedClass = task.completed ? 'completed' : '';
+            const dueDateHTML = task.dueDate ? `<div class="task-date">📅 ${formatDate(task.dueDate)}</div>` : '';
+            const priorityDot = task.priority ? `<div class="priority-dot ${task.priority}"></div>` : '';
+            
+            return `
+                <div class="task-item ${priorityClass} ${completedClass}">
+                    <div class="task-content">
+                        <div class="task-text-container">
+                            ${priorityDot}
+                            <div class="task-text">${task.text}</div>
+                        </div>
+                    </div>
+                    ${dueDateHTML}
+                    <div class="task-actions">
+                        ${!task.completed ? `<button class="action-btn complete-btn" onclick="toggleComplete(${task.id})">✓</button>` : `<button class="action-btn complete-btn" onclick="toggleComplete(${task.id})">↩</button>`}
+                        <button class="action-btn edit-btn" onclick="editTask(${task.id})">✏</button>
+                        <button class="action-btn delete-btn" onclick="deleteTask(${task.id})">🗑</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+            });
+        }
+
+        function toggleComplete(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                updateTaskDisplay();
+            }
+        }
+
+        function editTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                currentEditIndex = tasks.findIndex(t => t.id === taskId);
+                document.getElementById('editTaskInput').value = task.text;
+                document.getElementById('editDateInput').value = task.dueDate || '';
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        function saveEdit() {
+            if (currentEditIndex >= 0) {
+                const newText = document.getElementById('editTaskInput').value.trim();
+                const newDate = document.getElementById('editDateInput').value;
+                
+                if (newText) {
+                    tasks[currentEditIndex].text = newText;
+                    if (tasks[currentEditIndex].type === 'reminder') {
+                        tasks[currentEditIndex].dueDate = newDate || null;
+                    }
+                    updateTaskDisplay();
+                }
+            }
+            closeModal();
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                updateTaskDisplay();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentEditIndex = -1;
+        }
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
         });
-        div.addEventListener("dragover", (e) => e.preventDefault());
-        div.addEventListener("drop", (e) => {
-          e.preventDefault();
-          const draggedData = JSON.parse(e.dataTransfer.getData("text"));
-          const all = getTasks();
-          const draggedIndex = all.findIndex(t => t.text === draggedData.text && t.type === draggedData.type);
-          const targetIndex = all.findIndex(t => t.text === task.text && t.type === task.type);
-          const [moved] = all.splice(draggedIndex, 1);
-          all.splice(targetIndex, 0, moved);
-          saveTasks(all);
-          renderTasks();
-        });
-
-        container.appendChild(div);
-      });
-    }
-
-    function undoDelete() {
-      if (lastDeletedTask) {
-        const all = getTasks();
-        all.push(lastDeletedTask);
-        saveTasks(all);
-        lastDeletedTask = null;
-        renderTasks();
-      }
-    }
-
-    function updateDate() {
-      const date = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById("dateDisplay").textContent = date.toLocaleDateString(undefined, options);
-    }
-
-    updateDate();
-    renderTasks();
-  </script>
+    </script>
 </body>
 </html>
